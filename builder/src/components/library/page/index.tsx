@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { ComponentConfig, GridPosition } from '../../../types/generated/general';
+import { ComponentConfig, GridPosition } from '../general';
 
 const Grid = styled.div`
   display: grid;

@@ -1,5 +1,5 @@
 import React from 'react';
-import { ComponentConfig } from '../../types/generated/general';
+import { ComponentConfig } from '../library/general';
 
 interface PropertyEditorProps {
   component: ComponentConfig;

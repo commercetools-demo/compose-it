@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { AppConfig, PageConfig } from '../../types/generated/general';
 import PageList from '../page-list';
 import PageBuilder from '../page-builder';
+import { AppConfig, PageConfig } from '../library/general';
 
 export const App: React.FC = () => {
   const [appConfig, setAppConfig] = useState<AppConfig>({

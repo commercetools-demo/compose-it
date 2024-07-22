@@ -12,11 +12,11 @@ type MoleculeComponentConfig = {
   children: (AtomComponentConfig | MoleculeComponentConfig)[];
 };
 
-type ComponentConfig = AtomComponentConfig | MoleculeComponentConfig;
+export type ComponentConfig = AtomComponentConfig | MoleculeComponentConfig;
 
 
 // Position configuration for grid layout
-type GridPosition = {
+export type GridPosition = {
   column: number;
   row: number;
   width: number;
@@ -33,7 +33,7 @@ type PageConfig = {
   components: ComponentConfig[];
 };
 
-type AppConfig = {
+export type AppConfig = {
   pages: PageConfig[];
 };
 

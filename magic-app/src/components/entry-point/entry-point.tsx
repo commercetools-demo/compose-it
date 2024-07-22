@@ -5,6 +5,7 @@ import {
 } from '@commercetools-frontend/application-shell';
 import type { ApplicationWindow } from '@commercetools-frontend/constants';
 import loadMessages from '../../load-messages';
+import { AppConfig } from '../library/general';
 
 declare let window: ApplicationWindow;
 

@@ -1,11 +1,11 @@
 // Types for our component configurations
-export type AtomComponentConfig = {
+type AtomComponentConfig = {
   type: string;
   id: string;
   props: Record<string, any>;
 };
 
-export type MoleculeComponentConfig = {
+type MoleculeComponentConfig = {
   type: string;
   id: string;
   props: Record<string, any>;

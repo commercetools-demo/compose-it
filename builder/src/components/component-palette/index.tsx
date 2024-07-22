@@ -1,7 +1,5 @@
 import React from 'react';
-const componentTypes = ['Text.Headline', 'Button', 'Card', 'Page'];
-
-
+import {componentLibrary} from '../library'
 
 export const getComponentProps = (componentType: string) => {
     switch (componentType) {
@@ -26,7 +24,7 @@ const ComponentPalette: React.FC = () => {
   return (
     <div className="component-palette">
       <h3>Components</h3>
-      {componentTypes.map(type => (
+      {Object.keys(componentLibrary).map(type => (
         <div
           key={type}
           draggable

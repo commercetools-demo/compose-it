@@ -1,7 +1,7 @@
 import React from 'react';
-import { ComponentConfig, PageConfig } from '../../types/generated/general';
 import ComponentPalette, { getComponentProps } from '../component-palette';
 import PropertyEditor from '../property-editor';
+import { ComponentConfig, PageConfig } from '../library/general';
 import { componentLibrary } from '../library';
 
 interface PageBuilderProps {
@@ -10,9 +10,15 @@ interface PageBuilderProps {
 }
 
 const PageBuilder: React.FC<PageBuilderProps> = ({ page, onUpdatePage }) => {
-  const [selectedComponentId, setSelectedComponentId] = React.useState<string | null>(null);
+  const [selectedComponentId, setSelectedComponentId] = React.useState<
+    string | null
+  >(null);
 
-  const handleDrop = (e: React.DragEvent<HTMLDivElement>, column: number, row: number) => {
+  const handleDrop = (
+    e: React.DragEvent<HTMLDivElement>,
+    column: number,
+    row: number
+  ) => {
     e.preventDefault();
     const componentType = e.dataTransfer.getData('componentType');
     const newComponent: ComponentConfig = {
@@ -31,13 +37,15 @@ const PageBuilder: React.FC<PageBuilderProps> = ({ page, onUpdatePage }) => {
   };
 
   const handleComponentUpdate = (updatedComponent: ComponentConfig) => {
-    const updatedComponents = page.components.map(c => 
+    const updatedComponents = page.components.map((c) =>
       c.id === updatedComponent.id ? updatedComponent : c
     );
     onUpdatePage({ ...page, components: updatedComponents });
   };
 
-  const selectedComponent = page.components.find(c => c.id === selectedComponentId);
+  const selectedComponent = page.components.find(
+    (c) => c.id === selectedComponentId
+  );
 
   const renderComponent = (component: ComponentConfig) => {
     const style = {
@@ -45,7 +53,8 @@ const PageBuilder: React.FC<PageBuilderProps> = ({ page, onUpdatePage }) => {
       gridRow: `${component.props.gridRow} / span ${component.props.gridHeight}`,
       border: '1px solid #ccc',
       padding: '8px',
-      backgroundColor: component.id === selectedComponentId ? '#e0e0e0' : 'white',
+      backgroundColor:
+        component.id === selectedComponentId ? '#e0e0e0' : 'white',
     };
 
     const Component = componentLibrary[component.type];
@@ -62,20 +71,25 @@ const PageBuilder: React.FC<PageBuilderProps> = ({ page, onUpdatePage }) => {
       >
         <Component {...component.props} />
         {/* In a full implementation, you would render the actual component here */}
-        
       </div>
     );
   };
 
-  const handleCellDrop = (e: React.DragEvent<HTMLDivElement>, column: number, row: number) => {
+  const handleCellDrop = (
+    e: React.DragEvent<HTMLDivElement>,
+    column: number,
+    row: number
+  ) => {
     e.preventDefault();
     const componentId = e.dataTransfer.getData('componentId');
     const componentType = e.dataTransfer.getData('componentType');
 
     if (componentId) {
       // Moving an existing component
-      const updatedComponents = page.components.map(c =>
-        c.id === componentId ? { ...c, props: { ...c.props, gridColumn: column, gridRow: row } } : c
+      const updatedComponents = page.components.map((c) =>
+        c.id === componentId
+          ? { ...c, props: { ...c.props, gridColumn: column, gridRow: row } }
+          : c
       );
       onUpdatePage({ ...page, components: updatedComponents });
     } else if (componentType) {
@@ -87,10 +101,10 @@ const PageBuilder: React.FC<PageBuilderProps> = ({ page, onUpdatePage }) => {
   return (
     <div className="page-builder">
       <ComponentPalette />
-      <div 
-        className="grid-layout" 
-        style={{ 
-          display: 'grid', 
+      <div
+        className="grid-layout"
+        style={{
+          display: 'grid',
           gridTemplateColumns: `repeat(${page.layout.columns}, 1fr)`,
           gap: '4px',
           position: 'relative',

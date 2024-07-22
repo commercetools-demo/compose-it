@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { PageConfig } from '../../types/generated/general';
+import { PageConfig } from '../library/general';
 
 interface PageListProps {
   pages: PageConfig[];
