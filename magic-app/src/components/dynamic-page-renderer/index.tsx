@@ -1,5 +1,5 @@
 import React from 'react';
-import { componentLibrary } from '../library';
+import { componentLibrary } from '@shared/components/library';
 import { DynamicPageRendererProps } from './types';
 
 

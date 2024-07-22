@@ -3,7 +3,11 @@
   "compilerOptions": {
     "typeRoots": ["@types", "@types-extensions", "node_modules/@types"],
     // Allow tsc to resolve dependencies of `@types` packages in the way pnpm sets up the `node_modules`.
-    "preserveSymlinks": false
+    "preserveSymlinks": false,
+    "baseUrl": ".",
+    "paths": {
+      "@shared/*": ["../shared/src/*"]
+    }
   },
-  "include": ["src"]
+  "include": ["src", "../shared/src"]
 }
