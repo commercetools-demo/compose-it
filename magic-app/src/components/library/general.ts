@@ -23,7 +23,7 @@ export type GridPosition = {
   height: number;
 };
 
-type PageConfig = {
+export type PageConfig = {
   id: string;
   route: string;
   layout: {
