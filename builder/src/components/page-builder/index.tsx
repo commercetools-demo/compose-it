@@ -11,9 +11,7 @@ interface PageBuilderProps {
 }
 
 const PageBuilder: React.FC<PageBuilderProps> = ({ page, onUpdatePage }) => {
-  const [selectedComponentId, setSelectedComponentId] = React.useState<
-    string | null
-  >(null);
+  const [selectedComponent, setSelectedComponent] = useState<ComponentConfig>();
   const [resizing, setResizing] = useState<{
     id: string;
     direction: string;
@@ -26,13 +24,66 @@ const PageBuilder: React.FC<PageBuilderProps> = ({ page, onUpdatePage }) => {
 
   const gridRef = useRef<HTMLDivElement>(null);
 
+  const removeComponentById = (
+    components: ComponentConfig[],
+    id: string
+  ): ComponentConfig[] => {
+    return components.filter((component) => {
+      if (component.id === id) return false;
+      if (component.props.children) {
+        component.props.children = removeComponentById(
+          component.props.children,
+          id
+        );
+      }
+      return true;
+    });
+  };
+
+  const addComponentToTarget = (
+    components: ComponentConfig[],
+    targetId: string,
+    newComponent: ComponentConfig
+  ): ComponentConfig[] => {
+    return components.map((component) => {
+      if (component.id === targetId) {
+        return {
+          ...component,
+          props: {
+            ...component.props,
+            children: [...(component.props.children || []), newComponent],
+          },
+        };
+      }
+      if (component.props.children) {
+        return {
+          ...component,
+          props: {
+            ...component.props,
+            children: addComponentToTarget(
+              component.props.children,
+              targetId,
+              newComponent
+            ),
+          },
+        };
+      }
+      return component;
+    });
+  };
+
   const handleDrop = (
     e: React.DragEvent<HTMLDivElement>,
+    targetId: string | null,
     column: number,
     row: number
   ) => {
     e.preventDefault();
     const componentType = e.dataTransfer.getData('componentType');
+    const sourceComponentId = e.dataTransfer.getData('componentId');
+
+    console.log({ componentType, sourceComponentId, targetId });
+
     const newComponent: ComponentConfig = {
       type: componentType,
       id: Date.now().toString(),
@@ -46,7 +97,30 @@ const PageBuilder: React.FC<PageBuilderProps> = ({ page, onUpdatePage }) => {
         ...getComponentProps(componentType),
       },
     };
-    const updatedComponents = [...page.components, newComponent];
+    let updatedComponents = [...page.components, newComponent];
+    if (sourceComponentId) {
+      // Moving an existing component
+      updatedComponents = removeComponentById(
+        page.components,
+        sourceComponentId
+      );
+    } else {
+      // Adding a new component
+      updatedComponents = [...page.components];
+    }
+
+    if (targetId) {
+      // Dropping into another component
+      updatedComponents = addComponentToTarget(
+        updatedComponents,
+        targetId,
+        newComponent
+      );
+    } else {
+      // Dropping directly onto the grid
+      updatedComponents.push(newComponent);
+    }
+
     onUpdatePage({ ...page, components: updatedComponents });
   };
 
@@ -56,10 +130,6 @@ const PageBuilder: React.FC<PageBuilderProps> = ({ page, onUpdatePage }) => {
     );
     onUpdatePage({ ...page, components: updatedComponents });
   };
-
-  const selectedComponent = page.components.find(
-    (c) => c.id === selectedComponentId
-  );
 
   const startResize = (
     e: React.MouseEvent,
@@ -71,10 +141,15 @@ const PageBuilder: React.FC<PageBuilderProps> = ({ page, onUpdatePage }) => {
     setResizing({ id: componentId, direction });
   };
 
-  const startDrag = (e: React.DragEvent, componentId: string) => {
+  const startDrag = (
+    e: React.DragEvent,
+    componentId: string,
+    componentType: string
+  ) => {
     if (!resizing) {
       setDragging(componentId);
       e.dataTransfer.setData('componentId', componentId);
+      e.dataTransfer.setData('componentType', componentType);
     } else {
       e.preventDefault(); // Prevent drag if we're resizing
     }
@@ -152,7 +227,7 @@ const PageBuilder: React.FC<PageBuilderProps> = ({ page, onUpdatePage }) => {
       border: '1px solid #ccc',
       padding: '8px',
       backgroundColor:
-        component.id === selectedComponentId ? '#e0e0e0' : 'white',
+        component.id === selectedComponent?.id ? '#e0e0e0' : 'white',
       position: 'relative' as 'relative',
     };
 
@@ -170,12 +245,27 @@ const PageBuilder: React.FC<PageBuilderProps> = ({ page, onUpdatePage }) => {
       <div
         key={component.id}
         style={style}
-        onClick={() => setSelectedComponentId(component.id)}
+        onClick={(e) => {
+          e.stopPropagation();
+          setSelectedComponent(component);
+        }}
         draggable={!resizing}
-        onDragStart={(e) => startDrag(e, component.id)}
+        onDragStart={(e) => startDrag(e, component.id, component.type)}
+        onDragOver={(e) => e.preventDefault()}
+        onDrop={(e) =>
+          handleDrop(
+            e,
+            component.id,
+            component.layout.gridColumn,
+            component.layout.gridRow
+          )
+        }
         onMouseDown={() => setDragging(null)}
       >
-        <Component {...component.props} />
+        <Component {...component.props}>
+          {component.props.children &&
+            component.props.children.map(renderComponent)}
+        </Component>
 
         <div
           style={{
@@ -231,7 +321,7 @@ const PageBuilder: React.FC<PageBuilderProps> = ({ page, onUpdatePage }) => {
       onUpdatePage({ ...page, components: updatedComponents });
     } else if (componentType) {
       // Adding a new component
-      handleDrop(e, column, row);
+      handleDrop(e, null, column, row);
     }
   };
 
@@ -302,7 +392,7 @@ const PageBuilder: React.FC<PageBuilderProps> = ({ page, onUpdatePage }) => {
         })}
         {page.components.map(renderComponent)}
       </div>
-      {selectedComponent && (
+      {!!selectedComponent && (
         <PropertyEditor
           component={selectedComponent}
           onUpdateComponent={handleComponentUpdate}
