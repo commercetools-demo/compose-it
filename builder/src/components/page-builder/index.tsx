@@ -2,9 +2,10 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import ComponentPalette from '../component-palette';
 import PropertyEditor from '../property-editor';
 import { ComponentConfig, PageConfig } from '../library/general';
-import { componentLibrary } from '../library';
 import { getComponentProps } from '../library/utils';
 import ComponentWrapper from '../library/wrapper';
+import { useComponentConfig } from './hooks/use-component-config';
+import { calculateNewSize } from './utils';
 
 interface PageBuilderProps {
   page: PageConfig;
@@ -25,53 +26,11 @@ const PageBuilder: React.FC<PageBuilderProps> = ({ page, onUpdatePage }) => {
 
   const gridRef = useRef<HTMLDivElement>(null);
 
-  const removeComponentById = (
-    components: ComponentConfig[],
-    id: string
-  ): ComponentConfig[] => {
-    return components.filter((component) => {
-      if (component.id === id) return false;
-      if (component.props.children) {
-        component.props.children = removeComponentById(
-          component.props.children,
-          id
-        );
-      }
-      return true;
-    });
-  };
-
-  const addComponentToTarget = (
-    components: ComponentConfig[],
-    targetId: string,
-    newComponent: ComponentConfig
-  ): ComponentConfig[] => {
-    return components.map((component) => {
-      if (component.id === targetId) {
-        return {
-          ...component,
-          props: {
-            ...component.props,
-            children: [...(component.props.children || []), newComponent],
-          },
-        };
-      }
-      if (component.props.children) {
-        return {
-          ...component,
-          props: {
-            ...component.props,
-            children: addComponentToTarget(
-              component.props.children,
-              targetId,
-              newComponent
-            ),
-          },
-        };
-      }
-      return component;
-    });
-  };
+  const {
+    addComponentToTarget,
+    removeComponentById,
+    updateComponentInComponents,
+  } = useComponentConfig();
 
   const handleDrop = (
     e: React.DragEvent<HTMLDivElement>,
@@ -126,33 +85,6 @@ const PageBuilder: React.FC<PageBuilderProps> = ({ page, onUpdatePage }) => {
     onUpdatePage({ ...page, components: updatedComponents });
   };
 
-  const updateComponentInComponents = (
-    components: ComponentConfig[],
-    updatedComponent: ComponentConfig
-  ) => {
-    const updatedComponents = components.map((c) => {
-      if (c.id === updatedComponent.id) {
-        return { ...updatedComponent };
-      }
-      if (c.props.children) {
-        c.props.children = updateComponentInComponents(
-          c.props.children,
-          updatedComponent
-        );
-      }
-      return { ...c };
-    });
-    return updatedComponents;
-  };
-
-  const handleComponentUpdate = (updatedComponent: ComponentConfig) => {
-    const updatedComponents = updateComponentInComponents(
-      page.components,
-      updatedComponent
-    );
-    onUpdatePage({ ...page, components: updatedComponents });
-  };
-
   const startResize = (
     e: React.MouseEvent,
     componentId: string,
@@ -174,9 +106,6 @@ const PageBuilder: React.FC<PageBuilderProps> = ({ page, onUpdatePage }) => {
     } else {
       e.preventDefault(); // Prevent drag if we're resizing
     }
-  };
-  const calculateNewSize = (current: number, start: number, size: number) => {
-    return Math.max(1, Math.round((current - start) / size));
   };
 
   const handleResize = (e: React.MouseEvent) => {
@@ -241,6 +170,64 @@ const PageBuilder: React.FC<PageBuilderProps> = ({ page, onUpdatePage }) => {
     setResizing(null);
   };
 
+  const handleCellDrop = (
+    e: React.DragEvent<HTMLDivElement>,
+    column: number,
+    row: number
+  ) => {
+    e.preventDefault();
+    const componentId = e.dataTransfer.getData('componentId');
+    const componentType = e.dataTransfer.getData('componentType');
+
+    if (componentId) {
+      // Moving an existing component
+      const updatedComponents = page.components.map((c) =>
+        c.id === componentId
+          ? { ...c, layout: { ...c.layout, gridColumn: column, gridRow: row } }
+          : c
+      );
+      onUpdatePage({ ...page, components: updatedComponents });
+    } else if (componentType) {
+      // Adding a new component
+      handleDrop(e, null, column, row);
+    }
+  };
+
+  const updateGridDimensions = () => {
+    let maxColumn = page.layout.columns;
+    let maxRow = 10; // Starting with a minimum of 10 rows
+
+    page.components.forEach((component) => {
+      const rightEdge =
+        component.layout.gridColumn + component.layout.gridWidth - 1;
+      const bottomEdge =
+        component.layout.gridRow + component.layout.gridHeight - 1;
+
+      maxColumn = Math.max(maxColumn, rightEdge);
+      maxRow = Math.max(maxRow, bottomEdge);
+    });
+
+    setGridDimensions({ columns: maxColumn, rows: maxRow });
+  };
+
+  const availableCells = useMemo(
+    () =>
+      gridDimensions.columns * gridDimensions.rows -
+      page.components.reduce(
+        (acc, c) => acc + c.layout.gridWidth * c.layout.gridHeight,
+        0
+      ),
+    [gridDimensions]
+  );
+
+  const handleComponentUpdate = (updatedComponent: ComponentConfig) => {
+    const updatedComponents = updateComponentInComponents(
+      page.components,
+      updatedComponent
+    );
+    onUpdatePage({ ...page, components: updatedComponents });
+  };
+
   const renderComponent = (component: ComponentConfig) => {
     if (!component) return null;
     if (typeof component === 'string') return component;
@@ -292,90 +279,43 @@ const PageBuilder: React.FC<PageBuilderProps> = ({ page, onUpdatePage }) => {
             renderComponent(component.props.children)}
         </ComponentWrapper>
 
-        <div
-          style={{
-            ...resizeHandleStyle,
-            top: '50%',
-            left: 0,
-            transform: 'translateY(-50%)',
-            cursor: 'w-resize',
-          }}
-          onMouseDown={(e) => startResize(e, component.id, 'left')}
-        />
-        <div
-          style={{
-            ...resizeHandleStyle,
-            top: '50%',
-            right: 0,
-            transform: 'translateY(-50%)',
-            cursor: 'e-resize',
-          }}
-          onMouseDown={(e) => startResize(e, component.id, 'right')}
-        />
-        <div
-          style={{
-            ...resizeHandleStyle,
-            top: 0,
-            left: '50%',
-            transform: 'translateX(-50%)',
-            cursor: 'n-resize',
-          }}
-          onMouseDown={(e) => startResize(e, component.id, 'top')}
-        />
-        {/* In a full implementation, you would render the actual component here */}
+        {component.id === selectedComponent?.id && (
+          <>
+            <div
+              style={{
+                ...resizeHandleStyle,
+                top: '50%',
+                left: 0,
+                transform: 'translateY(-50%)',
+                cursor: 'w-resize',
+              }}
+              onMouseDown={(e) => startResize(e, component.id, 'left')}
+            />
+            <div
+              style={{
+                ...resizeHandleStyle,
+                top: '50%',
+                right: 0,
+                transform: 'translateY(-50%)',
+                cursor: 'e-resize',
+              }}
+              onMouseDown={(e) => startResize(e, component.id, 'right')}
+            />
+            <div
+              style={{
+                ...resizeHandleStyle,
+                top: 0,
+                left: '50%',
+                transform: 'translateX(-50%)',
+                cursor: 'n-resize',
+              }}
+              onMouseDown={(e) => startResize(e, component.id, 'top')}
+            />
+          </>
+        )}
       </div>
     );
   };
-
-  const handleCellDrop = (
-    e: React.DragEvent<HTMLDivElement>,
-    column: number,
-    row: number
-  ) => {
-    e.preventDefault();
-    const componentId = e.dataTransfer.getData('componentId');
-    const componentType = e.dataTransfer.getData('componentType');
-
-    if (componentId) {
-      // Moving an existing component
-      const updatedComponents = page.components.map((c) =>
-        c.id === componentId
-          ? { ...c, layout: { ...c.layout, gridColumn: column, gridRow: row } }
-          : c
-      );
-      onUpdatePage({ ...page, components: updatedComponents });
-    } else if (componentType) {
-      // Adding a new component
-      handleDrop(e, null, column, row);
-    }
-  };
-
-  const updateGridDimensions = () => {
-    let maxColumn = page.layout.columns;
-    let maxRow = 10; // Starting with a minimum of 10 rows
-
-    page.components.forEach((component) => {
-      const rightEdge =
-        component.layout.gridColumn + component.layout.gridWidth - 1;
-      const bottomEdge =
-        component.layout.gridRow + component.layout.gridHeight - 1;
-
-      maxColumn = Math.max(maxColumn, rightEdge);
-      maxRow = Math.max(maxRow, bottomEdge);
-    });
-
-    setGridDimensions({ columns: maxColumn, rows: maxRow });
-  };
-
-  const availableCells = useMemo(
-    () =>
-      gridDimensions.columns * gridDimensions.rows -
-      page.components.reduce(
-        (acc, c) => acc + c.layout.gridWidth * c.layout.gridHeight,
-        0
-      ),
-    [gridDimensions]
-  );
 
   useEffect(() => {
     updateGridDimensions();
