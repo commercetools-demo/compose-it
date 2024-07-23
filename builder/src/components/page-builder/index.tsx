@@ -30,7 +30,16 @@ const PageBuilder: React.FC<PageBuilderProps> = ({ page, onUpdatePage }) => {
     addComponentToTarget,
     removeComponentById,
     updateComponentInComponents,
+    findComponentById,
   } = useComponentConfig();
+
+  const handleComponentUpdate = (updatedComponent: ComponentConfig) => {
+    const updatedComponents = updateComponentInComponents(
+      page.components,
+      updatedComponent
+    );
+    onUpdatePage({ ...page, components: updatedComponents });
+  };
 
   const handleDrop = (
     e: React.DragEvent<HTMLDivElement>,
@@ -220,14 +229,6 @@ const PageBuilder: React.FC<PageBuilderProps> = ({ page, onUpdatePage }) => {
     [gridDimensions]
   );
 
-  const handleComponentUpdate = (updatedComponent: ComponentConfig) => {
-    const updatedComponents = updateComponentInComponents(
-      page.components,
-      updatedComponent
-    );
-    onUpdatePage({ ...page, components: updatedComponents });
-  };
-
   const renderComponent = (component: ComponentConfig) => {
     if (!component) return null;
     if (typeof component === 'string') return component;
@@ -319,6 +320,9 @@ const PageBuilder: React.FC<PageBuilderProps> = ({ page, onUpdatePage }) => {
 
   useEffect(() => {
     updateGridDimensions();
+    setSelectedComponent(
+      findComponentById(page.components, selectedComponent?.id)
+    );
   }, [page.components]);
 
   return (

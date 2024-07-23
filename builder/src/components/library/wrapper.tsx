@@ -10,7 +10,9 @@ const ComponentWrapper = ({
   children: React.ReactNode;
 }) => {
   const Component = componentLibrary[component.type];
-  const datasource = {} as any;
+  const datasource = {
+    'product.name': 'Apple',
+  };
 
   if (component.config?.propsBindings) {
     Object.keys(component.config.propsBindings).forEach((key) => {

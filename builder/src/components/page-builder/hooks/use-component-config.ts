@@ -68,9 +68,25 @@ export const useComponentConfig = () => {
     return updatedComponents;
   };
 
+  const findComponentById = (
+    components: ComponentConfig[],
+    id?: string
+  ): ComponentConfig | undefined => {
+    const updatedComponents = components.find((c) => {
+      if (c.id === id) {
+        return true;
+      }
+      if (c.props.children) {
+        return findComponentById(c.props.children, id);
+      }
+    });
+    return updatedComponents;
+  };
+
   return {
     removeComponentById,
     addComponentToTarget,
+    findComponentById,
     updateComponentInComponents,
   };
 };
