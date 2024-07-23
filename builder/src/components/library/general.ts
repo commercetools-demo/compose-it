@@ -12,14 +12,18 @@ type AtomComponentConfig = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   props: Record<string, any>;
   layout: ComponentLayout;
+  config: {
+    propsBindings: Record<
+      string,
+      {
+        type: 'datasource' | 'property';
+        value: string;
+      }
+    >;
+  };
 };
 
-type MoleculeComponentConfig = {
-  type: string;
-  id: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  props: Record<string, any>;
-  layout: ComponentLayout;
+type MoleculeComponentConfig = AtomComponentConfig & {
   children: (AtomComponentConfig | MoleculeComponentConfig)[];
 };
 

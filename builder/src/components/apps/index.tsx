@@ -26,8 +26,6 @@ export const App: React.FC = () => {
 
   const currentPage = appConfig.pages.find((p) => p.id === currentPageId);
 
-  console.log(currentPage);
-
   return (
     <div className="compose-it-builder">
       <h1>ComposeIt Builder</h1>

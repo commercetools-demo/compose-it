@@ -5,7 +5,7 @@ export const getComponentProps = (componentType: string) => {
     case 'Button':
       return { text: 'Click Me' };
     case 'Card':
-      return { type: 'flet', children: '' };
+      return { type: 'flat', children: '' };
     case 'Page':
       return { layout: {}, children: '' };
     default:

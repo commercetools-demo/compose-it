@@ -12,8 +12,15 @@ const PropertyEditor: React.FC<PropertyEditorProps> = ({
 }) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handlePropertyChange = (key: string, value: any) => {
-    const updatedProps = { ...component.props, [key]: value };
-    onUpdateComponent({ ...component, props: updatedProps });
+    const updatedConfig = {
+      ...(component.config || {}),
+      propsBindings: {
+        ...(component.config?.propsBindings || {}),
+        [key]: { type: 'property', value },
+      },
+    };
+
+    onUpdateComponent({ ...component, config: updatedConfig });
   };
 
   return (

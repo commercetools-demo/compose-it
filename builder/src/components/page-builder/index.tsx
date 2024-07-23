@@ -4,6 +4,7 @@ import PropertyEditor from '../property-editor';
 import { ComponentConfig, PageConfig } from '../library/general';
 import { componentLibrary } from '../library';
 import { getComponentProps } from '../library/utils';
+import ComponentWrapper from '../library/wrapper';
 
 interface PageBuilderProps {
   page: PageConfig;
@@ -82,8 +83,6 @@ const PageBuilder: React.FC<PageBuilderProps> = ({ page, onUpdatePage }) => {
     const componentType = e.dataTransfer.getData('componentType');
     const sourceComponentId = e.dataTransfer.getData('componentId');
 
-    console.log({ componentType, sourceComponentId, targetId });
-
     const newComponent: ComponentConfig = {
       type: componentType,
       id: Date.now().toString(),
@@ -92,6 +91,9 @@ const PageBuilder: React.FC<PageBuilderProps> = ({ page, onUpdatePage }) => {
         gridRow: row,
         gridWidth: 1,
         gridHeight: 1,
+      },
+      config: {
+        propsBindings: {},
       },
       props: {
         ...getComponentProps(componentType),
@@ -124,9 +126,29 @@ const PageBuilder: React.FC<PageBuilderProps> = ({ page, onUpdatePage }) => {
     onUpdatePage({ ...page, components: updatedComponents });
   };
 
+  const updateComponentInComponents = (
+    components: ComponentConfig[],
+    updatedComponent: ComponentConfig
+  ) => {
+    const updatedComponents = components.map((c) => {
+      if (c.id === updatedComponent.id) {
+        return { ...updatedComponent };
+      }
+      if (c.props.children) {
+        c.props.children = updateComponentInComponents(
+          c.props.children,
+          updatedComponent
+        );
+      }
+      return { ...c };
+    });
+    return updatedComponents;
+  };
+
   const handleComponentUpdate = (updatedComponent: ComponentConfig) => {
-    const updatedComponents = page.components.map((c) =>
-      c.id === updatedComponent.id ? updatedComponent : c
+    const updatedComponents = updateComponentInComponents(
+      page.components,
+      updatedComponent
     );
     onUpdatePage({ ...page, components: updatedComponents });
   };
@@ -137,7 +159,6 @@ const PageBuilder: React.FC<PageBuilderProps> = ({ page, onUpdatePage }) => {
     direction: string
   ) => {
     e.stopPropagation();
-    e.preventDefault(); // Prevent drag start
     setResizing({ id: componentId, direction });
   };
 
@@ -221,6 +242,8 @@ const PageBuilder: React.FC<PageBuilderProps> = ({ page, onUpdatePage }) => {
   };
 
   const renderComponent = (component: ComponentConfig) => {
+    if (!component) return null;
+    if (typeof component === 'string') return component;
     const style = {
       gridColumn: `${component.layout.gridColumn} / span ${component.layout.gridWidth}`,
       gridRow: `${component.layout.gridRow} / span ${component.layout.gridHeight}`,
@@ -238,8 +261,6 @@ const PageBuilder: React.FC<PageBuilderProps> = ({ page, onUpdatePage }) => {
       backgroundColor: '#4CAF50',
       zIndex: 10,
     };
-
-    const Component = componentLibrary[component.type];
 
     return (
       <div
@@ -262,10 +283,14 @@ const PageBuilder: React.FC<PageBuilderProps> = ({ page, onUpdatePage }) => {
         }
         onMouseDown={() => setDragging(null)}
       >
-        <Component {...component.props}>
+        <ComponentWrapper component={component}>
           {component.props.children &&
+            Array.isArray(component.props.children) &&
             component.props.children.map(renderComponent)}
-        </Component>
+          {component.props.children &&
+            !Array.isArray(component.props.children) &&
+            renderComponent(component.props.children)}
+        </ComponentWrapper>
 
         <div
           style={{
