@@ -5,6 +5,7 @@ import Text from '@commercetools-uikit/text';
 import Card from '@commercetools-uikit/card';
 import PrimaryButton from '@commercetools-uikit/primary-button';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const componentLibrary: Record<string, React.FC<any>> = {
   Page,
   ...Object.keys(Text).reduce(

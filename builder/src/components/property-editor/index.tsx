@@ -6,7 +6,11 @@ interface PropertyEditorProps {
   onUpdateComponent: (updatedComponent: ComponentConfig) => void;
 }
 
-const PropertyEditor: React.FC<PropertyEditorProps> = ({ component, onUpdateComponent }) => {
+const PropertyEditor: React.FC<PropertyEditorProps> = ({
+  component,
+  onUpdateComponent,
+}) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handlePropertyChange = (key: string, value: any) => {
     const updatedProps = { ...component.props, [key]: value };
     onUpdateComponent({ ...component, props: updatedProps });

@@ -1,14 +1,23 @@
 // Types for our component configurations
+
+type ComponentLayout =  {
+  gridColumn: number;
+  gridRow: number;
+  gridWidth: number;
+  gridHeight: number;
+};
 type AtomComponentConfig = {
   type: string;
   id: string;
   props: Record<string, any>;
+  layout: ComponentLayout;
 };
 
 type MoleculeComponentConfig = {
   type: string;
   id: string;
   props: Record<string, any>;
+  layout: ComponentLayout;
   children: (AtomComponentConfig | MoleculeComponentConfig)[];
 };
 

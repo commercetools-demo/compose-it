@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import ComponentPalette from '../component-palette';
 import PropertyEditor from '../property-editor';
 import { ComponentConfig, PageConfig } from '../library/general';
@@ -19,6 +19,11 @@ const PageBuilder: React.FC<PageBuilderProps> = ({ page, onUpdatePage }) => {
     direction: string;
   } | null>(null);
   const [dragging, setDragging] = useState<string | null>(null);
+  const [gridDimensions, setGridDimensions] = useState({
+    columns: page.layout.columns,
+    rows: 10,
+  });
+
   const gridRef = useRef<HTMLDivElement>(null);
 
   const handleDrop = (
@@ -31,11 +36,13 @@ const PageBuilder: React.FC<PageBuilderProps> = ({ page, onUpdatePage }) => {
     const newComponent: ComponentConfig = {
       type: componentType,
       id: Date.now().toString(),
-      props: {
+      layout: {
         gridColumn: column,
         gridRow: row,
         gridWidth: 1,
         gridHeight: 1,
+      },
+      props: {
         ...getComponentProps(componentType),
       },
     };
@@ -86,10 +93,10 @@ const PageBuilder: React.FC<PageBuilderProps> = ({ page, onUpdatePage }) => {
     const cellWidth = gridRect.width / page.layout.columns;
     const cellHeight = cellWidth; // Assuming square cells
 
-    let newWidth = component.props.gridWidth;
-    let newHeight = component.props.gridHeight;
-    let newColumn = component.props.gridColumn;
-    let newRow = component.props.gridRow;
+    let newWidth = component.layout.gridWidth;
+    let newHeight = component.layout.gridHeight;
+    let newColumn = component.layout.gridColumn;
+    let newRow = component.layout.gridRow;
 
     switch (resizing.direction) {
       case 'right':
@@ -109,24 +116,24 @@ const PageBuilder: React.FC<PageBuilderProps> = ({ page, onUpdatePage }) => {
       case 'left':
         const newLeft = Math.round((e.clientX - gridRect.left) / cellWidth) + 1;
         newWidth =
-          component.props.gridColumn + component.props.gridWidth - newLeft;
+          component.layout.gridColumn + component.layout.gridWidth - newLeft;
         if (newWidth > 0) {
-          component.props.gridColumn = newLeft;
+          component.layout.gridColumn = newLeft;
         }
         break;
       case 'top':
         const newTop = Math.round((e.clientY - gridRect.top) / cellHeight) + 1;
         newHeight =
-          component.props.gridRow + component.props.gridHeight - newTop;
+          component.layout.gridRow + component.layout.gridHeight - newTop;
         if (newHeight > 0) {
-          component.props.gridRow = newTop;
+          component.layout.gridRow = newTop;
         }
         break;
     }
     const updatedComponent = {
       ...component,
-      props: {
-        ...component.props,
+      layout: {
+        ...component.layout,
         gridWidth: Math.max(1, newWidth),
         gridHeight: Math.max(1, newHeight),
       },
@@ -140,8 +147,8 @@ const PageBuilder: React.FC<PageBuilderProps> = ({ page, onUpdatePage }) => {
 
   const renderComponent = (component: ComponentConfig) => {
     const style = {
-      gridColumn: `${component.props.gridColumn} / span ${component.props.gridWidth}`,
-      gridRow: `${component.props.gridRow} / span ${component.props.gridHeight}`,
+      gridColumn: `${component.layout.gridColumn} / span ${component.layout.gridWidth}`,
+      gridRow: `${component.layout.gridRow} / span ${component.layout.gridHeight}`,
       border: '1px solid #ccc',
       padding: '8px',
       backgroundColor:
@@ -218,7 +225,7 @@ const PageBuilder: React.FC<PageBuilderProps> = ({ page, onUpdatePage }) => {
       // Moving an existing component
       const updatedComponents = page.components.map((c) =>
         c.id === componentId
-          ? { ...c, props: { ...c.props, gridColumn: column, gridRow: row } }
+          ? { ...c, layout: { ...c.layout, gridColumn: column, gridRow: row } }
           : c
       );
       onUpdatePage({ ...page, components: updatedComponents });
@@ -228,6 +235,37 @@ const PageBuilder: React.FC<PageBuilderProps> = ({ page, onUpdatePage }) => {
     }
   };
 
+  const updateGridDimensions = () => {
+    let maxColumn = page.layout.columns;
+    let maxRow = 10; // Starting with a minimum of 10 rows
+
+    page.components.forEach((component) => {
+      const rightEdge =
+        component.layout.gridColumn + component.layout.gridWidth - 1;
+      const bottomEdge =
+        component.layout.gridRow + component.layout.gridHeight - 1;
+
+      maxColumn = Math.max(maxColumn, rightEdge);
+      maxRow = Math.max(maxRow, bottomEdge);
+    });
+
+    setGridDimensions({ columns: maxColumn, rows: maxRow });
+  };
+
+  const availableCells = useMemo(
+    () =>
+      gridDimensions.columns * gridDimensions.rows -
+      page.components.reduce(
+        (acc, c) => acc + c.layout.gridWidth * c.layout.gridHeight,
+        0
+      ),
+    [gridDimensions]
+  );
+
+  useEffect(() => {
+    updateGridDimensions();
+  }, [page.components]);
+
   return (
     <div className="page-builder">
       <ComponentPalette />
@@ -236,17 +274,19 @@ const PageBuilder: React.FC<PageBuilderProps> = ({ page, onUpdatePage }) => {
         ref={gridRef}
         style={{
           display: 'grid',
-          gridTemplateColumns: `repeat(${page.layout.columns}, 1fr)`,
+          gridTemplateColumns: `repeat(${gridDimensions.columns}, 1fr)`,
+          gridTemplateRows: `repeat(${gridDimensions.rows}, 1fr)`,
           gap: '4px',
           position: 'relative',
+          minHeight: `${gridDimensions.rows * 50}px`, // Assuming each cell is at
         }}
         onMouseMove={handleResize}
         onMouseUp={stopResize}
         onMouseLeave={stopResize}
       >
-        {Array.from({ length: page.layout.columns * 10 }).map((_, index) => {
-          const column = (index % page.layout.columns) + 1;
-          const row = Math.floor(index / page.layout.columns) + 1;
+        {Array.from({ length: availableCells }).map((_, index) => {
+          const column = (index % gridDimensions.columns) + 1;
+          const row = Math.floor(index / gridDimensions.columns) + 1;
           return (
             <div
               key={index}

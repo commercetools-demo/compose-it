@@ -9,8 +9,8 @@ const Grid = styled.div`
 `;
 
 const GridItem = styled.div<GridPosition>`
-  grid-column: ${props => props.column} / span ${props => props.width};
-  grid-row: ${props => props.row} / span ${props => props.height};
+  grid-column: ${(props) => props.column} / span ${(props) => props.width};
+  grid-row: ${(props) => props.row} / span ${(props) => props.height};
 `;
 
 interface PageProps {

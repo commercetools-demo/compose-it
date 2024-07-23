@@ -8,7 +8,12 @@ interface PageListProps {
   currentPageId: string | null;
 }
 
-const PageList: React.FC<PageListProps> = ({ pages, onAddPage, onSelectPage, currentPageId }) => {
+const PageList: React.FC<PageListProps> = ({
+  pages,
+  onAddPage,
+  onSelectPage,
+  currentPageId,
+}) => {
   const [newPageName, setNewPageName] = useState('');
 
   const handleAddPage = () => {
@@ -28,9 +33,9 @@ const PageList: React.FC<PageListProps> = ({ pages, onAddPage, onSelectPage, cur
     <div className="page-list">
       <h2>Pages</h2>
       <ul>
-        {pages.map(page => (
-          <li 
-            key={page.id} 
+        {pages.map((page) => (
+          <li
+            key={page.id}
             onClick={() => onSelectPage(page.id)}
             className={page.id === currentPageId ? 'active' : ''}
           >

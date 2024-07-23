@@ -10,7 +10,7 @@ export const App: React.FC = () => {
   const [currentPageId, setCurrentPageId] = useState<string | null>(null);
 
   const addPage = (page: PageConfig) => {
-    setAppConfig(prev => ({
+    setAppConfig((prev) => ({
       ...prev,
       pages: [...prev.pages, page],
     }));
@@ -18,13 +18,13 @@ export const App: React.FC = () => {
   };
 
   const updatePage = (updatedPage: PageConfig) => {
-    setAppConfig(prev => ({
+    setAppConfig((prev) => ({
       ...prev,
-      pages: prev.pages.map(p => p.id === updatedPage.id ? updatedPage : p),
+      pages: prev.pages.map((p) => (p.id === updatedPage.id ? updatedPage : p)),
     }));
   };
 
-  const currentPage = appConfig.pages.find(p => p.id === currentPageId);
+  const currentPage = appConfig.pages.find((p) => p.id === currentPageId);
 
   return (
     <div className="compose-it-builder">
@@ -37,10 +37,7 @@ export const App: React.FC = () => {
           currentPageId={currentPageId}
         />
         {currentPage && (
-          <PageBuilder
-            page={currentPage}
-            onUpdatePage={updatePage}
-          />
+          <PageBuilder page={currentPage} onUpdatePage={updatePage} />
         )}
       </div>
     </div>
