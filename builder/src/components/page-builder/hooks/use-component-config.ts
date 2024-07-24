@@ -22,6 +22,9 @@ export const useComponentConfig = () => {
     targetId: string,
     newComponent: ComponentConfig
   ): ComponentConfig[] => {
+    if (!Array.isArray(components)) {
+      return components;
+    }
     return components.map((component) => {
       if (component.id === targetId) {
         return {
@@ -53,6 +56,9 @@ export const useComponentConfig = () => {
     components: ComponentConfig[],
     updatedComponent: ComponentConfig
   ) => {
+    if (!Array.isArray(components)) {
+      return components;
+    }
     const updatedComponents = components.map((c) => {
       if (c.id === updatedComponent.id) {
         return { ...updatedComponent };
@@ -72,6 +78,9 @@ export const useComponentConfig = () => {
     components: ComponentConfig[],
     id?: string
   ): ComponentConfig | undefined => {
+    if (!Array.isArray(components)) {
+      return undefined;
+    }
     const updatedComponents = components.find((c) => {
       if (c.id === id) {
         return true;

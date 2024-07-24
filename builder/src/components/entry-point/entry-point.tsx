@@ -5,6 +5,7 @@ import {
 } from '@commercetools-frontend/application-shell';
 import type { ApplicationWindow } from '@commercetools-frontend/constants';
 import loadMessages from '../../load-messages';
+import BuilderStateProvider from '../../providers/process';
 
 declare let window: ApplicationWindow;
 
@@ -25,7 +26,9 @@ const EntryPoint = () => (
     environment={window.app}
     applicationMessages={loadMessages}
   >
-    <AsyncApplicationRoutes />
+    <BuilderStateProvider>
+      <AsyncApplicationRoutes />
+    </BuilderStateProvider>
   </ApplicationShell>
 );
 EntryPoint.displayName = 'EntryPoint';
