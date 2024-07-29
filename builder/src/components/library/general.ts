@@ -1,6 +1,8 @@
 // Types for our component configurations
 
-type PropsBindingState = {
+import { Datasource } from '../../types/datasource';
+
+export type PropsBindingState = {
   type: 'datasource' | 'property';
   value: string;
 };
@@ -38,16 +40,6 @@ export type GridPosition = {
   row: number;
   width: number;
   height: number;
-};
-
-export type Datasource = {
-  id: string;
-  name: string;
-  query: string;
-  variables: Record<string, string>;
-  config: {
-    variableBindings: Record<string, PropsBindingState>;
-  };
 };
 
 export type PageConfig = {

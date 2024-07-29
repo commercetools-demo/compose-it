@@ -5,11 +5,18 @@ import { ComponentConfig, PageConfig } from '../library/general';
 import GridLayout from './grid-layout';
 import { useGridDimensions } from './hooks/use-grid-dimensions';
 import { useComponentConfig } from './hooks/use-component-config';
+import styled from 'styled-components';
+import Datasources from '../datasource';
 
 interface PageBuilderProps {
   page: PageConfig;
   onUpdatePage: (updatedPage: PageConfig) => void;
 }
+
+const FlexDiv = styled.div`
+  display: flex;
+  flex-direction: row;
+`;
 
 const PageBuilder: React.FC<PageBuilderProps> = ({ page, onUpdatePage }) => {
   const [selectedComponent, setSelectedComponent] = useState<ComponentConfig>();
@@ -46,7 +53,10 @@ const PageBuilder: React.FC<PageBuilderProps> = ({ page, onUpdatePage }) => {
 
   return (
     <div className="page-builder">
-      <ComponentPalette />
+      <FlexDiv>
+        <ComponentPalette />
+        <Datasources />
+      </FlexDiv>
       <GridLayout
         page={page}
         gridDimensions={gridDimensions}

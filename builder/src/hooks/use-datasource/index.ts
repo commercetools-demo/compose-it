@@ -1,4 +1,3 @@
-import { App, AppDraft } from '../../types/app';
 import {
   useAsyncDispatch,
   actions,
@@ -8,22 +7,26 @@ import { MC_API_PROXY_TARGETS } from '@commercetools-frontend/constants';
 import { useApplicationContext } from '@commercetools-frontend/application-shell-connectors';
 import { APP_NAME } from '../../constants';
 import uniqueId from 'lodash/uniqueId';
-import { AppConfig } from '../../components/library/general';
 import { PagedQueryResponse } from '../../types/general';
+import {
+  Datasource,
+  DatasourceDraft,
+  DatasourceResponse,
+} from '../../types/datasource';
 import { buildUrlWithParams } from '../../utils/utils';
 
-const CONTAINER = `${APP_NAME}_apps`;
-const APPS_KEY_PREFIX = 'app-';
+const CONTAINER = `${APP_NAME}_datasources`;
+const DATASOURCES_KEY_PREFIX = 'datasource-';
 
-export const useApps = () => {
+export const useDatasource = () => {
   const context = useApplicationContext((context) => context);
   const dispatchAppsRead = useAsyncDispatch<
     TSdkAction,
-    PagedQueryResponse<App>
+    PagedQueryResponse<DatasourceResponse>
   >();
-  const dispatchAppsAction = useAsyncDispatch<TSdkAction, App>();
+  const dispatchAppsAction = useAsyncDispatch<TSdkAction, DatasourceResponse>();
 
-  const fetchAllApps = async (limit: number = 20, page: number = 1) => {
+  const fetchAllDatasources = async (limit: number = 20, page: number = 1) => {
     const offset = (page - 1) * limit;
 
     const result = await dispatchAppsRead(
@@ -41,8 +44,10 @@ export const useApps = () => {
     return result;
   };
 
-  const createApp = async (payload: AppDraft): Promise<App> => {
-    const key = uniqueId(APPS_KEY_PREFIX);
+  const createDatasource = async (
+    payload: DatasourceDraft
+  ): Promise<DatasourceResponse> => {
+    const key = uniqueId(DATASOURCES_KEY_PREFIX);
     const result = await dispatchAppsAction(
       actions.post({
         mcApiProxyTarget: MC_API_PROXY_TARGETS.COMMERCETOOLS_PLATFORM,
@@ -53,58 +58,61 @@ export const useApps = () => {
           value: {
             ...payload,
             key,
-          } as AppDraft,
+          } as DatasourceDraft,
         },
       })
     );
     return result;
   };
 
-  const deleteApp = async (appKey: string): Promise<App> => {
-    if (!appKey) {
-      return {} as App;
+  const deleteDatasource = async (
+    datasourceKey: string
+  ): Promise<DatasourceResponse> => {
+    if (!datasourceKey) {
+      return {} as DatasourceResponse;
     }
     const result = await dispatchAppsAction(
       actions.del({
         mcApiProxyTarget: MC_API_PROXY_TARGETS.COMMERCETOOLS_PLATFORM,
-        uri: `/${context?.project?.key}/custom-objects/${CONTAINER}/${appKey}`,
+        uri: `/${context?.project?.key}/custom-objects/${CONTAINER}/${datasourceKey}`,
       })
     );
     return result;
   };
 
-  const getApp = async (appKey: string): Promise<App> => {
-    if (!appKey) {
-      return {} as App;
+  const getDatasource = async (
+    datasourceKey: string
+  ): Promise<DatasourceResponse> => {
+    if (!datasourceKey) {
+      return {} as DatasourceResponse;
     }
     const result = await dispatchAppsAction(
       actions.get({
         mcApiProxyTarget: MC_API_PROXY_TARGETS.COMMERCETOOLS_PLATFORM,
-        uri: `/${context?.project?.key}/custom-objects/${CONTAINER}/${appKey}`,
+        uri: `/${context?.project?.key}/custom-objects/${CONTAINER}/${datasourceKey}`,
       })
     );
     return result;
   };
 
-  const updateAppConfig = async (
-    appKey: string,
-    config?: AppConfig
-  ): Promise<App> => {
-    if (!appKey || !config) {
-      return {} as App;
+  const updateDatasource = async (
+    datasourceKey: string,
+    datasource?: Datasource
+  ): Promise<DatasourceResponse> => {
+    if (!datasourceKey || !datasource) {
+      return {} as DatasourceResponse;
     }
-    const result = await getApp(appKey).then((process) => {
+    const result = await getDatasource(datasourceKey).then((process) => {
       return dispatchAppsAction(
         actions.post({
           mcApiProxyTarget: MC_API_PROXY_TARGETS.COMMERCETOOLS_PLATFORM,
           uri: `/${context?.project?.key}/custom-objects`,
           payload: {
             container: CONTAINER,
-            key: appKey,
+            key: datasourceKey,
             value: {
-              ...process.value,
-              appConfig: config,
-            } as AppDraft,
+              ...datasource,
+            } as DatasourceDraft,
           },
         })
       );
@@ -113,10 +121,10 @@ export const useApps = () => {
   };
 
   return {
-    fetchAllApps,
-    getApp,
-    updateAppConfig,
-    deleteApp,
-    createApp,
+    fetchAllDatasources,
+    getDatasource,
+    updateDatasource,
+    deleteDatasource,
+    createDatasource,
   };
 };
