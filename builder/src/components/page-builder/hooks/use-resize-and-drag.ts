@@ -14,6 +14,11 @@ export const useResizeAndDrag = (
     direction: string;
   } | null>(null);
 
+  const [dragPosition, setDragPosition] = useState<{
+    column: number;
+    row: number;
+  } | null>(null);
+
   const { removeComponentById, addComponentToTarget } = useComponentConfig();
 
   const handleResize = (e: React.MouseEvent) => {
@@ -117,6 +122,8 @@ export const useResizeAndDrag = (
     column: number,
     row: number
   ) => {
+    console.log('handleDrop', targetId, column, row);
+
     e.preventDefault();
     const componentType = e.dataTransfer.getData('componentType');
     const sourceComponentId = e.dataTransfer.getData('componentId');
@@ -163,12 +170,17 @@ export const useResizeAndDrag = (
 
     onUpdatePage({ ...page, components: updatedComponents });
   };
+  const handleDragLeave = () => {
+    setDragPosition(null);
+  };
 
   const handleCellDrop = (
     e: React.DragEvent<HTMLDivElement>,
     column: number,
     row: number
   ) => {
+    console.log('handleCellDrop', column, row);
+
     e.preventDefault();
     const componentId = e.dataTransfer.getData('componentId');
     const componentType = e.dataTransfer.getData('componentType');
@@ -185,6 +197,18 @@ export const useResizeAndDrag = (
       // Adding a new component
       handleDrop(e, null, column, row);
     }
+    handleDragLeave();
+  };
+
+  const handleDragOver = (
+    e: React.DragEvent<HTMLDivElement>,
+    column: number,
+    row: number
+  ) => {
+    e.preventDefault();
+    console.log('handleDragOver', column, row);
+
+    setDragPosition({ column, row });
   };
 
   return {
@@ -194,5 +218,8 @@ export const useResizeAndDrag = (
     startDrag,
     handleCellDrop,
     handleDrop,
+    handleDragOver,
+    handleDragLeave,
+    dragPosition,
   };
 };

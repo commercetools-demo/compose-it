@@ -46,6 +46,7 @@ const PropertyEditor: React.FC<PropertyEditorProps> = ({
   return (
     <div className="property-editor">
       <h3>Properties: {component.type}</h3>
+      {component.layout.gridWidth} x {component.layout.gridHeight}
       {Object.entries(component.props).map(([key]) => (
         <div key={key}>
           <label>{key}:</label>

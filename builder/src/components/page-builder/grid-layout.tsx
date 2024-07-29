@@ -1,7 +1,8 @@
-import React, { useRef } from 'react';
+import React, { useMemo, useRef } from 'react';
 import { ComponentConfig, PageConfig } from '../library/general';
 import ComponentRenderer from './component-renderer';
 import { useResizeAndDrag } from './hooks/use-resize-and-drag';
+import { useGridDimensions } from './hooks/use-grid-dimensions';
 
 interface GridLayoutProps {
   page: PageConfig;
@@ -35,14 +36,52 @@ const GridLayout: React.FC<GridLayoutProps> = ({
     startResize,
     stopResize,
     startDrag,
+    handleDragLeave,
+    handleDragOver,
+    dragPosition,
   } = useResizeAndDrag(page, onUpdatePage, gridRef);
+  const { gridOccupancy } = useGridDimensions(page);
 
-  const availableCells =
-    gridDimensions.columns * gridDimensions.rows -
-    page.components.reduce(
-      (acc, c) => acc + c.layout.gridWidth * c.layout.gridHeight,
-      0
-    );
+  const availableCells = useMemo(
+    () =>
+      gridDimensions.columns * gridDimensions.rows -
+      page.components.reduce(
+        (acc, c) => acc + c.layout.gridWidth * c.layout.gridHeight,
+        0
+      ),
+    [gridDimensions]
+  );
+
+  const renderEmptyCells = () => {
+    const cells = [];
+    for (let row = 0; row < gridDimensions.rows; row++) {
+      for (let col = 0; col < gridDimensions.columns; col++) {
+        if (!gridOccupancy[row][col]) {
+          const isHighlighted =
+            dragPosition?.column === col + 1 && dragPosition?.row === row + 1;
+          cells.push(
+            <div
+              key={`empty-${row}-${col}`}
+              className={`grid-cell ${isHighlighted ? 'highlighted' : ''}`}
+              style={{
+                gridColumn: col + 1,
+                gridRow: row + 1,
+                border: '1px dashed #ccc',
+                minHeight: '50px',
+                backgroundColor: isHighlighted
+                  ? 'rgba(0, 123, 255, 0.2)'
+                  : 'transparent',
+              }}
+              onDragOver={(e) => handleDragOver(e, col + 1, row + 1)}
+              onDragLeave={handleDragLeave}
+              onDrop={(e) => handleCellDrop(e, col + 1, row + 1)}
+            />
+          );
+        }
+      }
+    }
+    return cells;
+  };
 
   return (
     <div
@@ -60,22 +99,7 @@ const GridLayout: React.FC<GridLayoutProps> = ({
       onMouseUp={stopResize}
       onMouseLeave={stopResize}
     >
-      {Array.from({ length: availableCells }).map((_, index) => {
-        const column = (index % gridDimensions.columns) + 1;
-        const row = Math.floor(index / gridDimensions.columns) + 1;
-        return (
-          <div
-            key={index}
-            className="grid-cell"
-            style={{
-              border: '1px dashed #ccc',
-              minHeight: '50px',
-            }}
-            onDragOver={(e) => e.preventDefault()}
-            onDrop={(e) => handleCellDrop(e, column, row)}
-          />
-        );
-      })}
+      {renderEmptyCells()}
       {page.components.map((component) => (
         <ComponentRenderer
           key={component.id}
