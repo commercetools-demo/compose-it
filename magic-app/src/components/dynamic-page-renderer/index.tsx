@@ -1,36 +1,15 @@
 import React from 'react';
-import { componentLibrary } from '../library';
 import { DynamicPageRendererProps } from './types';
+import ComponentRenderer from './component-renderer';
 
-
-const DynamicPageRenderer: React.FC<DynamicPageRendererProps> = ({ pageConfig }) => {
-  const renderComponent = (config: ComponentConfig): React.ReactNode => {
-    const Component = componentLibrary[config.type];
-    
-    if (!Component) {
-      console.warn(`Component type "${config.type}" not found in library`);
-      return null;
-    }
-
-    const props = {
-      ...config.props,
-      key: config.id,
-    };
-
-    if ('children' in config) {
-      return (
-        <Component {...props}>
-          {config.children.map(renderComponent)}
-        </Component>
-      );
-    }
-
-    return <Component {...props} />;
-  };
-
+const DynamicPageRenderer: React.FC<DynamicPageRendererProps> = ({
+  pageConfig,
+}) => {
   return (
     <div className="dynamic-page">
-      {pageConfig.components.map(renderComponent)}
+      {pageConfig.components.map((component) => (
+        <ComponentRenderer key={component.id} component={component} />
+      ))}
     </div>
   );
 };

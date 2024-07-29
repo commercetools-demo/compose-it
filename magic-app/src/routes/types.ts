@@ -1,3 +1,1 @@
-export interface DynamicPageRendererProps {
-  appConfig: AppConfig;
-}
+export interface DynamicPageRendererProps {}
