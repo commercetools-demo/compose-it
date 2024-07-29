@@ -335,12 +335,6 @@ const PageBuilder: React.FC<PageBuilderProps> = ({ page, onUpdatePage }) => {
   useEffect(() => {
     updateGridDimensions();
     const cmp = findComponentById(page.components, selectedComponent?.id);
-    console.log('selectedComponent?.id', selectedComponent?.id);
-
-    console.log('page.components', page.components);
-
-    console.log('cmp', cmp);
-
     setSelectedComponent(cmp);
   }, [page.components]);
 

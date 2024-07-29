@@ -1,4 +1,4 @@
-import { AppConfig, PageConfig } from '../components/library/general';
+import { AppConfig } from '../components/library/general';
 
 export interface AppDraft {
   name: string;

@@ -1,5 +1,10 @@
 // Types for our component configurations
 
+type PropsBindingState = {
+  type: 'datasource' | 'property';
+  value: string;
+}
+
 type ComponentLayout = {
   gridColumn: number;
   gridRow: number;
@@ -15,10 +20,7 @@ type AtomComponentConfig = {
   config: {
     propsBindings: Record<
       string,
-      {
-        type: 'datasource' | 'property';
-        value: string;
-      }
+      PropsBindingState
     >;
   };
 };
@@ -41,6 +43,19 @@ export type GridPosition = {
   height: number;
 };
 
+export type Datasource = {
+  id: string;
+  name: string;
+  query: string;
+  variables: Record<string, string>;
+  config: {
+    variableBindings: Record<
+      string,
+      PropsBindingState
+    >;
+  };
+}
+
 export type PageConfig = {
   id: string;
   route: string;
@@ -49,6 +64,7 @@ export type PageConfig = {
     columns: number;
   };
   components: ComponentConfig[];
+  datasources: Datasource[];
 };
 
 export type AppConfig = {
