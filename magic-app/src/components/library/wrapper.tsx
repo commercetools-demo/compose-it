@@ -31,16 +31,23 @@ const ComponentWrapper = ({
       }
     });
   }
-  console.log(children);
-  console.log(component.props?.children);
 
-  return component.props?.children &&
-    !Array.isArray(component.props?.children) ? (
-    <Component {...component.props}>{component.props?.children}</Component>
-  ) : children ? (
-    <Component {...component.props}>{children}</Component>
-  ) : (
-    <Component {...component.props} />
+  const style = {
+    gridColumn: `${component.layout.gridColumn} / span ${component.layout.gridWidth}`,
+    gridRow: `${component.layout.gridRow} / span ${component.layout.gridHeight}`,
+  };
+
+  return (
+    <div style={style}>
+      {component.props?.children &&
+      !Array.isArray(component.props?.children) ? (
+        <Component {...component.props}>{component.props?.children}</Component>
+      ) : children ? (
+        <Component {...component.props}>{children}</Component>
+      ) : (
+        <Component {...component.props} />
+      )}
+    </div>
   );
 };
 
