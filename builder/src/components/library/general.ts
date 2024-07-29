@@ -3,7 +3,7 @@
 type PropsBindingState = {
   type: 'datasource' | 'property';
   value: string;
-}
+};
 
 type ComponentLayout = {
   gridColumn: number;
@@ -18,10 +18,7 @@ type AtomComponentConfig = {
   props: Record<string, any>;
   layout: ComponentLayout;
   config: {
-    propsBindings: Record<
-      string,
-      PropsBindingState
-    >;
+    propsBindings: Record<string, PropsBindingState>;
   };
 };
 
@@ -49,12 +46,9 @@ export type Datasource = {
   query: string;
   variables: Record<string, string>;
   config: {
-    variableBindings: Record<
-      string,
-      PropsBindingState
-    >;
+    variableBindings: Record<string, PropsBindingState>;
   };
-}
+};
 
 export type PageConfig = {
   id: string;
