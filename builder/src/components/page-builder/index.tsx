@@ -41,6 +41,17 @@ const PageBuilder: React.FC<PageBuilderProps> = ({ page, onUpdatePage }) => {
     onUpdatePage({ ...page, components: updatedComponents });
   };
 
+  const handleComponentDelete = (component: ComponentConfig) => {
+    if (!component?.id) return;
+
+    const updatedComponents = removeComponentById(
+      page.components,
+      component.id
+    );
+
+    onUpdatePage({ ...page, components: updatedComponents });
+  };
+
   const handleDrop = (
     e: React.DragEvent<HTMLDivElement>,
     targetId: string | null,
@@ -232,6 +243,9 @@ const PageBuilder: React.FC<PageBuilderProps> = ({ page, onUpdatePage }) => {
   const renderComponent = (component: ComponentConfig) => {
     if (!component) return null;
     if (typeof component === 'string') return component;
+    // TODO: fix {0: 'h'}
+    // console.log(component);
+
     const style = {
       gridColumn: `${component.layout.gridColumn} / span ${component.layout.gridWidth}`,
       gridRow: `${component.layout.gridRow} / span ${component.layout.gridHeight}`,
@@ -320,9 +334,14 @@ const PageBuilder: React.FC<PageBuilderProps> = ({ page, onUpdatePage }) => {
 
   useEffect(() => {
     updateGridDimensions();
-    setSelectedComponent(
-      findComponentById(page.components, selectedComponent?.id)
-    );
+    const cmp = findComponentById(page.components, selectedComponent?.id);
+    console.log('selectedComponent?.id', selectedComponent?.id);
+
+    console.log('page.components', page.components);
+
+    console.log('cmp', cmp);
+
+    setSelectedComponent(cmp);
   }, [page.components]);
 
   return (
@@ -365,6 +384,7 @@ const PageBuilder: React.FC<PageBuilderProps> = ({ page, onUpdatePage }) => {
         <PropertyEditor
           component={selectedComponent}
           onUpdateComponent={handleComponentUpdate}
+          onDeleteComponent={handleComponentDelete}
         />
       )}
     </div>

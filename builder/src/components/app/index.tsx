@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import PageList from '../page-list';
 import PageBuilder from '../page-builder';
 import { AppConfig, PageConfig } from '../library/general';
@@ -45,8 +45,20 @@ export const App: React.FC = () => {
     fetchApp();
   }, [params]);
 
+  // Implement the code for the TODO comment
+  const debounceUpdateAppConfig = useCallback(
+    (newConfig?: AppConfig) => {
+      updateAppConfig(params.key, newConfig);
+    },
+    [params.key]
+  );
+
   useEffect(() => {
-    updateAppConfig(params.key, appConfig);
+    const timer = setTimeout(() => {
+      debounceUpdateAppConfig(appConfig);
+    }, 500);
+
+    return () => clearTimeout(timer);
   }, [appConfig]);
 
   return (

@@ -4,11 +4,13 @@ import { ComponentConfig } from '../library/general';
 interface PropertyEditorProps {
   component: ComponentConfig;
   onUpdateComponent: (updatedComponent: ComponentConfig) => void;
+  onDeleteComponent: (component: ComponentConfig) => void;
 }
 
 const PropertyEditor: React.FC<PropertyEditorProps> = ({
   component,
   onUpdateComponent,
+  onDeleteComponent,
 }) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handlePropertyChange = (key: string, value: any) => {
@@ -68,6 +70,9 @@ const PropertyEditor: React.FC<PropertyEditorProps> = ({
           />
         </div>
       ))}
+      <button onClick={() => onDeleteComponent(component)} type="button">
+        DELETE
+      </button>
     </div>
   );
 };

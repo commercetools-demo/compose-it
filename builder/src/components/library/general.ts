@@ -24,7 +24,11 @@ type AtomComponentConfig = {
 };
 
 type MoleculeComponentConfig = AtomComponentConfig & {
-  children: (AtomComponentConfig | MoleculeComponentConfig)[];
+  props: {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    [key: string]: any;
+    children: (AtomComponentConfig | MoleculeComponentConfig)[];
+  };
 };
 
 export type ComponentConfig = AtomComponentConfig | MoleculeComponentConfig;

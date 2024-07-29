@@ -7,7 +7,10 @@ export const useComponentConfig = () => {
   ): ComponentConfig[] => {
     return components.filter((component) => {
       if (component.id === id) return false;
-      if (component.props.children) {
+      if (
+        component.props?.children &&
+        Array.isArray(component.props.children)
+      ) {
         component.props.children = removeComponentById(
           component.props.children,
           id
@@ -30,12 +33,15 @@ export const useComponentConfig = () => {
         return {
           ...component,
           props: {
-            ...component.props,
+            ...(component.props || {}),
             children: [...(component.props.children || []), newComponent],
           },
         };
       }
-      if (component.props.children) {
+      if (
+        component.props?.children &&
+        Array.isArray(component.props.children)
+      ) {
         return {
           ...component,
           props: {
@@ -63,7 +69,7 @@ export const useComponentConfig = () => {
       if (c.id === updatedComponent.id) {
         return { ...updatedComponent };
       }
-      if (c.props.children) {
+      if (c.props?.children && Array.isArray(c.props.children)) {
         c.props.children = updateComponentInComponents(
           c.props.children,
           updatedComponent
@@ -78,18 +84,29 @@ export const useComponentConfig = () => {
     components: ComponentConfig[],
     id?: string
   ): ComponentConfig | undefined => {
-    if (!Array.isArray(components)) {
+    if (!id || !Array.isArray(components)) {
       return undefined;
     }
-    const updatedComponents = components.find((c) => {
-      if (c.id === id) {
-        return true;
+
+    for (const component of components) {
+      if (component.id === id) {
+        return component;
       }
-      if (c.props.children) {
-        return findComponentById(c.props.children, id);
+
+      // Check if the component is a MoleculeComponentConfig
+      if (
+        'props' in component &&
+        'children' in component.props &&
+        Array.isArray(component.props.children)
+      ) {
+        const foundInChildren = findComponentById(component.props.children, id);
+        if (foundInChildren) {
+          return foundInChildren;
+        }
       }
-    });
-    return updatedComponents;
+    }
+
+    return undefined;
   };
 
   return {
