@@ -13,7 +13,7 @@ const Divider = styled.div`
   background-color: #f0f0f0;
   margin-top: 32px;
   margin-bottom: 32px;
-`
+`;
 
 const Home = () => {
   return (

@@ -4,9 +4,11 @@ import PageBuilder from '../page-builder';
 import { AppConfig, PageConfig } from '../library/general';
 import { useRouteMatch } from 'react-router';
 import { useApps } from '../../hooks/use-app';
-
+import { useHistory } from 'react-router-dom';
+import { InfoDetailPage } from '@commercetools-frontend/application-components';
 export const App: React.FC = () => {
   const { params }: { params: { key: string } } = useRouteMatch();
+  const history = useHistory();
 
   const { getApp, updateAppConfig } = useApps();
   const [appConfig, setAppConfig] = useState<AppConfig>();
@@ -62,8 +64,10 @@ export const App: React.FC = () => {
   }, [appConfig]);
 
   return (
-    <div className="compose-it-builder">
-      <h1>ComposeIt Builder</h1>
+    <InfoDetailPage
+      title={`App: ${params.key}`}
+      onPreviousPathClick={() => history.push('/')}
+    >
       {appConfig && (
         <div className="builder-layout">
           <PageList
@@ -77,6 +81,6 @@ export const App: React.FC = () => {
           )}
         </div>
       )}
-    </div>
+    </InfoDetailPage>
   );
 };

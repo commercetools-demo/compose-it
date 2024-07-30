@@ -55,7 +55,6 @@ const PageBuilder: React.FC<PageBuilderProps> = ({ page, onUpdatePage }) => {
     <div className="page-builder">
       <FlexDiv>
         <ComponentPalette />
-        <Datasources />
       </FlexDiv>
       <GridLayout
         page={page}
