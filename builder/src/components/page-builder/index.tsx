@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import ComponentPalette from '../component-palette';
-import PropertyEditor from '../property-editor';
 import { ComponentConfig, PageConfig } from '../library/general';
 import GridLayout from './grid-layout';
 import { useGridDimensions } from './hooks/use-grid-dimensions';
 import { useComponentConfig } from './hooks/use-component-config';
 import styled from 'styled-components';
+import TabbedSidebar from './tabbed-sidebar';
 
 interface PageBuilderProps {
   page: PageConfig;
@@ -15,6 +14,10 @@ interface PageBuilderProps {
 const FlexDiv = styled.div`
   display: flex;
   flex-direction: row;
+`;
+const StyledDiv = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 300px;
 `;
 
 const PageBuilder: React.FC<PageBuilderProps> = ({ page, onUpdatePage }) => {
@@ -52,25 +55,22 @@ const PageBuilder: React.FC<PageBuilderProps> = ({ page, onUpdatePage }) => {
 
   return (
     <div className="page-builder">
-      <FlexDiv>
-        <ComponentPalette />
-      </FlexDiv>
-      <GridLayout
-        page={page}
-        gridDimensions={gridDimensions}
-        onUpdatePage={onUpdatePage}
-        selectedComponent={selectedComponent}
-        setSelectedComponent={setSelectedComponent}
-        addComponentToTarget={addComponentToTarget}
-        removeComponentById={removeComponentById}
-      />
-      {!!selectedComponent && (
-        <PropertyEditor
+      <StyledDiv>
+        <GridLayout
+          page={page}
+          gridDimensions={gridDimensions}
+          onUpdatePage={onUpdatePage}
+          selectedComponent={selectedComponent}
+          setSelectedComponent={setSelectedComponent}
+          addComponentToTarget={addComponentToTarget}
+          removeComponentById={removeComponentById}
+        />
+        <TabbedSidebar
           component={selectedComponent}
           onUpdateComponent={handleComponentUpdate}
           onDeleteComponent={handleComponentDelete}
         />
-      )}
+      </StyledDiv>
     </div>
   );
 };
