@@ -2,6 +2,7 @@ import { ComponentConfig } from './general';
 import { componentLibrary } from '.';
 import { get } from 'lodash';
 import { useAppConfig } from '../../providers/app-config';
+import { usePageWrapper } from '../../providers/page-wrapper';
 
 const ComponentWrapper = ({
   component,
@@ -12,7 +13,7 @@ const ComponentWrapper = ({
 }) => {
   const Component = componentLibrary[component.type];
 
-  const { datasources } = useAppConfig();
+  const { datasources } = usePageWrapper();
 
   if (component.config?.propsBindings) {
     Object.keys(component.config.propsBindings).forEach((key) => {

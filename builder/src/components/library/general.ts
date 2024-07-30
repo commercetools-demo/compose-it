@@ -1,6 +1,6 @@
 // Types for our component configurations
 
-import { DatasourceRef, DatasourceSample } from '../../types/datasource';
+import { DatasourceRef } from '../../types/datasource';
 
 export type PropsBindingState = {
   type: 'datasource' | 'property';

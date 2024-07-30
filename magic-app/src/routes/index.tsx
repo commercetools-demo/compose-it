@@ -5,6 +5,7 @@ import { DynamicPageRendererProps } from './types';
 import DynamicPageRenderer from '../components/dynamic-page-renderer';
 import { useApps } from '../hooks/use-app';
 import { App } from '../types/app';
+import PageWrapperProvider from '../providers/page-wrapper';
 
 type ApplicationRoutesProps = {
   children?: ReactNode;
@@ -41,10 +42,12 @@ const ApplicationRoutes = () => {
       <Switch>
         {appConfig.value?.appConfig?.pages.map((pageConfig) => (
           <Route key={pageConfig.id} path={pageConfig.route}>
-            <DynamicPageRenderer
-              pageConfig={pageConfig}
-              parentUrl={match.url}
-            />
+            <PageWrapperProvider pageConfig={pageConfig}>
+              <DynamicPageRenderer
+                pageConfig={pageConfig}
+                parentUrl={match.url}
+              />
+            </PageWrapperProvider>
           </Route>
         ))}
         <Route path="*" component={NotFound} />

@@ -23,3 +23,14 @@ export interface DatasourceResponse {
   key: string;
   value?: Datasource;
 }
+
+export type DatasourceRef = {
+  key: string;
+  typeId: 'datasource';
+};
+
+export type DatasourceSample = {
+  key: string;
+  typeId: 'datasource';
+  sample: unknown;
+};
