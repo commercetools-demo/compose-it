@@ -1,9 +1,8 @@
-import { Datasource } from '../../types/datasource';
 import { usePropertyDatasource } from './hooks/use-property-datasource';
 import { useBuilderStateContext } from '../../providers/process';
 import { PathSelector } from './path-selector';
-import React, { useEffect, useMemo, useState } from 'react';
-import { ComponentConfig, PropsBindingState } from '../library/general';
+import { useMemo } from 'react';
+import { ComponentConfig } from '../library/general';
 type Props = {
   propertyKey: string;
   component: ComponentConfig;

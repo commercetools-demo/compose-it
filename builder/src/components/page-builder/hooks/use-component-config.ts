@@ -1,3 +1,4 @@
+import { DatasourceRef } from '../../../types/datasource';
 import { ComponentConfig } from '../../library/general';
 
 export const useComponentConfig = () => {
@@ -109,10 +110,50 @@ export const useComponentConfig = () => {
     return undefined;
   };
 
+  const getDatasourceRefs = (
+    components: ComponentConfig[]
+  ): DatasourceRef[] => {
+    const datasourceRefs: DatasourceRef[] = [];
+
+    function extractDatasourceRefs(component: ComponentConfig) {
+      // Check propsBindings for datasource type
+      Object.entries(component.config.propsBindings).forEach(
+        ([key, binding]) => {
+          if (binding.type === 'datasource') {
+            datasourceRefs.push({
+              typeId: 'datasource',
+              key: binding?.value?.split('.')[0],
+            });
+          }
+        }
+      );
+
+      // Recursively check children if they exist
+      if (
+        'children' in component.props &&
+        Array.isArray(component.props.children)
+      ) {
+        component.props.children.forEach((child) => {
+          if (typeof child !== 'string') {
+            extractDatasourceRefs(child);
+          }
+        });
+      }
+    }
+
+    // Process each component in the list
+    components.forEach((component) => extractDatasourceRefs(component));
+
+    return datasourceRefs.filter((value, index, self) => {
+      return self.findIndex((item) => item.key === value.key) === index;
+    });
+  };
+
   return {
     removeComponentById,
     addComponentToTarget,
     findComponentById,
+    getDatasourceRefs,
     updateComponentInComponents,
   };
 };

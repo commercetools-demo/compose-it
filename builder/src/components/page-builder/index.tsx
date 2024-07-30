@@ -6,7 +6,6 @@ import GridLayout from './grid-layout';
 import { useGridDimensions } from './hooks/use-grid-dimensions';
 import { useComponentConfig } from './hooks/use-component-config';
 import styled from 'styled-components';
-import Datasources from '../datasource';
 
 interface PageBuilderProps {
   page: PageConfig;

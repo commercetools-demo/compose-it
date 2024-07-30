@@ -11,6 +11,7 @@ import uniqueId from 'lodash/uniqueId';
 import { AppConfig } from '../../components/library/general';
 import { PagedQueryResponse } from '../../types/general';
 import { buildUrlWithParams } from '../../utils/utils';
+import { useComponentConfig } from '../../components/page-builder/hooks/use-component-config';
 
 const CONTAINER = `${APP_NAME}_apps`;
 const APPS_KEY_PREFIX = 'app-';
@@ -22,6 +23,8 @@ export const useApps = () => {
     PagedQueryResponse<App>
   >();
   const dispatchAppsAction = useAsyncDispatch<TSdkAction, App>();
+
+  const { getDatasourceRefs } = useComponentConfig();
 
   const fetchAllApps = async (limit: number = 20, page: number = 1) => {
     const offset = (page - 1) * limit;
@@ -86,6 +89,15 @@ export const useApps = () => {
     return result;
   };
 
+  const hydratePageswithDatasources = (pages: AppConfig['pages']) => {
+    return pages
+      ? pages.map((page) => ({
+          ...page,
+          datasourceRefs: getDatasourceRefs(page.components),
+        }))
+      : pages;
+  };
+
   const updateAppConfig = async (
     appKey: string,
     config?: AppConfig
@@ -93,6 +105,8 @@ export const useApps = () => {
     if (!appKey || !config) {
       return {} as App;
     }
+
+    const pages = hydratePageswithDatasources(config?.pages);
     const result = await getApp(appKey).then((process) => {
       return dispatchAppsAction(
         actions.post({
@@ -103,7 +117,9 @@ export const useApps = () => {
             key: appKey,
             value: {
               ...process.value,
-              appConfig: config,
+              appConfig: {
+                pages: pages,
+              },
             } as AppDraft,
           },
         })

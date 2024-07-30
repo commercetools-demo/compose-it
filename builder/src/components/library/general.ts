@@ -51,7 +51,6 @@ export type PageConfig = {
   };
   components: ComponentConfig[];
   datasources?: DatasourceRef[];
-  datasourceSamples?: DatasourceSample[];
 };
 
 export type AppConfig = {
