@@ -1,6 +1,6 @@
 // Types for our component configurations
 
-import { Datasource } from '../../types/datasource';
+import { DatasourceRef, DatasourceSample } from '../../types/datasource';
 
 export type PropsBindingState = {
   type: 'datasource' | 'property';
@@ -50,7 +50,8 @@ export type PageConfig = {
     columns: number;
   };
   components: ComponentConfig[];
-  datasources: Datasource[];
+  datasources?: DatasourceRef[];
+  datasourceSamples?: DatasourceSample[];
 };
 
 export type AppConfig = {

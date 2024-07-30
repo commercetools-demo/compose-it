@@ -1,19 +1,21 @@
-import React from 'react';
 import DatasourceList from './list';
-import styled from 'styled-components';
 import NewDatasource from './new-datasource';
-
-const FlexDiv = styled.div`
-  display: flex;
-  flex-direction: row;
-`;
+import Spacings from '@commercetools-uikit/spacings';
+import Text from '@commercetools-uikit/text';
 
 const Datasources = () => {
   return (
-    <FlexDiv>
-      <DatasourceList />
-      <NewDatasource />
-    </FlexDiv>
+    <>
+      <Spacings.Stack scale="xl">
+        <Spacings.Stack scale="l">
+          <Spacings.Inline justifyContent="space-between">
+            <Text.Subheadline as="h4">List of datasources</Text.Subheadline>
+            <NewDatasource />
+          </Spacings.Inline>
+          <DatasourceList />
+        </Spacings.Stack>
+      </Spacings.Stack>
+    </>
   );
 };
 

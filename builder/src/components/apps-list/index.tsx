@@ -29,11 +29,9 @@ const Apps = (props: Props) => {
   return (
     <>
       <Spacings.Stack scale="xl">
-        <Text.Headline as="h1">Compose it apps</Text.Headline>
-
         <Spacings.Stack scale="l">
           <Spacings.Inline justifyContent="space-between">
-            <Text.Subheadline as="h4">List of all apps</Text.Subheadline>
+            <Text.Subheadline as="h4">List of apps</Text.Subheadline>
             <PrimaryButton
               iconLeft={<PlusBoldIcon />}
               label="Add new app"
