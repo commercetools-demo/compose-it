@@ -11,9 +11,8 @@ import { useBuilderStateContext } from '../../providers/process';
 import { AppDraft } from '../../types/app';
 import AppsList from './list';
 import NewAppForm from './new-app';
-type Props = {};
 
-const Apps = (props: Props) => {
+const Apps = () => {
   const drawerState = useModalState();
   const { createApp } = useApps();
   const { refreshData } = useBuilderStateContext();

@@ -11,7 +11,6 @@ import Spacings from '@commercetools-uikit/spacings';
 import { useHistory, useRouteMatch } from 'react-router';
 import { App } from '../../types/app';
 import { useBuilderStateContext } from '../../providers/process';
-type Props = {};
 
 const columns = [
   { key: 'key', label: 'Key' },
@@ -19,7 +18,7 @@ const columns = [
   { key: 'description', label: 'Description' },
 ];
 
-const AppsList = (props: Props) => {
+const AppsList = () => {
   const { push } = useHistory();
   const match = useRouteMatch();
   const { apps, isLoading } = useBuilderStateContext();

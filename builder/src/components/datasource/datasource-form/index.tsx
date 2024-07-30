@@ -36,11 +36,12 @@ const DatasourceForm = ({
   } as Datasource,
 }: Props) => {
   const handleValidation = (values: Datasource) => {
-    console.log(values);
-
-    const errors: Record<keyof AppDraft, string> = {} as never;
+    const errors: Record<keyof Datasource, string> = {} as never;
     if (!values.name) {
       errors['name'] = 'Required';
+    }
+    if (!values.query) {
+      errors['query'] = 'Required';
     }
 
     return errors;
@@ -97,6 +98,9 @@ const DatasourceForm = ({
               setFieldValue('variables', variables)
             }
           />
+          {errors.query && (
+            <Text.Caption tone="warning">{errors.query}</Text.Caption>
+          )}
         </Form>
       )}
     </Formik>
