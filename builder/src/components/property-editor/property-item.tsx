@@ -3,6 +3,9 @@ import { useBuilderStateContext } from '../../providers/process';
 import { PathSelector } from './path-selector';
 import { useMemo } from 'react';
 import { ComponentConfig } from '../library/general';
+import CollapsiblePanel from '@commercetools-uikit/collapsible-panel';
+import PropertyValueEditor from './components/property-value-editor';
+
 type Props = {
   propertyKey: string;
   component: ComponentConfig;
@@ -19,7 +22,10 @@ export const PropertyItem = ({
 
   const selectedDatasource = useMemo(
     () =>
-      component.config?.propsBindings?.[propertyKey]?.type === 'datasource'
+      component.config?.propsBindings?.[propertyKey]?.type === 'datasource' &&
+      typeof component.config?.propsBindings?.[propertyKey]?.value ===
+        'string' &&
+      !!component.config?.propsBindings?.[propertyKey]?.value
         ? component.config?.propsBindings?.[propertyKey]?.value?.split('.')?.[0]
         : '',
     [component]
@@ -39,13 +45,22 @@ export const PropertyItem = ({
   }, [selectedDatasource]);
 
   const selectedPath = useMemo(() => {
-    return component.config?.propsBindings?.[propertyKey]?.value
-      ?.split('.')
-      .slice(1)
-      .join('.');
+    return component.config?.propsBindings?.[propertyKey]?.type ===
+      'datasource' &&
+      typeof component.config?.propsBindings?.[propertyKey]?.value ===
+        'string' &&
+      !!component.config?.propsBindings?.[propertyKey]?.value
+      ? component.config?.propsBindings?.[propertyKey]?.value
+          ?.split('.')
+          .slice(1)
+          .join('.')
+      : '';
   }, [component]);
 
-  const updatePropsBinding = (key: string, value: string) => {
+  const updatePropsBinding = (
+    key: string,
+    value: string | number | unknown[] | boolean | object
+  ) => {
     const updatedConfig = {
       ...(component.config || {}),
       propsBindings: {
@@ -66,7 +81,9 @@ export const PropertyItem = ({
     updatePropsBinding('value', datasourceKey);
   };
 
-  const handlePropertyChange = (value: string) => {
+  const handlePropertyChange = (
+    value: string | number | unknown[] | boolean | object
+  ) => {
     updatePropsBinding('value', value);
   };
   const handleTypeChange = (type: 'property' | 'datasource') => {
@@ -78,9 +95,10 @@ export const PropertyItem = ({
   };
 
   return (
-    <div>
-      <label>{propertyKey}:</label>
-
+    <CollapsiblePanel
+      isDefaultClosed
+      header={`${propertyKey} (${component.config?.propsBindings?.[propertyKey]?.dataType})`}
+    >
       <label htmlFor={`use-datasource-${propertyKey}`}>use datasource:</label>
       <input
         type="checkbox"
@@ -94,10 +112,11 @@ export const PropertyItem = ({
       />
       {component.config?.propsBindings?.[propertyKey]?.type !==
         'datasource' && (
-        <input
-          type="text"
+        <PropertyValueEditor
+          propsBinding={component.config?.propsBindings?.[propertyKey]}
+          componentType={component.type}
           value={component.config?.propsBindings?.[propertyKey]?.value}
-          onChange={(e) => handlePropertyChange(e.target.value)}
+          onChange={handlePropertyChange}
         />
       )}
       {component.config?.propsBindings?.[propertyKey]?.type ===
@@ -123,6 +142,6 @@ export const PropertyItem = ({
           )}
         </>
       )}
-    </div>
+    </CollapsiblePanel>
   );
 };

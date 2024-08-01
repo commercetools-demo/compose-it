@@ -1,7 +1,7 @@
 import { RefObject, useState } from 'react';
 import { ComponentConfig, PageConfig } from '../../library/general';
 import { calculateNewSize } from '../utils';
-import { getComponentProps } from '../../library/utils';
+import { getComponentBindings, getComponentProps } from '../../library/utils';
 import { useComponentConfig } from './use-component-config';
 
 export const useResizeAndDrag = (
@@ -122,11 +122,12 @@ export const useResizeAndDrag = (
     column: number,
     row: number
   ) => {
-    console.log('handleDrop', targetId, column, row);
-
     e.preventDefault();
     const componentType = e.dataTransfer.getData('componentType');
     const sourceComponentId = e.dataTransfer.getData('componentId');
+
+    const props = getComponentProps(componentType);
+    const propsBindings = getComponentBindings(componentType);
 
     const newComponent: ComponentConfig = {
       type: componentType,
@@ -138,11 +139,9 @@ export const useResizeAndDrag = (
         gridHeight: 1,
       },
       config: {
-        propsBindings: {},
+        propsBindings: propsBindings,
       },
-      props: {
-        ...getComponentProps(componentType),
-      },
+      props,
     };
     let updatedComponents = [...page.components, newComponent];
     if (sourceComponentId) {
@@ -179,8 +178,6 @@ export const useResizeAndDrag = (
     column: number,
     row: number
   ) => {
-    console.log('handleCellDrop', column, row);
-
     e.preventDefault();
     const componentId = e.dataTransfer.getData('componentId');
     const componentType = e.dataTransfer.getData('componentType');

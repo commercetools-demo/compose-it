@@ -4,7 +4,8 @@ import { DatasourceRef } from '../../types/datasource';
 
 export type PropsBindingState = {
   type: 'datasource' | 'property';
-  value: string;
+  dataType?: string;
+  value: string | number | boolean | null | object;
 };
 
 type ComponentLayout = {

@@ -119,7 +119,11 @@ export const useComponentConfig = () => {
       // Check propsBindings for datasource type
       Object.entries(component.config.propsBindings).forEach(
         ([key, binding]) => {
-          if (binding.type === 'datasource') {
+          if (
+            binding.type === 'datasource' &&
+            typeof binding?.value === 'string' &&
+            !!binding?.value
+          ) {
             datasourceRefs.push({
               typeId: 'datasource',
               key: binding?.value?.split('.')[0],
