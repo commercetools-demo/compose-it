@@ -1,5 +1,6 @@
 import CommercetoolsDataTable, {
   TDataTableProps,
+  TRow,
 } from '@commercetools-uikit/data-table';
 import { get } from 'lodash';
 
@@ -9,6 +10,7 @@ const DataTable = (props: TDataTableProps) => {
     columns = columns.map((column) => {
       return {
         ...column,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         renderItem: (row: any) => {
           return <>{get(row, column.key) || row[column.key]}</>;
         },
