@@ -19,7 +19,7 @@ type Props = {
 
 const PropertyValueEditor = ({ propsBinding, value, onChange }: Props) => {
   if (propsBinding.dataType === 'array') {
-    return <ArrayEditorInput value={value as string[]} onChange={onChange} />;
+    return <ArrayEditorInput value={value as object[]} onChange={onChange} />;
   }
   return (
     <input
