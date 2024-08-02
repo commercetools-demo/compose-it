@@ -1,10 +1,8 @@
 import type { ReactNode } from 'react';
 import { Switch, Route, useRouteMatch } from 'react-router-dom';
 import Spacings from '@commercetools-uikit/spacings';
-import Apps from './components/apps-list';
-import { App } from './components/app';
-import Datasources from './components/datasource';
 import Home from './components/home';
+import { AppWrapper } from './components/app/app-wrapper';
 
 type ApplicationRoutesProps = {
   children?: ReactNode;
@@ -27,7 +25,7 @@ const ApplicationRoutes = (_props: ApplicationRoutesProps) => {
     <Spacings.Inset scale="l">
       <Switch>
         <Route path={`${match.path}/app/:key`}>
-          <App />
+          <AppWrapper />
         </Route>
         <Route>
           <Home />

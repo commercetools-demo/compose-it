@@ -5,7 +5,7 @@ interface PageListProps {
   pages: PageConfig[];
   onAddPage: (page: PageConfig) => void;
   onSelectPage: (pageId: string) => void;
-  currentPageId: string | null;
+  currentPageId?: string | null;
 }
 
 const PageList: React.FC<PageListProps> = ({

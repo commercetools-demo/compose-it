@@ -1,80 +1,28 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React from 'react';
 import PageList from '../page-list';
 import PageBuilder from '../page-builder';
-import { AppConfig, PageConfig } from '../library/general';
-import { useRouteMatch } from 'react-router';
-import { useApps } from '../../hooks/use-app';
 import { useHistory } from 'react-router-dom';
 import { InfoDetailPage } from '@commercetools-frontend/application-components';
+import { useAppContext } from '../../providers/app';
+import AppToolbar from './app-toolbar';
 export const App: React.FC = () => {
-  const { params }: { params: { key: string } } = useRouteMatch();
+  const { appConfig, currentPage, updatePage, addPage, updateCurrentPageId } =
+    useAppContext();
+
   const history = useHistory();
-
-  const { getApp, updateAppConfig } = useApps();
-  const [appConfig, setAppConfig] = useState<AppConfig>();
-
-  const fetchApp = async () => {
-    const result = await getApp(params.key);
-    console.log('result', result);
-
-    if (result?.value) {
-      setAppConfig(result.value?.appConfig || {});
-    }
-  };
-
-  const [currentPageId, setCurrentPageId] = useState<string | null>(null);
-
-  const addPage = (page: PageConfig) => {
-    setAppConfig((prev) => ({
-      ...prev,
-      pages: [...(prev?.pages || []), page],
-    }));
-    setCurrentPageId(page.id);
-  };
-
-  const updatePage = (updatedPage: PageConfig) => {
-    setAppConfig((prev) => ({
-      ...prev,
-      pages: (prev?.pages || []).map((p) =>
-        p.id === updatedPage.id ? updatedPage : p
-      ),
-    }));
-  };
-
-  const currentPage = appConfig?.pages?.find((p) => p.id === currentPageId);
-
-  useEffect(() => {
-    fetchApp();
-  }, [params]);
-
-  // Implement the code for the TODO comment
-  const debounceUpdateAppConfig = useCallback(
-    (newConfig?: AppConfig) => {
-      updateAppConfig(params.key, newConfig);
-    },
-    [params.key]
-  );
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      debounceUpdateAppConfig(appConfig);
-    }, 500);
-
-    return () => clearTimeout(timer);
-  }, [appConfig]);
 
   return (
     <InfoDetailPage
-      title={`App: ${params.key}`}
       onPreviousPathClick={() => history.push('/')}
+      customTitleRow={<AppToolbar />}
     >
       {appConfig && (
         <div className="builder-layout">
           <PageList
             pages={appConfig?.pages || []}
             onAddPage={addPage}
-            onSelectPage={setCurrentPageId}
-            currentPageId={currentPageId}
+            onSelectPage={updateCurrentPageId}
+            currentPageId={currentPage?.id}
           />
           {currentPage && (
             <PageBuilder page={currentPage} onUpdatePage={updatePage} />
