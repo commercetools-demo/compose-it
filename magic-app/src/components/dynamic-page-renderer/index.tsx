@@ -4,9 +4,8 @@ import ComponentRenderer from './component-renderer';
 
 const DynamicPageRenderer: React.FC<DynamicPageRendererProps> = ({
   pageConfig,
+  parentUrl,
 }) => {
-  console.log(pageConfig);
-
   return (
     <div
       className="dynamic-page"
@@ -18,7 +17,11 @@ const DynamicPageRenderer: React.FC<DynamicPageRendererProps> = ({
       }}
     >
       {pageConfig.components.map((component) => (
-        <ComponentRenderer key={component.id} component={component} />
+        <ComponentRenderer
+          key={component.id}
+          component={component}
+          parentUrl={parentUrl}
+        />
       ))}
     </div>
   );

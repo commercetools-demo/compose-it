@@ -5,6 +5,7 @@ import { DatasourceRef } from '../../types/datasource';
 export type PropsBindingState = {
   type: 'datasource' | 'property';
   value: string;
+  dataType?: string;
 };
 
 type ComponentLayout = {

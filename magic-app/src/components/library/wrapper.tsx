@@ -1,19 +1,23 @@
 import { ComponentConfig } from './general';
 import { componentLibrary } from '.';
 import { get } from 'lodash';
-import { useAppConfig } from '../../providers/app-config';
 import { usePageWrapper } from '../../providers/page-wrapper';
+import { fixUpRoutingProps } from './utils';
 
 const ComponentWrapper = ({
   component,
   children,
+  parentUrl,
 }: {
   component: ComponentConfig;
   children: React.ReactNode;
+  parentUrl?: string;
 }) => {
   const Component = componentLibrary[component.type];
 
   const { datasources } = usePageWrapper();
+
+  ////// TODO: datatable rows: set to results > how to get columns?
 
   if (component.config?.propsBindings) {
     Object.keys(component.config.propsBindings).forEach((key) => {
@@ -32,6 +36,8 @@ const ComponentWrapper = ({
       }
     });
   }
+
+  component = fixUpRoutingProps(component, parentUrl);
 
   const style = {
     gridColumn: `${component.layout.gridColumn} / span ${component.layout.gridWidth}`,

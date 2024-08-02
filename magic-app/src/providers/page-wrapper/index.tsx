@@ -3,7 +3,6 @@ import React, {
   useCallback,
   useContext,
   useEffect,
-  useMemo,
   useState,
 } from 'react';
 import {
@@ -79,28 +78,35 @@ const PageWrapperProvider = ({
     []
   );
 
-  const availableDatasources = useMemo(() => {
-    return datasourceResponses.filter((response) =>
+  useEffect(() => {
+    if (!pageConfig || !datasourceResponses) {
+      return;
+    }
+    const availableDatasources = datasourceResponses.filter((response) =>
       pageConfig.datasourceRefs?.find((ds) => ds.key === response.key)
     );
-  }, [datasourceResponses, pageConfig.datasourceRefs]);
+    if (!availableDatasources || !availableDatasources.length) {
+      setIsLoading(false);
+      return;
+    }
 
-  useEffect(() => {
-    availableDatasources.map((response) => {
+    availableDatasources.forEach((availableDatasource) => {
       fetcher({
-        query: response.value?.query || '',
-        variables: JSON.parse(response.value?.variables || '{}'),
+        query: availableDatasource.value?.query || '',
+        variables: JSON.parse(availableDatasource.value?.variables || '{}'),
       }).then((data) => {
         setDatasources((prevDatasources) => {
           return {
             ...prevDatasources,
-            [response.key]: data,
+            [availableDatasource.key]: data,
           };
         });
         setIsLoading(false);
       });
     });
-  }, [availableDatasources]);
+
+    // availableDatasources.map((response) => );
+  }, [datasourceResponses, pageConfig.datasourceRefs]);
 
   if (isLoading) {
     return <div>Loading...</div>; // Or any loading indicator

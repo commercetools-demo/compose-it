@@ -6,6 +6,8 @@ import DynamicPageRenderer from '../components/dynamic-page-renderer';
 import { useApps } from '../hooks/use-app';
 import { App } from '../types/app';
 import PageWrapperProvider from '../providers/page-wrapper';
+import { useAppConfig } from '../providers/app-config';
+import { joinUrls } from '../utils/url-utils';
 
 type ApplicationRoutesProps = {
   children?: ReactNode;
@@ -14,13 +16,7 @@ const NotFound: React.FC = () => <h1>404 - Page Not Found</h1>;
 
 const ApplicationRoutes = () => {
   const match = useRouteMatch();
-  const { getApp } = useApps();
-
-  const [appConfig, setAppConfig] = useState<App>();
-
-  useEffect(() => {
-    getApp('app-15').then((app) => setAppConfig(app));
-  }, []);
+  const { appConfig } = useAppConfig();
 
   /**
    * When using routes, there is a good chance that you might want to
@@ -41,7 +37,10 @@ const ApplicationRoutes = () => {
     <Spacings.Inset scale="l">
       <Switch>
         {appConfig.value?.appConfig?.pages.map((pageConfig) => (
-          <Route key={pageConfig.id} path={pageConfig.route}>
+          <Route
+            key={pageConfig.id}
+            path={joinUrls(match.url, pageConfig.route)}
+          >
             <PageWrapperProvider pageConfig={pageConfig}>
               <DynamicPageRenderer
                 pageConfig={pageConfig}
