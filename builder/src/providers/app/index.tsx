@@ -32,7 +32,7 @@ export const AppProvider: React.FC<{
   appKey: string;
 }> = ({ children, appKey }) => {
   const [appConfig, setAppConfig] = useState<AppConfig>();
-  const [history, setHistory] = useState<(PageConfig | undefined)[]>([]);
+  const [history, setHistory] = useState<(AppConfig | undefined)[]>([]);
   const [currentHistoryIndex, setCurrentHistoryIndex] = useState(0);
   const [currentPageId, updateCurrentPageId] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
@@ -57,6 +57,14 @@ export const AppProvider: React.FC<{
     updateCurrentPageId(page.id);
   };
 
+  const updateApp = (appConfig?: AppConfig) => {
+    if (!appConfig) return;
+    setAppConfig((prev) => ({
+      ...prev,
+      ...appConfig,
+    }));
+  };
+
   const updatePageInApp = (updatedPage?: PageConfig) => {
     if (!updatedPage) return;
     setAppConfig((prev) => ({
@@ -71,21 +79,32 @@ export const AppProvider: React.FC<{
     const result = await getApp(appKey);
     if (result?.value) {
       setAppConfig(result.value?.appConfig || {});
-      setHistory(result.value?.appConfig?.pages || []);
+      setHistory([result.value?.appConfig]);
     }
   };
 
-  const updatePage = useCallback(
-    (updatedPage: PageConfig) => {
-      updatePageInApp(updatedPage);
-      setHistory((prevHistory) => {
-        const newHistory = prevHistory.slice(0, currentHistoryIndex + 1);
-        return [...newHistory, updatedPage];
-      });
-      setCurrentHistoryIndex((prevIndex) => prevIndex + 1);
-    },
-    [currentHistoryIndex]
-  );
+  const updatePage = (updatedPage: PageConfig) => {
+    console.log('updatePage', updatedPage);
+
+    updatePageInApp(updatedPage);
+    setHistory((prevHistory) => {
+      const oldHistory = prevHistory.slice(0, currentHistoryIndex + 1);
+      console.log('oldHistory', oldHistory);
+      const newHistory = prevHistory.slice(-1);
+      console.log('newHistory', newHistory);
+
+      return [
+        ...oldHistory,
+        {
+          ...newHistory[0],
+          pages: (newHistory[0]?.pages || []).map((p) =>
+            p.id === updatedPage.id ? updatedPage : p
+          ),
+        },
+      ];
+    });
+    setCurrentHistoryIndex((prevIndex) => prevIndex + 1);
+  };
 
   // Implement the code for the TODO comment
   //   const debounceUpdateAppConfig = useCallback(
@@ -98,20 +117,21 @@ export const AppProvider: React.FC<{
   const undo = useCallback(() => {
     if (currentHistoryIndex > 0) {
       setCurrentHistoryIndex((prevIndex) => prevIndex - 1);
-      updatePageInApp(history[currentHistoryIndex - 1]);
+      updateApp(history[currentHistoryIndex - 1]);
     }
   }, [currentHistoryIndex, history]);
 
   const redo = useCallback(() => {
     if (currentHistoryIndex < history.length - 1) {
       setCurrentHistoryIndex((prevIndex) => prevIndex + 1);
-      updatePageInApp(history[currentHistoryIndex + 1]);
+      updateApp(history[currentHistoryIndex + 1]);
     }
   }, [currentHistoryIndex, history]);
 
   const hasUndo = currentHistoryIndex > 0;
   const hasRedo = currentHistoryIndex < history.length - 1;
-  const isPageDirty = history.length > 0;
+  const isPageDirty = history.length > 1;
+  console.log('history', history, currentHistoryIndex);
 
   //   useEffect(() => {
   //     const timer = setTimeout(() => {

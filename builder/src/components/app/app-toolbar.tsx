@@ -11,6 +11,7 @@ import {
 } from '@commercetools-uikit/icons';
 import { useRouteMatch } from 'react-router';
 import styled from 'styled-components';
+import RoutingListButton from '../app-routing/routing-list-button';
 
 const RotatingIcon = styled.div`
   animation: rotate 2s linear infinite;
@@ -33,6 +34,7 @@ const AppToolbar = () => {
     <Spacings.Inline justifyContent="space-between">
       <Spacings.Inline>
         <Text.Headline as="h1">{`App: ${params.key}`}</Text.Headline>
+        <RoutingListButton />
       </Spacings.Inline>
       <Spacings.Inline alignItems="center">
         <FlatButton

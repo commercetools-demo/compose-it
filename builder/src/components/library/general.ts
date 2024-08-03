@@ -50,6 +50,8 @@ export type PageConfig = {
     type: 'grid';
     columns: number;
   };
+  type: 'landing' | 'FormDetailPage';
+  name?: string;
   components: ComponentConfig[];
   datasources?: DatasourceRef[];
 };
@@ -57,3 +59,18 @@ export type PageConfig = {
 export type AppConfig = {
   pages: PageConfig[];
 };
+
+export const PAGE_TYPES = [
+  {
+    label: 'Landing Page',
+    value: 'landing',
+  },
+  {
+    label: 'Form Detail Page',
+    value: 'FormDetailPage',
+  },
+  {
+    label: 'Form Modal Page',
+    value: 'FormModalPage',
+  },
+];
