@@ -13,6 +13,9 @@ import createHttpUserAgent from '@commercetools/http-user-agent';
 import { type FetcherOpts, type FetcherParams } from '@graphiql/toolkit';
 import { PageConfig } from '../../components/library/general';
 import { useAppConfig } from '../app-config';
+import LandingPageRenderer from '../../components/dynamic-page-renderer/landing-page';
+import { useRouteMatch } from 'react-router';
+import ModalPageRenderer from '../../components/dynamic-page-renderer/modal-page';
 
 export interface ContextShape {
   datasources: {};
@@ -64,6 +67,7 @@ const PageWrapperProvider = ({
 }: React.PropsWithChildren<{ pageConfig: PageConfig }>) => {
   const { datasources: datasourceResponses } = useAppConfig();
   const [isLoading, setIsLoading] = useState(true);
+  const match = useRouteMatch();
 
   const [datasources, setDatasources] = useState({});
 
@@ -77,6 +81,30 @@ const PageWrapperProvider = ({
       }),
     []
   );
+
+  const renderPageType = (pageConfig: PageConfig, parentUrl: string) => {
+    switch (pageConfig.type) {
+      case 'landing':
+      case 'FormDetailPage':
+        return (
+          <LandingPageRenderer
+            pageConfig={pageConfig}
+            parentUrl={match.url}
+            {...pageConfig.props}
+          />
+        );
+      case 'FormModalPage':
+        return (
+          <ModalPageRenderer
+            pageConfig={pageConfig}
+            parentUrl={parentUrl}
+            {...pageConfig.props}
+          />
+        );
+      default:
+        return <div>Unknown page type</div>;
+    }
+  };
 
   useEffect(() => {
     if (!pageConfig || !datasourceResponses) {
@@ -117,7 +145,7 @@ const PageWrapperProvider = ({
         datasources,
       }}
     >
-      {children}
+      {renderPageType(pageConfig, match.url)}
     </PageWrapperContext.Provider>
   );
 };

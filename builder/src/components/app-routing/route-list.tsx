@@ -23,7 +23,11 @@ const RouteList: React.FC<Props> = ({ onClose, onEditPage, onSave }) => {
         <div></div>
         <Spacings.Inline>
           <PrimaryButton label="Add a Route" onClick={() => onEditPage()} />
-          <PrimaryButton label="Save Routes" onClick={onSave} isDisabled={!isPageDirty} />
+          <PrimaryButton
+            label="Save Routes"
+            onClick={onSave}
+            isDisabled={!isPageDirty}
+          />
         </Spacings.Inline>
       </Spacings.Inline>
       <DataTable

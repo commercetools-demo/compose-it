@@ -9,6 +9,7 @@ import RouteList from './route-list';
 import { PageConfig } from '../library/general';
 import NewRouteForm from './new-route';
 import { useAppContext } from '../../providers/app';
+import { getComponentBindings, getComponentProps } from '../library/utils';
 
 const RoutingListButton: React.FC = () => {
   const { addPage, updatePage, savePage } = useAppContext();
@@ -39,12 +40,35 @@ const RoutingListButton: React.FC = () => {
     editDrawerState.closeModal();
   };
 
+  const handleCloseEdit = () => {
+    setSelectedPage(undefined);
+    editDrawerState.closeModal();
+  };
+
   const handleOpenEdit = (page?: PageConfig) => {
     if (page) {
-      setSelectedPage(page);
+      const props = getComponentProps(page.type);
+      const config = {
+        propsBindings: getComponentBindings(page.type),
+      };
+      setSelectedPage({
+        ...page,
+        props,
+        config,
+      });
       editDrawerState.openModal();
     } else {
-      setSelectedPage(undefined);
+      setSelectedPage({
+        layout: { type: 'grid', columns: 12 },
+        route: '',
+        type: 'landing',
+        name: '',
+        config: {
+          propsBindings: {},
+        },
+        props: {},
+        id: Date.now().toString(),
+      });
       editDrawerState.openModal();
     }
   };
@@ -68,15 +92,15 @@ const RoutingListButton: React.FC = () => {
           onSave={savePage}
         />
       </Drawer>
-      <Drawer
-        title={!!selectedPage ? `Edit Page ${selectedPage.route}` : 'Add Page'}
-        isOpen={editDrawerState.isModalOpen}
-        onClose={editDrawerState.closeModal}
-        size={10}
-        hideControls
-      >
-        <NewRouteForm page={selectedPage} onSubmit={handlePageAction} />
-      </Drawer>
+
+      {!!selectedPage && (
+        <NewRouteForm
+          page={selectedPage}
+          onSubmit={handlePageAction}
+          isOpen={editDrawerState.isModalOpen}
+          onClose={handleCloseEdit}
+        />
+      )}
     </Spacings.Inline>
   );
 };

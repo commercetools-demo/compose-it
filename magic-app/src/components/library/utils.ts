@@ -1,5 +1,5 @@
 import { joinUrls } from '../../utils/url-utils';
-import { ComponentConfig } from './general';
+import { ComponentConfig, PageConfig } from './general';
 
 type FixUpRoutingConfig = {
   [componentType: string]: {
@@ -24,9 +24,9 @@ const fixUpRoutingConfig: FixUpRoutingConfig = {
 };
 
 export const fixUpRoutingProps = (
-  component: ComponentConfig,
+  component: ComponentConfig | PageConfig,
   parentUrl?: string
-): ComponentConfig => {
+): ComponentConfig | PageConfig => {
   if (component.type in fixUpRoutingConfig) {
     for (const propName in fixUpRoutingConfig[component.type].props) {
       component.props[propName] = parentUrl

@@ -4,6 +4,10 @@ import Text from '@commercetools-uikit/text';
 import Card from '@commercetools-uikit/card';
 import PrimaryButton from '@commercetools-uikit/primary-button';
 import DataTable from './data-table';
+import {
+  FormModalPage,
+  FormDetailPage,
+} from '@commercetools-frontend/application-components';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const componentLibrary: Record<string, React.FC<any>> = {
@@ -15,4 +19,6 @@ export const componentLibrary: Record<string, React.FC<any>> = {
   DataTable,
   Card,
   Link,
+  FormModalPage,
+  FormDetailPage,
 };

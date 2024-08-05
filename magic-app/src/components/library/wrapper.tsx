@@ -1,48 +1,47 @@
-import { ComponentConfig } from './general';
+import { ComponentConfig, PageConfig } from './general';
 import { componentLibrary } from '.';
-import { get } from 'lodash';
-import { usePageWrapper } from '../../providers/page-wrapper';
 import { fixUpRoutingProps } from './utils';
+import { useMemo } from 'react';
+import { usePropsBinding } from './hooks/use-props-binding';
 
 const ComponentWrapper = ({
   component,
   children,
   parentUrl,
 }: {
-  component: ComponentConfig;
+  component: ComponentConfig | PageConfig;
   children: React.ReactNode;
   parentUrl?: string;
 }) => {
   const Component = componentLibrary[component.type];
 
-  const { datasources } = usePageWrapper();
+  const { setPropsBinding } = usePropsBinding();
 
   ////// TODO: datatable rows: set to results > how to get columns?
 
   if (component.config?.propsBindings) {
-    Object.keys(component.config.propsBindings).forEach((key) => {
-      const binding = component.config.propsBindings[key];
-      if (binding.type === 'datasource') {
-        const value = get(datasources, binding.value);
+    const props = setPropsBinding(component.config.propsBindings);
 
-        if (value) {
-          component.props[key] = value;
-        }
-      } else {
-        const value = binding.value;
-        if (value) {
-          component.props[key] = value;
-        }
-      }
-    });
+    if (props) {
+      component.props = {
+        ...component.props,
+        ...props,
+      };
+    }
   }
 
   component = fixUpRoutingProps(component, parentUrl);
 
-  const style = {
-    gridColumn: `${component.layout.gridColumn} / span ${component.layout.gridWidth}`,
-    gridRow: `${component.layout.gridRow} / span ${component.layout.gridHeight}`,
-  };
+  const style = useMemo(() => {
+    if ('gridColumn' in component.layout) {
+      return {
+        gridColumn: `${component.layout.gridColumn} / span ${component.layout.gridWidth}`,
+        gridRow: `${component.layout.gridRow} / span ${component.layout.gridHeight}`,
+      };
+    } else {
+      return {};
+    }
+  }, [component]);
 
   return (
     <div style={style}>

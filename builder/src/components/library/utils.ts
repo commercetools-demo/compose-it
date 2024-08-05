@@ -19,8 +19,8 @@ export const getComponentProps = (
   componentType: string
 ): Record<string, unknown> => {
   const Component = componentLibrary[componentType];
-  const propNames = Object.keys(Component.propTypes || {});
-  const defaultProps = Component.defaultProps || {};
+  const propNames = Object.keys(Component?.propTypes || {});
+  const defaultProps = Component?.defaultProps || {};
 
   const props = propNames.reduce((acc, propName) => {
     acc[propName] = defaultProps[propName] || '';
@@ -28,11 +28,6 @@ export const getComponentProps = (
   }, {} as Record<string, string | number | unknown[] | boolean>);
 
   switch (componentType) {
-    // case 'Page':
-    //   return {
-    //     layout: {},
-    //     children: {},
-    //   };
     case 'DataTable':
       props.rows = [];
       props.columns = [];
@@ -47,8 +42,8 @@ export const getComponentBindings = (
   componentType: string
 ): Record<string, PropsBindingState> => {
   const Component = componentLibrary[componentType];
-  const propNames = Object.keys(Component.propTypes || {});
-  const defaultProps = Component.defaultProps || {};
+  const propNames = Object.keys(Component?.propTypes || {});
+  const defaultProps = Component?.defaultProps || {};
 
   const bindings = propNames.reduce((acc, propName) => {
     acc[propName] = {

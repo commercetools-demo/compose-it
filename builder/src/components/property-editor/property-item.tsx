@@ -1,16 +1,12 @@
-import { usePropertyDatasource } from './hooks/use-property-datasource';
-import { useBuilderStateContext } from '../../providers/process';
-import { PathSelector } from './path-selector';
-import { useMemo } from 'react';
-import { ComponentConfig } from '../library/general';
+import { ComponentConfig, PageConfig } from '../library/general';
 import CollapsiblePanel from '@commercetools-uikit/collapsible-panel';
 import PropertyValueEditor from './components/property-value-editor';
 import DatasourceSelector from './components/datasource-selector';
 
 type Props = {
   propertyKey: string;
-  component: ComponentConfig;
-  onUpdateComponent: (updatedComponent: ComponentConfig) => void;
+  component: ComponentConfig | PageConfig;
+  onUpdateComponent: (updatedComponent: ComponentConfig | PageConfig) => void;
 };
 
 export const PropertyItem = ({

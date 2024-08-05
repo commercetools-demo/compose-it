@@ -2,7 +2,7 @@ import React from 'react';
 import { DynamicPageRendererProps } from './types';
 import ComponentRenderer from './component-renderer';
 
-const DynamicPageRenderer: React.FC<DynamicPageRendererProps> = ({
+const LandingPageRenderer: React.FC<DynamicPageRendererProps> = ({
   pageConfig,
   parentUrl,
 }) => {
@@ -27,4 +27,4 @@ const DynamicPageRenderer: React.FC<DynamicPageRendererProps> = ({
   );
 };
 
-export default DynamicPageRenderer;
+export default LandingPageRenderer;

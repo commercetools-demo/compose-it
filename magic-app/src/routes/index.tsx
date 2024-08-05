@@ -1,10 +1,7 @@
-import { useEffect, useState, type ReactNode } from 'react';
+import { type ReactNode } from 'react';
 import { Switch, Route, useRouteMatch } from 'react-router-dom';
 import Spacings from '@commercetools-uikit/spacings';
 import { DynamicPageRendererProps } from './types';
-import DynamicPageRenderer from '../components/dynamic-page-renderer';
-import { useApps } from '../hooks/use-app';
-import { App } from '../types/app';
 import PageWrapperProvider from '../providers/page-wrapper';
 import { useAppConfig } from '../providers/app-config';
 import { joinUrls } from '../utils/url-utils';
@@ -41,12 +38,7 @@ const ApplicationRoutes = () => {
             key={pageConfig.id}
             path={joinUrls(match.url, pageConfig.route)}
           >
-            <PageWrapperProvider pageConfig={pageConfig}>
-              <DynamicPageRenderer
-                pageConfig={pageConfig}
-                parentUrl={match.url}
-              />
-            </PageWrapperProvider>
+            <PageWrapperProvider pageConfig={pageConfig}></PageWrapperProvider>
           </Route>
         ))}
         <Route path="*" component={NotFound} />

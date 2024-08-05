@@ -39,11 +39,20 @@ const TabbedSidebar = ({
         </Route>
         <Route path={`${match.path}/properties`}>
           {!!component && (
-            <PropertyEditor
-              component={component}
-              onUpdateComponent={onUpdateComponent}
-              onDeleteComponent={onDeleteComponent}
-            />
+            <>
+              <PropertyEditor
+                component={component}
+                onUpdateComponent={(componentConfig) =>
+                  onUpdateComponent(componentConfig as ComponentConfig)
+                }
+              />
+              <button
+                onClick={() => onDeleteComponent(component)}
+                type="button"
+              >
+                DELETE
+              </button>
+            </>
           )}
           {!component && <div>No component selected</div>}
         </Route>

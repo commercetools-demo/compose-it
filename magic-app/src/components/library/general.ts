@@ -50,6 +50,13 @@ export type PageConfig = {
     type: 'grid';
     columns: number;
   };
+  type: 'landing' | 'FormDetailPage' | 'FormModalPage';
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  props: Record<string, any>;
+  config: {
+    propsBindings: Record<string, PropsBindingState>;
+  };
+  name?: string;
   components: ComponentConfig[];
   datasourceRefs?: DatasourceRef[];
 };

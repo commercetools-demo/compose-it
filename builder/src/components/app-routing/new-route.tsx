@@ -7,24 +7,30 @@ import NumberInput from '@commercetools-uikit/number-input';
 import SelectInput from '@commercetools-uikit/select-input';
 import Text from '@commercetools-uikit/text';
 import Grid from '@commercetools-uikit/grid';
-import PrimaryButton from '@commercetools-uikit/primary-button';
+import { useState } from 'react';
+import { Drawer } from '@commercetools-frontend/application-components';
+import PropertyEditor from '../property-editor';
+
 type Props = {
   page?: PageConfig;
   onSubmit: (page: PageConfig) => Promise<void>;
+  isOpen: boolean;
+  onClose: () => void;
 };
 
 const NewRouteForm = ({
   page = {
-    components: [],
     layout: { type: 'grid', columns: 12 },
     route: '',
     type: 'FormDetailPage',
-    datasources: [],
     name: '',
     id: Date.now().toString(),
   },
   onSubmit,
+  isOpen,
+  onClose,
 }: Props) => {
+  const [pageData, setPageData] = useState<PageConfig>(page);
   const handleValidation = (values: PageConfig) => {
     const errors: Record<keyof PageConfig, string | Record<string, string>> =
       {} as never;
@@ -36,92 +42,101 @@ const NewRouteForm = ({
         columns: 'Required',
       };
     }
-    // TODO: empty route
+    setPageData(values);
+    return errors;
   };
+
+  const onPageConfigUpdate = (updatedPage: PageConfig) => {
+    setPageData(updatedPage);
+  };
+
   return (
-    <Formik
-      initialValues={page}
-      onSubmit={onSubmit}
-      validateOnBlur
-      validate={handleValidation}
+    <Drawer
+      title={!!pageData ? `Edit Page ${pageData.route}` : 'Add Page'}
+      isOpen={isOpen}
+      onClose={onClose}
+      size={10}
+      onPrimaryButtonClick={() => onSubmit(pageData)}
+      onSecondaryButtonClick={onClose}
     >
-      {({ values, errors, handleChange, submitForm, dirty }) => (
-        <Form>
-          <div style={{ paddingBottom: '16px' }}>
-            <Spacings.Inline
-              alignItems="center"
-              justifyContent="flex-end"
-              scale="m"
+      <Formik
+        initialValues={pageData}
+        onSubmit={() => {}}
+        validateOnBlur
+        validate={handleValidation}
+      >
+        {({ values, errors, handleChange }) => (
+          <Form>
+            <Grid
+              gridGap="16px"
+              gridTemplateColumns="repeat(2, 1fr)"
+              gridAutoColumns="1fr"
             >
-              <PrimaryButton
-                label="Save"
-                onClick={submitForm}
-                type="button"
-                isDisabled={!dirty}
+              <Grid.Item gridColumn="span 2">
+                <Spacings.Inline alignItems="center">
+                  <FieldLabel title="Name" />
+                  <TextInput
+                    value={values?.name || ''}
+                    name="name"
+                    onChange={handleChange}
+                  />
+                </Spacings.Inline>
+                {errors.name && (
+                  <Text.Caption tone="warning">{errors.name}</Text.Caption>
+                )}
+              </Grid.Item>
+              <Grid.Item gridColumn="span 2">
+                <Spacings.Inline alignItems="center">
+                  <FieldLabel title="Route" />
+                  <TextInput
+                    value={values?.route || ''}
+                    name="route"
+                    onChange={handleChange}
+                  />
+                </Spacings.Inline>
+                {errors.route && (
+                  <Text.Caption tone="warning">{errors.route}</Text.Caption>
+                )}
+              </Grid.Item>
+              <Grid.Item gridColumn="span 2">
+                <Spacings.Inline alignItems="center">
+                  <FieldLabel title="Columns" />
+                  <NumberInput
+                    value={values?.layout?.columns || 12}
+                    name="layout.columns"
+                    onChange={handleChange}
+                  />
+                </Spacings.Inline>
+                {errors.layout?.columns && (
+                  <Text.Caption tone="warning">
+                    {errors.layout.columns}
+                  </Text.Caption>
+                )}
+              </Grid.Item>
+              <Grid.Item gridColumn="span 2">
+                <Spacings.Inline alignItems="center">
+                  <FieldLabel title="Page Type" />
+                  <SelectInput
+                    options={PAGE_TYPES}
+                    value={values?.type}
+                    name="type"
+                    onChange={handleChange}
+                  />
+                </Spacings.Inline>
+              </Grid.Item>
+            </Grid>
+            {!!pageData?.type && (
+              <PropertyEditor
+                component={pageData}
+                onUpdateComponent={(pageConfig) =>
+                  onPageConfigUpdate(pageConfig as PageConfig)
+                }
               />
-            </Spacings.Inline>
-          </div>
-          <Grid
-            gridGap="16px"
-            gridTemplateColumns="repeat(2, 1fr)"
-            gridAutoColumns="1fr"
-          >
-            <Grid.Item gridColumn="span 2">
-              <Spacings.Inline alignItems="center">
-                <FieldLabel title="Name" />
-                <TextInput
-                  value={values?.name || ''}
-                  name="name"
-                  onChange={handleChange}
-                />
-              </Spacings.Inline>
-              {errors.name && (
-                <Text.Caption tone="warning">{errors.name}</Text.Caption>
-              )}
-            </Grid.Item>
-            <Grid.Item gridColumn="span 2">
-              <Spacings.Inline alignItems="center">
-                <FieldLabel title="Route" />
-                <TextInput
-                  value={values?.route || ''}
-                  name="route"
-                  onChange={handleChange}
-                />
-              </Spacings.Inline>
-              {errors.route && (
-                <Text.Caption tone="warning">{errors.route}</Text.Caption>
-              )}
-            </Grid.Item>
-            <Grid.Item gridColumn="span 2">
-              <Spacings.Inline alignItems="center">
-                <FieldLabel title="Columns" />
-                <NumberInput
-                  value={values?.layout?.columns || 12}
-                  name="layout.columns"
-                  onChange={handleChange}
-                />
-              </Spacings.Inline>
-              {errors.layout?.columns && (
-                <Text.Caption tone="warning">
-                  {errors.layout.columns}
-                </Text.Caption>
-              )}
-            </Grid.Item>
-            <Grid.Item gridColumn="span 2">
-              <Spacings.Inline alignItems="center">
-                <FieldLabel title="Page Type" />
-                <SelectInput
-                  options={PAGE_TYPES}
-                  value={values?.type}
-                  name="type"
-                  onChange={handleChange}
-                />
-              </Spacings.Inline>
-            </Grid.Item>
-          </Grid>
-        </Form>
-      )}
-    </Formik>
+            )}
+          </Form>
+        )}
+      </Formik>
+    </Drawer>
   );
 };
 
