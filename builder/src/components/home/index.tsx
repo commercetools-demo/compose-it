@@ -1,8 +1,9 @@
 import Spacings from '@commercetools-uikit/spacings';
 import Apps from '../apps-list';
-import Datasources from '../datasource';
+import Datasources from '../graph-ql/datasource';
 import Text from '@commercetools-uikit/text';
 import styled from 'styled-components';
+import Actions from '../graph-ql/action';
 
 const StyledDiv = styled.div`
   padding-top: 32px;
@@ -23,6 +24,7 @@ const Home = () => {
         <Apps />
         <Divider />
         <Datasources />
+        <Actions />
       </Spacings.Stack>
     </StyledDiv>
   );

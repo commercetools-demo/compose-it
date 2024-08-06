@@ -6,9 +6,8 @@ import { Form, Formik } from 'formik';
 import FieldLabel from '@commercetools-uikit/field-label';
 import TextInput from '@commercetools-uikit/text-input';
 import Text from '@commercetools-uikit/text';
-import { AppDraft } from '../../../types/app';
 import Editor from '../editor';
-import { Datasource } from '../../../types/datasource';
+import { Datasource } from '../../../../types/datasource';
 
 type Props = {
   onSubmit: (datasource: Datasource) => Promise<void>;

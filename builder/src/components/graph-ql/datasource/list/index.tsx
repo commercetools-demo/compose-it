@@ -1,7 +1,7 @@
 import Constraints from '@commercetools-uikit/constraints';
 import { useState } from 'react';
-import { useDatasource } from '../../../hooks/use-datasource';
-import { Datasource, DatasourceResponse } from '../../../types/datasource';
+import { useDatasource } from '../../../../hooks/use-datasource';
+import { Datasource, DatasourceResponse } from '../../../../types/datasource';
 
 import {
   Drawer,
@@ -14,7 +14,7 @@ import {
 } from '@commercetools-uikit/hooks';
 import { Pagination } from '@commercetools-uikit/pagination';
 import Spacings from '@commercetools-uikit/spacings';
-import { useBuilderStateContext } from '../../../providers/process';
+import { useBuilderStateContext } from '../../../../providers/process';
 import DatasourceForm from '../datasource-form';
 import LoadingSpinner from '@commercetools-uikit/loading-spinner';
 

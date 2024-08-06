@@ -4,17 +4,17 @@ import {
 } from '@commercetools-frontend/application-components';
 import { PlusBoldIcon } from '@commercetools-uikit/icons';
 import PrimaryButton from '@commercetools-uikit/primary-button';
-import DatasourceForm from '../datasource-form';
-import { useDatasource } from '../../../hooks/use-datasource';
-import { DatasourceDraft } from '../../../types/datasource';
+import { ActionDraft } from '../../../../types/datasource';
+import { useAction } from '../../../../hooks/use-action';
+import ActionForm from '../action-form';
 
-const NewDatasource = () => {
+const NewAction = () => {
   const drawerState = useModalState();
 
-  const { createDatasource } = useDatasource();
+  const { createAction } = useAction();
 
-  const handleCreateDatasource = async (datasource: DatasourceDraft) => {
-    const result = await createDatasource(datasource);
+  const handleCreateAction = async (action: ActionDraft) => {
+    const result = await createAction(action);
     if (!!result) {
       drawerState.closeModal();
     }
@@ -24,18 +24,18 @@ const NewDatasource = () => {
     <>
       <PrimaryButton
         iconLeft={<PlusBoldIcon />}
-        label="Add new datasource"
+        label="Add a new action"
         onClick={drawerState.openModal}
       />
       <Drawer
-        title="Add new datasource"
+        title="Add a new action"
         isOpen={drawerState.isModalOpen}
         onClose={drawerState.closeModal}
         hideControls
         size={30}
       >
-        <DatasourceForm
-          onSubmit={handleCreateDatasource}
+        <ActionForm
+          onSubmit={handleCreateAction}
           onCancel={drawerState.closeModal}
         />
       </Drawer>
@@ -43,4 +43,4 @@ const NewDatasource = () => {
   );
 };
 
-export default NewDatasource;
+export default NewAction;
