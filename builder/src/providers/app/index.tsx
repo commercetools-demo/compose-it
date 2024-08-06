@@ -84,14 +84,10 @@ export const AppProvider: React.FC<{
   };
 
   const updatePage = (updatedPage: PageConfig) => {
-    console.log('updatePage', updatedPage);
-
     updatePageInApp(updatedPage);
     setHistory((prevHistory) => {
       const oldHistory = prevHistory.slice(0, currentHistoryIndex + 1);
-      console.log('oldHistory', oldHistory);
       const newHistory = prevHistory.slice(-1);
-      console.log('newHistory', newHistory);
 
       return [
         ...oldHistory,
@@ -131,7 +127,6 @@ export const AppProvider: React.FC<{
   const hasUndo = currentHistoryIndex > 0;
   const hasRedo = currentHistoryIndex < history.length - 1;
   const isPageDirty = history.length > 1;
-  console.log('history', history, currentHistoryIndex);
 
   //   useEffect(() => {
   //     const timer = setTimeout(() => {

@@ -42,16 +42,6 @@ const GridLayout: React.FC<GridLayoutProps> = ({
   } = useResizeAndDrag(page, onUpdatePage, gridRef);
   const { gridOccupancy } = useGridDimensions(page);
 
-  const availableCells = useMemo(
-    () =>
-      gridDimensions.columns * gridDimensions.rows -
-      page.components.reduce(
-        (acc, c) => acc + c.layout.gridWidth * c.layout.gridHeight,
-        0
-      ),
-    [gridDimensions]
-  );
-
   const renderEmptyCells = () => {
     const cells = [];
     for (let row = 0; row < gridDimensions.rows; row++) {
@@ -100,7 +90,7 @@ const GridLayout: React.FC<GridLayoutProps> = ({
       onMouseLeave={stopResize}
     >
       {renderEmptyCells()}
-      {page.components.map((component) => (
+      {page.components?.map((component) => (
         <ComponentRenderer
           key={component.id}
           component={component}

@@ -2772,6 +2772,21 @@
     "@babel/runtime-corejs3" "^7.20.13"
     "@emotion/is-prop-valid" "1.2.2"
 
+"@commercetools-uikit/view-switcher@^19.9.0":
+  version "19.9.0"
+  resolved "https://registry.yarnpkg.com/@commercetools-uikit/view-switcher/-/view-switcher-19.9.0.tgz#12980b7af22b4635c92c77ab4e544c1bbb86d920"
+  integrity sha512-6v3sBdkv11PvQfCePW4SSeiGbBcO2ZeomVaBT1cXNSIB+RiQn5JAYVjhji/AspqqhTcJ5Re1ysfcEpBJlfcIgg==
+  dependencies:
+    "@babel/runtime" "^7.20.13"
+    "@babel/runtime-corejs3" "^7.20.13"
+    "@commercetools-uikit/accessible-button" "19.9.0"
+    "@commercetools-uikit/design-system" "19.9.0"
+    "@commercetools-uikit/utils" "19.9.0"
+    "@emotion/react" "^11.10.5"
+    "@emotion/styled" "^11.10.5"
+    lodash "4.17.21"
+    prop-types "15.8.1"
+
 "@commercetools/api-request-builder@6.0.0":
   version "6.0.0"
   resolved "https://registry.yarnpkg.com/@commercetools/api-request-builder/-/api-request-builder-6.0.0.tgz#7c0b8104f4d3655ac8bdb79dee3087d747018c0b"

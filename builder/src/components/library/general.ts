@@ -3,7 +3,7 @@
 import { DatasourceRef } from '../../types/datasource';
 
 export type PropsBindingState = {
-  type: 'datasource' | 'property';
+  type: 'datasource' | 'property' | 'action';
   dataType?: string;
   value: string | number | boolean | null | object;
 };

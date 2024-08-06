@@ -8,25 +8,21 @@ import { useApplicationContext } from '@commercetools-frontend/application-shell
 import { APP_NAME } from '../../constants';
 import uniqueId from 'lodash/uniqueId';
 import { PagedQueryResponse } from '../../types/general';
-import {
-  Datasource,
-  DatasourceDraft,
-  DatasourceResponse,
-} from '../../types/datasource';
+import { ActionResponse, ActionDraft, Action } from '../../types/datasource';
 import { buildUrlWithParams } from '../../utils/utils';
 
-const CONTAINER = `${APP_NAME}_datasources`;
-const DATASOURCES_KEY_PREFIX = 'datasource-';
+const CONTAINER = `${APP_NAME}_actions`;
+const ACTIONS_KEY_PREFIX = 'action-';
 
-export const useDatasource = () => {
+export const useAction = () => {
   const context = useApplicationContext((context) => context);
   const dispatchAppsRead = useAsyncDispatch<
     TSdkAction,
-    PagedQueryResponse<DatasourceResponse>
+    PagedQueryResponse<ActionResponse>
   >();
-  const dispatchAppsAction = useAsyncDispatch<TSdkAction, DatasourceResponse>();
+  const dispatchAppsAction = useAsyncDispatch<TSdkAction, ActionResponse>();
 
-  const fetchAllDatasources = async (limit: number = 20, page: number = 1) => {
+  const fetchAllActions = async (limit: number = 20, page: number = 1) => {
     const offset = (page - 1) * limit;
 
     const result = await dispatchAppsRead(
@@ -44,10 +40,10 @@ export const useDatasource = () => {
     return result;
   };
 
-  const createDatasource = async (
-    payload: DatasourceDraft
-  ): Promise<DatasourceResponse> => {
-    const key = uniqueId(DATASOURCES_KEY_PREFIX);
+  const createAction = async (
+    payload: ActionDraft
+  ): Promise<ActionResponse> => {
+    const key = uniqueId(ACTIONS_KEY_PREFIX);
     const result = await dispatchAppsAction(
       actions.post({
         mcApiProxyTarget: MC_API_PROXY_TARGETS.COMMERCETOOLS_PLATFORM,
@@ -58,62 +54,58 @@ export const useDatasource = () => {
           value: {
             ...payload,
             key,
-          } as DatasourceDraft,
+          } as ActionDraft,
         },
       })
     );
     return result;
   };
 
-  const deleteDatasource = async (
-    datasourceKey: string
-  ): Promise<DatasourceResponse> => {
-    if (!datasourceKey) {
-      return {} as DatasourceResponse;
+  const deleteAction = async (actionKey: string): Promise<ActionResponse> => {
+    if (!actionKey) {
+      return {} as ActionResponse;
     }
     const result = await dispatchAppsAction(
       actions.del({
         mcApiProxyTarget: MC_API_PROXY_TARGETS.COMMERCETOOLS_PLATFORM,
-        uri: `/${context?.project?.key}/custom-objects/${CONTAINER}/${datasourceKey}`,
+        uri: `/${context?.project?.key}/custom-objects/${CONTAINER}/${actionKey}`,
       })
     );
     return result;
   };
 
-  const getDatasource = async (
-    datasourceKey: string
-  ): Promise<DatasourceResponse> => {
-    if (!datasourceKey) {
-      return {} as DatasourceResponse;
+  const getAction = async (actionKey: string): Promise<ActionResponse> => {
+    if (!actionKey) {
+      return {} as ActionResponse;
     }
     const result = await dispatchAppsAction(
       actions.get({
         mcApiProxyTarget: MC_API_PROXY_TARGETS.COMMERCETOOLS_PLATFORM,
-        uri: `/${context?.project?.key}/custom-objects/${CONTAINER}/${datasourceKey}`,
+        uri: `/${context?.project?.key}/custom-objects/${CONTAINER}/${actionKey}`,
       })
     );
     return result;
   };
 
-  const updateDatasource = async (
-    datasourceKey: string,
-    datasource?: Datasource
-  ): Promise<DatasourceResponse> => {
-    if (!datasourceKey || !datasource) {
-      return {} as DatasourceResponse;
+  const updateAction = async (
+    actionKey: string,
+    action?: Action
+  ): Promise<ActionResponse> => {
+    if (!actionKey || !action) {
+      return {} as ActionResponse;
     }
-    const result = await getDatasource(datasourceKey).then((ds) => {
+    const result = await getAction(actionKey).then((ac) => {
       return dispatchAppsAction(
         actions.post({
           mcApiProxyTarget: MC_API_PROXY_TARGETS.COMMERCETOOLS_PLATFORM,
           uri: `/${context?.project?.key}/custom-objects`,
           payload: {
             container: CONTAINER,
-            key: datasourceKey,
+            key: actionKey,
             value: {
-              ...ds.value,
-              ...datasource,
-            } as DatasourceDraft,
+              ...ac.value,
+              ...action,
+            } as ActionDraft,
           },
         })
       );
@@ -122,10 +114,10 @@ export const useDatasource = () => {
   };
 
   return {
-    fetchAllDatasources,
-    getDatasource,
-    updateDatasource,
-    deleteDatasource,
-    createDatasource,
+    fetchAllActions: fetchAllActions,
+    getAction: getAction,
+    updateAction: updateAction,
+    deleteAction: deleteAction,
+    createAction: createAction,
   };
 };

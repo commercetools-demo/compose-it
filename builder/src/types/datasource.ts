@@ -9,6 +9,15 @@ export type Datasource = {
     variableBindings: Record<string, PropsBindingState>;
   };
 };
+export type Action = {
+  id: string;
+  name: string;
+  mutation: string;
+  variables: string;
+  config: {
+    variableBindings: Record<string, PropsBindingState>;
+  };
+};
 
 export type DatasourceDraft = {
   id: string;
@@ -17,11 +26,25 @@ export type DatasourceDraft = {
   variables: string;
 };
 
+export type ActionDraft = {
+  id: string;
+  name: string;
+  mutation: string;
+  variables: string;
+};
+
 export interface DatasourceResponse {
   id: string;
   createdAt: string;
   key: string;
   value?: Datasource;
+}
+
+export interface ActionResponse {
+  id: string;
+  createdAt: string;
+  key: string;
+  value?: Action;
 }
 
 export type DatasourceRef = {

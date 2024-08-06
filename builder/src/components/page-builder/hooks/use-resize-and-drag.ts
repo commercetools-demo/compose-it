@@ -203,8 +203,6 @@ export const useResizeAndDrag = (
     row: number
   ) => {
     e.preventDefault();
-    console.log('handleDragOver', column, row);
-
     setDragPosition({ column, row });
   };
 

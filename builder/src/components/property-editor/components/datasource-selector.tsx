@@ -6,14 +6,12 @@ type Props = {
   isDatasourceSelected: boolean;
   value?: string | number | unknown[] | boolean | object | null;
   onDatasourceSelect: (datasourceKey?: string, path?: string) => void;
-  onDatasourceDeselect: () => void;
 };
 
 const DatasourceSelector = ({
   isDatasourceSelected,
   value,
   onDatasourceSelect,
-  onDatasourceDeselect,
 }: Props) => {
   const { extractPaths } = usePropertyDatasource();
   const { datasources } = useBuilderStateContext();
@@ -47,13 +45,6 @@ const DatasourceSelector = ({
 
   return (
     <>
-      <input
-        type="checkbox"
-        checked={isDatasourceSelected}
-        onChange={(e) =>
-          e.target.checked ? onDatasourceSelect() : onDatasourceDeselect()
-        }
-      />
       {isDatasourceSelected && (
         <>
           <select
