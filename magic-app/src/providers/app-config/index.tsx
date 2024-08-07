@@ -1,17 +1,20 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { App } from '../../types/app';
-import { DatasourceResponse } from '../../types/datasource';
+import { ActionResponse, DatasourceResponse } from '../../types/datasource';
 import { useApps } from '../../hooks/use-app';
 import { useDatasource } from '../../hooks/use-datasource';
+import { useAction } from '../../hooks/use-action';
 
 export interface ContextShape {
   appConfig: App;
   datasources: DatasourceResponse[];
+  actions: ActionResponse[];
 }
 
 const initialState = {
   appConfig: {} as App,
   datasources: [] as DatasourceResponse[],
+  actions: [] as ActionResponse[],
 } as ContextShape;
 
 export const AppConfigContext = createContext(initialState);
@@ -48,18 +51,27 @@ const sortRoutes = (app: App): App => {
 const AppConfigProvider = ({ children }: React.PropsWithChildren<{}>) => {
   const { getApp } = useApps();
   const { fetchAllDatasources } = useDatasource();
+  const { fetchAllActions } = useAction();
   const [appConfig, setAppConfig] = useState<App>(initialState.appConfig);
   const [datasourceResponses, setDatasourceResponses] = useState<
     DatasourceResponse[]
   >([]);
+  const [actionResponses, serActionResponses] = useState<ActionResponse[]>([]);
+
+  const fetchAll = async () => {
+    const [datasources, app, actions] = await Promise.all([
+      fetchAllDatasources(),
+      getApp(APP_KEY),
+      fetchAllActions(),
+    ]);
+
+    setDatasourceResponses(datasources?.results);
+    setAppConfig(sortRoutes(app));
+    serActionResponses(actions?.results);
+  };
 
   useEffect(() => {
-    fetchAllDatasources().then((datasources) => {
-      setDatasourceResponses(datasources?.results);
-    });
-    getApp(APP_KEY).then((app) => {
-      setAppConfig(sortRoutes(app));
-    });
+    fetchAll();
   }, []);
 
   if (!appConfig || !datasourceResponses) {
@@ -71,6 +83,7 @@ const AppConfigProvider = ({ children }: React.PropsWithChildren<{}>) => {
       value={{
         appConfig,
         datasources: datasourceResponses,
+        actions: actionResponses,
       }}
     >
       {children}
