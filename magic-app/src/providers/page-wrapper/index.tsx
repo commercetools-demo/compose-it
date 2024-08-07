@@ -121,7 +121,9 @@ const PageWrapperProvider = ({
     availableDatasources.forEach((availableDatasource) => {
       fetcher({
         query: availableDatasource.value?.query || '',
-        variables: JSON.parse(availableDatasource.value?.variables || '{}'),
+        variables: availableDatasource.value?.variables
+          ? JSON.parse(availableDatasource.value?.variables)
+          : match.params,
       }).then((data) => {
         setDatasources((prevDatasources) => {
           return {

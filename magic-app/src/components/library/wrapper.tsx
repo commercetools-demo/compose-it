@@ -48,7 +48,9 @@ const ComponentWrapper = ({
       {component.props?.children &&
       !Array.isArray(component.props?.children) ? (
         <Component {...component.props}>{component.props?.children}</Component>
-      ) : children ? (
+      ) : children &&
+        Array.isArray(component.props?.children) &&
+        component.props.children.every((child) => !!child) ? (
         <Component {...component.props}>{children}</Component>
       ) : (
         <Component {...component.props} />
