@@ -1,6 +1,7 @@
 import React from 'react';
 import { PropsBindingState } from '../../library/general';
 import ArrayEditorInput from './array-editor-input';
+import EventEditorInput from './event-editor-input';
 
 type Props = {
   componentType: string;
@@ -23,6 +24,9 @@ const PropertyValueEditor = ({ propsBinding, value, onChange }: Props) => {
   }
   if (propsBinding.dataType === 'array') {
     return <ArrayEditorInput value={value as object[]} onChange={onChange} />;
+  }
+  if (propsBinding.dataType === 'event') {
+    return <EventEditorInput value={value as string} onChange={onChange} />;
   }
   return (
     <input
