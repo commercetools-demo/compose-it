@@ -51,21 +51,21 @@ const NewRouteForm = ({
   };
 
   return (
-    <Drawer
-      title={!!pageData ? `Edit Page ${pageData.route}` : 'Add Page'}
-      isOpen={isOpen}
-      onClose={onClose}
-      size={10}
-      onPrimaryButtonClick={() => onSubmit(pageData)}
-      onSecondaryButtonClick={onClose}
+    <Formik
+      initialValues={pageData}
+      onSubmit={onSubmit}
+      validateOnBlur
+      validate={handleValidation}
     >
-      <Formik
-        initialValues={pageData}
-        onSubmit={() => {}}
-        validateOnBlur
-        validate={handleValidation}
-      >
-        {({ values, errors, handleChange }) => (
+      {({ values, errors, handleChange, handleSubmit }) => (
+        <Drawer
+          title={!!pageData ? `Edit Page ${pageData.route}` : 'Add Page'}
+          isOpen={isOpen}
+          onClose={onClose}
+          size={10}
+          onPrimaryButtonClick={() => handleSubmit()}
+          onSecondaryButtonClick={onClose}
+        >
           <Form>
             <Grid
               gridGap="16px"
@@ -134,9 +134,9 @@ const NewRouteForm = ({
               />
             )}
           </Form>
-        )}
-      </Formik>
-    </Drawer>
+        </Drawer>
+      )}
+    </Formik>
   );
 };
 

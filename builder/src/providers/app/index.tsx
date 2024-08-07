@@ -49,12 +49,27 @@ export const AppProvider: React.FC<{
     setIsSaving(false);
   };
 
-  const addPage = (page: PageConfig) => {
+  const addPage = (page: PageConfig) => {    
     setAppConfig((prev) => ({
       ...prev,
       pages: [...(prev?.pages || []), page],
     }));
     updateCurrentPageId(page.id);
+    setHistory((prevHistory) => {
+      const oldHistory = prevHistory.slice(0, currentHistoryIndex + 1);
+      const newHistory = prevHistory.slice(-1);
+
+      return [
+        ...oldHistory,
+        {
+          ...newHistory[0],
+          pages: (newHistory[0]?.pages || []).map((p) =>
+            p.id === page.id ? page : p
+          ),
+        },
+      ];
+    });
+    setCurrentHistoryIndex((prevIndex) => prevIndex + 1);
   };
 
   const updateApp = (appConfig?: AppConfig) => {

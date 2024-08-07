@@ -11,7 +11,7 @@ export const useGridDimensions = (page: PageConfig) => {
     let maxColumn = page.layout.columns;
     let maxRow = 10;
 
-    page.components.forEach((component) => {
+    page.components?.forEach((component) => {
       const rightEdge =
         component.layout.gridColumn + component.layout.gridWidth - 1;
       const bottomEdge =
@@ -29,7 +29,7 @@ export const useGridDimensions = (page: PageConfig) => {
       .fill(null)
       .map(() => Array(gridDimensions.columns).fill(false));
 
-    page.components.forEach((component) => {
+    page.components?.forEach((component) => {
       for (
         let row = component.layout.gridRow;
         row < component.layout.gridRow + component.layout.gridHeight;

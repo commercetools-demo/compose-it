@@ -93,7 +93,7 @@ export const useApps = () => {
     return pages
       ? pages.map((page) => ({
           ...page,
-          datasourceRefs: getDatasourceRefs(page.components),
+          datasourceRefs: getDatasourceRefs(page.components || []),
         }))
       : pages;
   };

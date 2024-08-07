@@ -24,7 +24,7 @@ export const useResizeAndDrag = (
   const handleResize = (e: React.MouseEvent) => {
     if (!resizing || !gridRef.current) return;
 
-    const component = page.components.find((c) => c.id === resizing.id);
+    const component = page.components?.find((c) => c.id === resizing.id);
     if (!component) return;
 
     const gridRect = gridRef.current.getBoundingClientRect();
@@ -81,7 +81,7 @@ export const useResizeAndDrag = (
 
     const updatedPage = {
       ...page,
-      components: page.components.map((c) =>
+      components: page.components?.map((c) =>
         c.id === component.id ? updatedComponent : c
       ),
     };
@@ -143,16 +143,16 @@ export const useResizeAndDrag = (
       },
       props,
     };
-    let updatedComponents = [...page.components, newComponent];
+    let updatedComponents = [...(page.components || []), newComponent];
     if (sourceComponentId) {
       // Moving an existing component
       updatedComponents = removeComponentById(
-        page.components,
+        page.components || [],
         sourceComponentId
       );
     } else {
       // Adding a new component
-      updatedComponents = [...page.components];
+      updatedComponents = [...(page.components || [])];
     }
 
     if (targetId) {
@@ -184,7 +184,7 @@ export const useResizeAndDrag = (
 
     if (componentId) {
       // Moving an existing component
-      const updatedComponents = page.components.map((c) =>
+      const updatedComponents = page.components?.map((c) =>
         c.id === componentId
           ? { ...c, layout: { ...c.layout, gridColumn: column, gridRow: row } }
           : c

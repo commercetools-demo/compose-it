@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 
 interface FormProps {
   action?: string;
+  actionType?: string;
   initialData?: string;
 }
 
@@ -19,8 +20,11 @@ const Form: React.FC<PropsWithChildren<FormProps>> = ({ children }) => {
 Form.propTypes = {
   action: PropTypes.string,
   initialData: PropTypes.string,
+  actionType: PropTypes.string,
 };
 
-Form.defaultProps = {};
+Form.defaultProps = {
+  actionType: 'customer',
+};
 
 export default Form;

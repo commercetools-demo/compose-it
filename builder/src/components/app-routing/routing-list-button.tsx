@@ -58,17 +58,6 @@ const RoutingListButton: React.FC = () => {
       });
       editDrawerState.openModal();
     } else {
-      setSelectedPage({
-        layout: { type: 'grid', columns: 12 },
-        route: '',
-        type: 'landing',
-        name: '',
-        config: {
-          propsBindings: {},
-        },
-        props: {},
-        id: Date.now().toString(),
-      });
       editDrawerState.openModal();
     }
   };
@@ -93,14 +82,12 @@ const RoutingListButton: React.FC = () => {
         />
       </Drawer>
 
-      {!!selectedPage && (
-        <NewRouteForm
-          page={selectedPage}
-          onSubmit={handlePageAction}
-          isOpen={editDrawerState.isModalOpen}
-          onClose={handleCloseEdit}
-        />
-      )}
+      <NewRouteForm
+        page={selectedPage}
+        onSubmit={handlePageAction}
+        isOpen={editDrawerState.isModalOpen}
+        onClose={handleCloseEdit}
+      />
     </Spacings.Inline>
   );
 };
