@@ -3,6 +3,11 @@ import { componentLibrary } from '.';
 import { fixUpRoutingProps } from './utils';
 import { useMemo } from 'react';
 import { usePropsBinding } from './hooks/use-props-binding';
+import styled from 'styled-components';
+
+const ErrorDiv = styled.div`
+  color: red;
+`;
 
 const ComponentWrapper = ({
   component,
@@ -14,6 +19,7 @@ const ComponentWrapper = ({
   parentUrl?: string;
 }) => {
   const Component = componentLibrary[component.type];
+  console.log('component', Component);
 
   const { setPropsBinding } = usePropsBinding();
 
@@ -42,6 +48,10 @@ const ComponentWrapper = ({
       return {};
     }
   }, [component]);
+
+  if (!Component) {
+    return <ErrorDiv>component not implemented {component.type}</ErrorDiv>;
+  }
 
   return (
     <div style={style}>

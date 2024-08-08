@@ -9,7 +9,13 @@ import {
   FormDetailPage,
 } from '@commercetools-frontend/application-components';
 import Form from './components/form';
-import TextInput from './components/text-input';
+import UiKitTextInput, {
+  TTextInputProps,
+} from '@commercetools-uikit/text-input';
+import UiKitTextField, {
+  TTextFieldProps,
+} from '@commercetools-uikit/text-field';
+import withFormikInput from './components/with-formik';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const componentLibrary: Record<string, React.FC<any>> = {
@@ -22,7 +28,8 @@ export const componentLibrary: Record<string, React.FC<any>> = {
   Form,
   Card,
   Link,
-  TextInput,
+  TextInput: withFormikInput<TTextInputProps>(UiKitTextInput),
+  TextField: withFormikInput<TTextFieldProps>(UiKitTextField),
   FormModalPage,
   FormDetailPage,
 };

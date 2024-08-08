@@ -4,15 +4,17 @@ import React, { PropsWithChildren } from 'react';
 import PropTypes from 'prop-types';
 import { Form as FormikForm, Formik } from 'formik';
 import { useAppConfig } from '../../../providers/app-config';
-import { createSyncCustomers } from '@commercetools/sync-actions';
+import * as syncActions from '@commercetools/sync-actions';
 
 interface FormProps {
   action?: string;
   initialData?: any;
+  actionType?: string;
 }
 
 const Form: React.FC<PropsWithChildren<FormProps>> = ({
   children,
+  actionType,
   action,
   initialData,
 }) => {
@@ -20,7 +22,9 @@ const Form: React.FC<PropsWithChildren<FormProps>> = ({
 
   const theAction = actions.find((a) => a.key === action);
 
-  console.log('theAction', theAction);
+  console.log('actionType', actionType);
+  console.log('actions', Object.keys(syncActions));
+  
 
   const submit = (values: any) => {
     const syncCustomers = createSyncCustomers();
