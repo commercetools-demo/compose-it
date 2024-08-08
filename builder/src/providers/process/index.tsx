@@ -2,7 +2,12 @@ import React, { useContext, useEffect, useState } from 'react';
 import { PagedQueryResponse } from '../../types/general';
 import { App } from '../../types/app';
 import { useApps } from '../../hooks/use-app';
-import { ActionResponse, ComponentProp, ComponentPropResponse, DatasourceResponse } from '../../types/datasource';
+import {
+  ActionResponse,
+  ComponentProp,
+  ComponentPropResponse,
+  DatasourceResponse,
+} from '../../types/datasource';
 import { useDatasource } from '../../hooks/use-datasource';
 import { useAction } from '../../hooks/use-action';
 import { useComponentProps } from '../../hooks/use-components';
@@ -30,26 +35,31 @@ const BuilderStateProvider = ({ children }: React.PropsWithChildren<{}>) => {
   const [datasources, setDatasources] =
     useState<PagedQueryResponse<DatasourceResponse>>();
   const [actions, setActions] = useState<PagedQueryResponse<ActionResponse>>();
-  const [componentProps, setComponentProps] = useState<ComponentPropResponse[]>();
+  const [componentProps, setComponentProps] =
+    useState<ComponentPropResponse[]>();
   const [isLoading, setIsLoading] = useState(false);
   const { fetchAllApps } = useApps();
   const { fetchAllDatasources } = useDatasource();
   const { fetchAllActions } = useAction();
   const { fetchAllComponentProps } = useComponentProps();
 
-  const getComponentProps = (componentType: string): ComponentProp | undefined => {
-    return componentProps?.find((component) => component.key === componentType)?.value;
-  }
+  const getComponentProps = (
+    componentType: string
+  ): ComponentProp | undefined => {
+    return componentProps?.find((component) => component.key === componentType)
+      ?.value;
+  };
 
   const getApps = async (limit?: number, page?: number) => {
     setIsLoading(true);
 
-    const [appResult, datasourceResult, actionResult, componentProps] = await Promise.all([
-      fetchAllApps(limit, page),
-      fetchAllDatasources(limit, page),
-      fetchAllActions(limit, page),
-      fetchAllComponentProps(),
-    ]);
+    const [appResult, datasourceResult, actionResult, componentProps] =
+      await Promise.all([
+        fetchAllApps(limit, page),
+        fetchAllDatasources(limit, page),
+        fetchAllActions(limit, page),
+        fetchAllComponentProps(),
+      ]);
     setApps(appResult);
     setDatasources(datasourceResult);
     setActions(actionResult);

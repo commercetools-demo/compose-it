@@ -19,7 +19,7 @@ export const useResizeAndDrag = (
     row: number;
   } | null>(null);
 
-  const {getComponentProps} = useBuilderStateContext();
+  const { getComponentProps } = useBuilderStateContext();
 
   const { removeComponentById, addComponentToTarget } = useComponentConfig();
 

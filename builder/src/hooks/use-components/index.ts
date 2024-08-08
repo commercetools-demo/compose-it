@@ -18,9 +18,15 @@ export const useComponentProps = () => {
     TSdkAction,
     PagedQueryResponse<ComponentPropResponse>
   >();
-  const dispatchAppsAction = useAsyncDispatch<TSdkAction, ComponentPropResponse>();
+  const dispatchAppsAction = useAsyncDispatch<
+    TSdkAction,
+    ComponentPropResponse
+  >();
 
-  const fetchAllComponentProps = async (limit: number = 500, page: number = 1) => {
+  const fetchAllComponentProps = async (
+    limit: number = 500,
+    page: number = 1
+  ) => {
     const offset = (page - 1) * limit;
 
     const result = await dispatchAppsRead(
@@ -50,13 +56,12 @@ export const useComponentProps = () => {
         payload: {
           container: CONTAINER,
           key,
-          value: payload
+          value: payload,
         },
       })
     );
     return result;
   };
-
 
   return {
     fetchAllComponentProps,

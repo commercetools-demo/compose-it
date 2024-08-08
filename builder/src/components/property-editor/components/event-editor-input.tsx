@@ -61,21 +61,21 @@ const EventEditorInput: React.FC<Props> = ({ value, onChange }) => {
 
   return (
     <Spacings.Inline scale="s">
-        <Select
-          title="Event type"
-          options={[
-            { value: 'route', label: 'Change Route' },
-            ...ENTITY_ACTIONT_TYPES,
-          ]}
-          value={action.type}
-          placeholder="Select an action"
-          isClearable
-          isCondensed
-          onChange={(event) =>
-            handleActionTypeChange(event.target.value as string)
-          }
-        />
-        {renderActionInput()}
+      <Select
+        title="Event type"
+        options={[
+          { value: 'route', label: 'Change Route' },
+          ...ENTITY_ACTIONT_TYPES,
+        ]}
+        value={action.type}
+        placeholder="Select an action"
+        isClearable
+        isCondensed
+        onChange={(event) =>
+          handleActionTypeChange(event.target.value as string)
+        }
+      />
+      {renderActionInput()}
     </Spacings.Inline>
   );
 };
