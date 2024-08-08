@@ -19,6 +19,17 @@ export type Action = {
   };
 };
 
+export interface ComponentPropResponse {
+  id: string;
+  createdAt: string;
+  key: string;
+  value?: ComponentProp;
+}
+export type ComponentProp = {
+  props: Record<string, unknown>;
+  propsBindings: Record<string, PropsBindingState>;
+};
+
 export type DatasourceDraft = {
   id: string;
   name: string;

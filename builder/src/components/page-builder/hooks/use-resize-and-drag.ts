@@ -1,8 +1,8 @@
 import { RefObject, useState } from 'react';
 import { ComponentConfig, PageConfig } from '../../library/general';
 import { calculateNewSize } from '../utils';
-import { getComponentBindings, getComponentProps } from '../../library/utils';
 import { useComponentConfig } from './use-component-config';
+import { useBuilderStateContext } from '../../../providers/process';
 
 export const useResizeAndDrag = (
   page: PageConfig,
@@ -18,6 +18,8 @@ export const useResizeAndDrag = (
     column: number;
     row: number;
   } | null>(null);
+
+  const {getComponentProps} = useBuilderStateContext();
 
   const { removeComponentById, addComponentToTarget } = useComponentConfig();
 
@@ -126,8 +128,10 @@ export const useResizeAndDrag = (
     const componentType = e.dataTransfer.getData('componentType');
     const sourceComponentId = e.dataTransfer.getData('componentId');
 
-    const props = getComponentProps(componentType);
-    const propsBindings = getComponentBindings(componentType);
+    const componentProps = getComponentProps(componentType);
+
+    const props = componentProps?.props || {};
+    const propsBindings = componentProps?.propsBindings || {};
 
     const newComponent: ComponentConfig = {
       type: componentType,

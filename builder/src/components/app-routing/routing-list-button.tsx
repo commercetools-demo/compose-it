@@ -9,9 +9,10 @@ import RouteList from './route-list';
 import { PageConfig } from '../library/general';
 import NewRouteForm from './new-route';
 import { useAppContext } from '../../providers/app';
-import { getComponentBindings, getComponentProps } from '../library/utils';
+import { useBuilderStateContext } from '../../providers/process';
 
 const RoutingListButton: React.FC = () => {
+  const { getComponentProps } = useBuilderStateContext();
   const { addPage, updatePage, savePage } = useAppContext();
   const [selectedPage, setSelectedPage] = useState<PageConfig>();
   const listDrawerState = useModalState();
@@ -47,9 +48,10 @@ const RoutingListButton: React.FC = () => {
 
   const handleOpenEdit = (page?: PageConfig) => {
     if (page) {
-      const props = getComponentProps(page.type);
+      const componentProps = getComponentProps(page.type);
+      const props = componentProps?.props || {};
       const config = {
-        propsBindings: getComponentBindings(page.type),
+        propsBindings: componentProps?.propsBindings || {},
       };
       setSelectedPage({
         ...page,
