@@ -32,7 +32,7 @@ const ModalPageRenderer: React.FC<DynamicPageRendererProps> = ({
       onClose={formModalState.closeModal}
       onPrimaryButtonClick={formModalState.closeModal}
       onSecondaryButtonClick={formModalState.closeModal}
-      {...pageConfig?.props || {}}
+      {...(pageConfig?.props || {})}
     >
       <div
         className="dynamic-page"

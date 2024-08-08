@@ -11,7 +11,7 @@ function withFormikInput<T extends WithFormikInputProps>(
 ) {
   return function FormikInput(props: T) {
     const { values, handleChange } = useFormikContext();
-    
+
     if (!props.name) {
       return null;
     }
