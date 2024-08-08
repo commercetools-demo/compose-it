@@ -46,18 +46,27 @@ const RoutingListButton: React.FC = () => {
     editDrawerState.closeModal();
   };
 
+  const handleCloseList = () => {
+    setSelectedPage(undefined);
+    listDrawerState.closeModal();
+  };
+
   const handleOpenEdit = (page?: PageConfig) => {
+    console.log('page', page);
+
     if (page) {
       const componentProps = getComponentProps(page.type);
       const props = componentProps?.props || {};
       const config = {
         propsBindings: componentProps?.propsBindings || {},
       };
-      setSelectedPage({
+      const isThispage = {
         ...page,
         props,
         config,
-      });
+      };
+
+      setSelectedPage(isThispage);
       editDrawerState.openModal();
     } else {
       editDrawerState.openModal();
@@ -73,23 +82,25 @@ const RoutingListButton: React.FC = () => {
       <Drawer
         title="Manage routing"
         isOpen={listDrawerState.isModalOpen}
-        onClose={listDrawerState.closeModal}
+        onClose={handleCloseList}
         hideControls
         size={20}
       >
         <RouteList
-          onClose={listDrawerState.closeModal}
+          onClose={handleCloseList}
           onEditPage={handleOpenEdit}
           onSave={savePage}
         />
       </Drawer>
 
-      <NewRouteForm
-        page={selectedPage}
-        onSubmit={handlePageAction}
-        isOpen={editDrawerState.isModalOpen}
-        onClose={handleCloseEdit}
-      />
+      {editDrawerState.isModalOpen && (
+        <NewRouteForm
+          page={selectedPage}
+          onSubmit={handlePageAction}
+          isOpen={editDrawerState.isModalOpen}
+          onClose={handleCloseEdit}
+        />
+      )}
     </Spacings.Inline>
   );
 };
