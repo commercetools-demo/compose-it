@@ -3,6 +3,8 @@
 import React, { PropsWithChildren } from 'react';
 import PropTypes from 'prop-types';
 import { Form as FormikForm, Formik } from 'formik';
+import PrimaryButton from '@commercetools-uikit/primary-button';
+import Spacings from '@commercetools-uikit/spacings';
 
 interface FormProps {
   onAction?: (initialData: any, values: any) => Promise<any>;
@@ -33,12 +35,18 @@ const Form: React.FC<PropsWithChildren<FormProps>> = ({
         >
           {({ submitForm }) => (
             <>
-              <FormikForm>{children}</FormikForm>
-              <div>
-                <button type="button" onClick={submitForm} className="primary">
-                  Submit
-                </button>
-              </div>
+              <Spacings.Stack scale="l">
+                <FormikForm>{children}</FormikForm>
+                <Spacings.Inline scale="l">
+                  <PrimaryButton
+                    label="Submit"
+                    type="button"
+                    onClick={submitForm}
+                  >
+                    Submit
+                  </PrimaryButton>
+                </Spacings.Inline>
+              </Spacings.Stack>
             </>
           )}
         </Formik>
