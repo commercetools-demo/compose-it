@@ -56,7 +56,7 @@
     "@commercetools-uikit/select-field": "^19.2.0",
     "@commercetools-uikit/spacings": "^19.2.0",
     "@commercetools-uikit/text": "^19.2.0",
-    "@commercetools-uikit/text-field": "^19.2.0",
+    "@commercetools-uikit/text-field": "^19.9.0",
     "@commercetools-uikit/text-input": "^19.2.0",
     "@commercetools-uikit/view-switcher": "^19.9.0",
     "@commercetools/sync-actions": "^5.14.0",
