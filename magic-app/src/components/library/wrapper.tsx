@@ -19,7 +19,6 @@ const ComponentWrapper = ({
   parentUrl?: string;
 }) => {
   const Component = componentLibrary[component.type];
-  console.log('component', Component);
 
   const { setPropsBinding } = usePropsBinding();
 

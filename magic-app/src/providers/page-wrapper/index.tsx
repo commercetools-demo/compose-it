@@ -19,10 +19,12 @@ import ModalPageRenderer from '../../components/dynamic-page-renderer/modal-page
 
 export interface ContextShape {
   datasources: {};
+  fetcher: (graphQLParams: FetcherParams, fetcherOpts?: FetcherOpts) => any;
 }
 
 const initialState = {
   datasources: {} as {},
+  fetcher: () => {},
 } as ContextShape;
 
 export const PageWrapperContext = createContext(initialState);
@@ -145,6 +147,7 @@ const PageWrapperProvider = ({
     <PageWrapperContext.Provider
       value={{
         datasources,
+        fetcher,
       }}
     >
       {renderPageType(pageConfig, match.url)}

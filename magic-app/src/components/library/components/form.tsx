@@ -3,36 +3,19 @@
 import React, { PropsWithChildren } from 'react';
 import PropTypes from 'prop-types';
 import { Form as FormikForm, Formik } from 'formik';
-import { useAppConfig } from '../../../providers/app-config';
-import * as syncActions from '@commercetools/sync-actions';
 
 interface FormProps {
-  action?: string;
+  onAction?: (initialData: any, values: any) => Promise<any>;
   initialData?: any;
-  actionType?: string;
 }
 
 const Form: React.FC<PropsWithChildren<FormProps>> = ({
   children,
-  actionType,
-  action,
+  onAction,
   initialData,
 }) => {
-  const { actions } = useAppConfig();
-
-  const theAction = actions.find((a) => a.key === action);
-
-  console.log('actionType', actionType);
-  console.log('actions', Object.keys(syncActions));
-  
-
-  const submit = (values: any) => {
-    const syncCustomers = createSyncCustomers();
-
-    console.log('values', values, initialData);
-
-    const actions = syncCustomers.buildActions(initialData, values);
-    console.log('blah', actions);
+  const submit = async (values: any) => {
+    return onAction?.(initialData, values);
   };
 
   // wait for initial data to be loaded
@@ -65,7 +48,7 @@ const Form: React.FC<PropsWithChildren<FormProps>> = ({
 };
 
 Form.propTypes = {
-  action: PropTypes.string,
+  onAction: PropTypes.string,
   initialData: PropTypes.string,
 };
 
