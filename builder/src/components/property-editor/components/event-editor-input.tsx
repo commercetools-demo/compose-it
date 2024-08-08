@@ -19,7 +19,7 @@ const EventEditorInput: React.FC<Props> = ({ value, onChange }) => {
     try {
       return JSON.parse(value);
     } catch {
-      return { type: 'route', value: '' };
+      return { type: null, value: '' };
     }
   });
 
@@ -61,8 +61,13 @@ const EventEditorInput: React.FC<Props> = ({ value, onChange }) => {
   return (
     <div>
       <Select
-        options={[{ value: 'route', label: 'Route' }, ...ENTITY_ACTIONT_TYPES]}
+        options={[
+          { value: 'route', label: 'Route' },
+          ...ENTITY_ACTIONT_TYPES,
+        ]}
         value={action.type}
+        placeholder="Select an action"
+        isClearable
         isCondensed
         onChange={(event) =>
           handleActionTypeChange(event.target.value as string)
