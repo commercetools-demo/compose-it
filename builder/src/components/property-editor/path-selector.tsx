@@ -1,4 +1,5 @@
 import React from 'react';
+import Select from '@commercetools-uikit/select-field';
 
 interface PathSelectorProps {
   paths: string[];
@@ -12,13 +13,19 @@ export const PathSelector: React.FC<PathSelectorProps> = ({
   onSelect,
 }) => {
   return (
-    <select onChange={(e) => onSelect(e.target.value)} value={value}>
-      <option value="">Select a path</option>
-      {paths.map((path, index) => (
-        <option key={index} value={path}>
-          {path}
-        </option>
-      ))}
-    </select>
+    <Select
+      onChange={(e) => onSelect(e.target.value)}
+      value={value}
+      isClearable
+      isCondensed
+      options={[{ value: undefined, label: '' }].concat(
+        paths.map((path) => ({
+          value: path,
+          label: path,
+        }))
+      )}
+      title="Path"
+      placeholder="Select a path"
+    ></Select>
   );
 };

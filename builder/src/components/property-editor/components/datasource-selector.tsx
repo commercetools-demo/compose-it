@@ -2,6 +2,8 @@ import { usePropertyDatasource } from '../hooks/use-property-datasource';
 import { useBuilderStateContext } from '../../../providers/process';
 import { PathSelector } from '../path-selector';
 import { useMemo } from 'react';
+import Select from '@commercetools-uikit/select-field';
+
 type Props = {
   isDatasourceSelected: boolean;
   value?: string | number | unknown[] | boolean | object | null;
@@ -47,17 +49,20 @@ const DatasourceSelector = ({
     <>
       {isDatasourceSelected && (
         <>
-          <select
-            onChange={(e) => onDatasourceSelect(e.target.value)}
+          <Select
+            onChange={(e) => onDatasourceSelect(e.target.value as string)}
             value={selectedDatasource}
-          >
-            <option value="">Select a datasource</option>
-            {datasources?.results.map((datasource) => (
-              <option key={datasource.key} value={datasource.key}>
-                {datasource.value?.name}
-              </option>
-            ))}
-          </select>
+            isCondensed
+            isClearable
+            options={[{ value: undefined, label: '' }].concat(
+              datasources?.results.map((datasource) => ({
+                value: datasource.key,
+                label: datasource.value?.name,
+              }))
+            )}
+            title="Datasource"
+            placeholder="Select a datasource"
+          ></Select>
           {selectedDatasource && (
             <PathSelector
               paths={availablePaths}

@@ -55,7 +55,7 @@ export const PropertyItem = ({
       >
         <ViewSwitcher.Button value="property">Property</ViewSwitcher.Button>
         <ViewSwitcher.Button value="datasource">Datasource</ViewSwitcher.Button>
-        <ViewSwitcher.Button value="action">Action</ViewSwitcher.Button>
+        {/* <ViewSwitcher.Button value="action">Action</ViewSwitcher.Button> */}
       </ViewSwitcher.Group>
       <DatasourceSelector
         isDatasourceSelected={

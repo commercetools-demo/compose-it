@@ -2,8 +2,7 @@ import Spacings from '@commercetools-uikit/spacings';
 import { FieldArray, Form, Formik } from 'formik';
 import React from 'react';
 import IconButton from '@commercetools-uikit/icon-button';
-import TextInput from '@commercetools-uikit/text-input';
-import { CloseIcon, PlusBoldIcon } from '@commercetools-uikit/icons';
+import { PlusBoldIcon } from '@commercetools-uikit/icons';
 import ArrayEditoInputItem from './array-editor-input-item';
 
 type Props = {

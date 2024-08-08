@@ -1,6 +1,6 @@
 import { useBuilderStateContext } from '../../../providers/process';
 import { useMemo } from 'react';
-import Select from '@commercetools-uikit/select-input';
+import Select from '@commercetools-uikit/select-field';
 
 type Props = {
   isActionSelected: boolean;
@@ -25,6 +25,8 @@ const ActionSelector = ({ isActionSelected, value, onActionSelect }: Props) => {
         <>
           <Select
             isCondensed
+            isClearable
+            title="Action"
             onChange={(e) => onActionSelect(e.target.value as string)}
             value={selectedAction}
             options={actions?.results.map((action) => ({

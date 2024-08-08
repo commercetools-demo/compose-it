@@ -1,5 +1,5 @@
 import React from 'react';
-import TextInput from '@commercetools-uikit/text-input';
+import TextInput from '@commercetools-uikit/text-field';
 import Spacings from '@commercetools-uikit/spacings';
 import { CloseIcon } from '@commercetools-uikit/icons';
 import IconButton from '@commercetools-uikit/icon-button';
@@ -15,12 +15,16 @@ const ArrayEditoInputItem = ({ index, item, remove, handleChange }: Props) => {
   return (
     <Spacings.Inline key={`value.${index}`}>
       <TextInput
+        isCondensed
+        title="Key"
         name={`value.${index}.key`}
         value={item.key}
         onChange={handleChange}
       />
 
       <TextInput
+        title="Label"
+        isCondensed
         name={`value.${index}.label`}
         value={item.label}
         onChange={handleChange}

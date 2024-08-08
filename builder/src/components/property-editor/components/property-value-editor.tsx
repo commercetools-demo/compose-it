@@ -2,6 +2,7 @@ import React from 'react';
 import { PropsBindingState } from '../../library/general';
 import ArrayEditorInput from './array-editor-input';
 import EventEditorInput from './event-editor-input';
+import Text from '@commercetools-uikit/text-field';
 
 type Props = {
   componentType: string;
@@ -29,8 +30,9 @@ const PropertyValueEditor = ({ propsBinding, value, onChange }: Props) => {
     return <EventEditorInput value={value as string} onChange={onChange} />;
   }
   return (
-    <input
-      type="text"
+    <Text
+      isCondensed
+      title="Enter a value"
       value={propsBinding.value as string}
       onChange={(e) => onChange(e.target.value)}
     />
