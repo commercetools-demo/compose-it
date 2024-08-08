@@ -31,7 +31,7 @@ const RouteList: React.FC<Props> = ({ onClose, onEditPage, onSave }) => {
         </Spacings.Inline>
       </Spacings.Inline>
       <DataTable
-        rows={pages}
+        rows={pages || []}
         columns={[
           {
             key: 'name',
