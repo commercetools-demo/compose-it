@@ -64,9 +64,9 @@ const graphqlFetcher = async (
 };
 
 const PageWrapperProvider = ({
-  children,
+  parentUrl,
   pageConfig,
-}: React.PropsWithChildren<{ pageConfig: PageConfig }>) => {
+}: React.PropsWithChildren<{ pageConfig: PageConfig; parentUrl?: string }>) => {
   const { datasources: datasourceResponses } = useAppConfig();
   const [isLoading, setIsLoading] = useState(true);
   const match = useRouteMatch();
@@ -84,7 +84,7 @@ const PageWrapperProvider = ({
     []
   );
 
-  const renderPageType = (pageConfig: PageConfig, parentUrl: string) => {
+  const renderPageType = (pageConfig: PageConfig, parentUrl?: string) => {
     switch (pageConfig.type) {
       case 'landing':
       case 'FormDetailPage':
@@ -150,7 +150,7 @@ const PageWrapperProvider = ({
         fetcher,
       }}
     >
-      {renderPageType(pageConfig, match.url)}
+      {renderPageType(pageConfig, parentUrl)}
     </PageWrapperContext.Provider>
   );
 };

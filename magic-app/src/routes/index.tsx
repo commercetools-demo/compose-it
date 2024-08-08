@@ -38,7 +38,10 @@ const ApplicationRoutes = () => {
             key={pageConfig.id}
             path={joinUrls(match.url, pageConfig.route)}
           >
-            <PageWrapperProvider pageConfig={pageConfig}></PageWrapperProvider>
+            <PageWrapperProvider
+              pageConfig={pageConfig}
+              parentUrl={match.url}
+            ></PageWrapperProvider>
           </Route>
         ))}
         <Route path="*" component={NotFound} />

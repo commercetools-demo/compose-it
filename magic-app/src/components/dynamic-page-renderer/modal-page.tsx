@@ -6,6 +6,7 @@ import {
   useModalState,
 } from '@commercetools-frontend/application-components';
 import { usePropsBinding } from '../library/hooks/use-props-binding';
+import { useHistory } from 'react-router-dom';
 
 const ModalPageRenderer: React.FC<DynamicPageRendererProps> = ({
   pageConfig,
@@ -13,6 +14,7 @@ const ModalPageRenderer: React.FC<DynamicPageRendererProps> = ({
 }) => {
   const formModalState = useModalState(true);
   const { setPropsBinding, removeEmptyProps } = usePropsBinding();
+  const { replace } = useHistory();
 
   if (pageConfig?.config?.propsBindings) {
     const props = setPropsBinding(pageConfig.config.propsBindings);
@@ -29,9 +31,8 @@ const ModalPageRenderer: React.FC<DynamicPageRendererProps> = ({
     <FormModalPage
       isOpen={formModalState.isModalOpen}
       title={pageConfig?.props?.title || 'Modal Page'}
-      onClose={formModalState.closeModal}
-      onPrimaryButtonClick={formModalState.closeModal}
-      onSecondaryButtonClick={formModalState.closeModal}
+      hideControls
+      onClose={() => parentUrl ? replace(parentUrl) : formModalState.closeModal()}
       {...(pageConfig?.props || {})}
     >
       <div
