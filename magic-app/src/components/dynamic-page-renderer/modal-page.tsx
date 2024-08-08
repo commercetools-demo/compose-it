@@ -14,7 +14,7 @@ const ModalPageRenderer: React.FC<DynamicPageRendererProps> = ({
   const formModalState = useModalState(true);
   const { setPropsBinding, removeEmptyProps } = usePropsBinding();
 
-  if (pageConfig.config?.propsBindings) {
+  if (pageConfig?.config?.propsBindings) {
     const props = setPropsBinding(pageConfig.config.propsBindings);
 
     if (props) {
@@ -28,22 +28,22 @@ const ModalPageRenderer: React.FC<DynamicPageRendererProps> = ({
   return (
     <FormModalPage
       isOpen={formModalState.isModalOpen}
-      title={pageConfig.props.title || ''}
+      title={pageConfig?.props?.title || 'Modal Page'}
       onClose={formModalState.closeModal}
       onPrimaryButtonClick={formModalState.closeModal}
       onSecondaryButtonClick={formModalState.closeModal}
-      {...pageConfig.props}
+      {...pageConfig?.props || {}}
     >
       <div
         className="dynamic-page"
         style={{
           display: 'grid',
-          gridTemplateColumns: `repeat(${pageConfig.layout.columns}, 1fr)`,
+          gridTemplateColumns: `repeat(${pageConfig?.layout?.columns}, 1fr)`,
           gap: '4px',
           position: 'relative',
         }}
       >
-        {pageConfig.components.map((component) => (
+        {pageConfig?.components?.map((component) => (
           <ComponentRenderer
             key={component.id}
             component={component}
