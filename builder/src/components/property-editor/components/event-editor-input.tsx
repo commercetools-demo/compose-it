@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import Select from '@commercetools-uikit/select-input';
-import TextInput from '@commercetools-uikit/text-input';
+import { ENTITY_ACTIONT_TYPES } from '../../library/general';
+import RouteSelector from './route-selector';
+import ActionSelector from './action-selector';
 
 type EventAction = {
-  type: 'route' | 'custom';
+  type: 'route' | keyof typeof ENTITY_ACTIONT_TYPES;
   value: string;
 };
 
@@ -21,33 +23,52 @@ const EventEditorInput: React.FC<Props> = ({ value, onChange }) => {
     }
   });
 
-  const handleActionTypeChange = (event: { target: { value: string } }) => {
-    const newAction = { ...action, type: event.target.value as 'route' | 'custom' };
+  const handleActionTypeChange = (value?: string) => {
+    const newAction = {
+      ...action,
+      type: value as EventAction['type'],
+    };
     setAction(newAction);
     onChange(JSON.stringify(newAction));
   };
 
-  const handleActionValueChange = (event: { target: { value: string } }) => {
-    const newAction = { ...action, value: event.target.value };
+  const handleActionValueChange = (value?: string) => {
+    const newAction = { ...action, value: value || '' };
     setAction(newAction);
     onChange(JSON.stringify(newAction));
+  };
+
+  const renderActionInput = () => {
+    switch (action.type) {
+      case 'route':
+        return (
+          <RouteSelector
+            value={action.value}
+            onChange={handleActionValueChange}
+          />
+        );
+      default:
+        return (
+          <ActionSelector
+            isActionSelected
+            value={action.value}
+            onActionSelect={handleActionValueChange}
+          />
+        );
+    }
   };
 
   return (
     <div>
       <Select
-        options={[
-          { value: 'route', label: 'Route' },
-          { value: 'custom', label: 'Custom Action' },
-        ]}
+        options={[{ value: 'route', label: 'Route' }, ...ENTITY_ACTIONT_TYPES]}
         value={action.type}
-        onChange={handleActionTypeChange}
+        isCondensed
+        onChange={(event) =>
+          handleActionTypeChange(event.target.value as string)
+        }
       />
-      <TextInput
-        value={action.value}
-        onChange={handleActionValueChange}
-        placeholder={action.type === 'route' ? 'Enter route' : 'Enter custom action'}
-      />
+      {renderActionInput()}
     </div>
   );
 };

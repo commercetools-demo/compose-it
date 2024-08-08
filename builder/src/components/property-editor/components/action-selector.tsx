@@ -1,5 +1,7 @@
 import { useBuilderStateContext } from '../../../providers/process';
 import { useMemo } from 'react';
+import Select from '@commercetools-uikit/select-input';
+
 type Props = {
   isActionSelected: boolean;
   value?: string | number | unknown[] | boolean | object | null;
@@ -9,7 +11,7 @@ type Props = {
 const ActionSelector = ({ isActionSelected, value, onActionSelect }: Props) => {
   const { actions } = useBuilderStateContext();
 
-  const selectedDatasource = useMemo(
+  const selectedAction = useMemo(
     () =>
       isActionSelected && typeof value === 'string' && !!value
         ? value?.split('.')?.[0]
@@ -21,17 +23,16 @@ const ActionSelector = ({ isActionSelected, value, onActionSelect }: Props) => {
     <>
       {isActionSelected && (
         <>
-          <select
-            onChange={(e) => onActionSelect(e.target.value)}
-            value={selectedDatasource}
-          >
-            <option value="">Select an action</option>
-            {actions?.results.map((action) => (
-              <option key={action.key} value={action.key}>
-                {action.value?.name}
-              </option>
-            ))}
-          </select>
+          <Select
+            isCondensed
+            onChange={(e) => onActionSelect(e.target.value as string)}
+            value={selectedAction}
+            options={actions?.results.map((action) => ({
+              value: action.key,
+              label: action.value?.name,
+            }))}
+            placeholder="Select an action"
+          ></Select>
         </>
       )}
     </>

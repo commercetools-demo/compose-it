@@ -49,7 +49,7 @@ export const AppProvider: React.FC<{
     setIsSaving(false);
   };
 
-  const addPage = (page: PageConfig) => {    
+  const addPage = (page: PageConfig) => {
     setAppConfig((prev) => ({
       ...prev,
       pages: [...(prev?.pages || []), page],

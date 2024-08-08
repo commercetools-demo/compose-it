@@ -4,8 +4,7 @@ import React, { PropsWithChildren } from 'react';
 import PropTypes from 'prop-types';
 
 interface FormProps {
-  action?: string;
-  actionType?: string;
+  onAction?: string;
   initialData?: string;
 }
 
@@ -18,13 +17,12 @@ const Form: React.FC<PropsWithChildren<FormProps>> = ({ children }) => {
 };
 
 Form.propTypes = {
-  action: PropTypes.string,
+  onAction: PropTypes.string,
   initialData: PropTypes.string,
-  actionType: PropTypes.string,
 };
 
 Form.defaultProps = {
-  actionType: 'customer',
+  initialData: '',
 };
 
 export default Form;

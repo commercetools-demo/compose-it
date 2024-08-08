@@ -79,3 +79,27 @@ export const PAGE_TYPES = [
     value: 'FormModalPage',
   },
 ];
+
+export const ENTITY_ACTIONT_TYPES = [
+  { label: 'Save AttributeGroup', value: 'createSyncAttributeGroups' },
+  { label: 'Save CartDiscount', value: 'createSyncCartDiscounts' },
+  { label: 'Save Categorie', value: 'createSyncCategories' },
+  { label: 'Save Channel', value: 'createSyncChannels' },
+  { label: 'Save CustomerGrou', value: 'createSyncCustomerGroup' },
+  { label: 'Save Customer', value: 'createSyncCustomers' },
+  { label: 'Save DiscountCode', value: 'createSyncDiscountCodes' },
+  { label: 'Save Inventorie', value: 'createSyncInventories' },
+  { label: 'Save Order', value: 'createSyncOrders' },
+  { label: 'Save ProductDiscount', value: 'createSyncProductDiscounts' },
+  { label: 'Save ProductSelection', value: 'createSyncProductSelections' },
+  { label: 'Save ProductType', value: 'createSyncProductTypes' },
+  { label: 'Save Product', value: 'createSyncProducts' },
+  { label: 'Save Project', value: 'createSyncProjects' },
+  { label: 'Save ShippingMethod', value: 'createSyncShippingMethods' },
+  { label: 'Save StandalonePrice', value: 'createSyncStandalonePrices' },
+  { label: 'Save State', value: 'createSyncStates' },
+  { label: 'Save Store', value: 'createSyncStores' },
+  { label: 'Save TaxCategorie', value: 'createSyncTaxCategories' },
+  { label: 'Save Type', value: 'createSyncTypes' },
+  { label: 'Save Zone', value: 'createSyncZones' },
+];

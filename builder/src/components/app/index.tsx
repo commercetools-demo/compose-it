@@ -6,8 +6,7 @@ import { useAppContext } from '../../providers/app';
 import AppToolbar from './app-toolbar';
 import Text from '@commercetools-uikit/text';
 export const App: React.FC = () => {
-  const { appConfig, currentPage, updatePage } =
-    useAppContext();
+  const { appConfig, currentPage, updatePage } = useAppContext();
 
   const history = useHistory();
 
