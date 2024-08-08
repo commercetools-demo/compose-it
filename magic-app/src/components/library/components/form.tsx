@@ -48,7 +48,7 @@ const Form: React.FC<PropsWithChildren<FormProps>> = ({
 };
 
 Form.propTypes = {
-  onAction: PropTypes.string,
+  onAction: PropTypes.func,
   initialData: PropTypes.string,
 };
 

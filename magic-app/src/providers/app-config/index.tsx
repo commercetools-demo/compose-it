@@ -4,6 +4,7 @@ import { ActionResponse, DatasourceResponse } from '../../types/datasource';
 import { useApps } from '../../hooks/use-app';
 import { useDatasource } from '../../hooks/use-datasource';
 import { useAction } from '../../hooks/use-action';
+import { useApplicationContext } from '@commercetools-frontend/application-shell-connectors';
 
 export interface ContextShape {
   appConfig: App;
@@ -19,7 +20,6 @@ const initialState = {
 
 export const AppConfigContext = createContext(initialState);
 
-const APP_KEY = 'app-15';
 
 const sortRoutes = (app: App): App => {
   if (!app.value) {
@@ -58,10 +58,15 @@ const AppConfigProvider = ({ children }: React.PropsWithChildren<{}>) => {
   >([]);
   const [actionResponses, serActionResponses] = useState<ActionResponse[]>([]);
 
+  const { appKey } = useApplicationContext<
+  { appKey: string },
+  { appKey: string }
+>((context) => context.environment);
+
   const fetchAll = async () => {
     const [datasources, app, actions] = await Promise.all([
       fetchAllDatasources(),
-      getApp(APP_KEY),
+      getApp(appKey),
       fetchAllActions(),
     ]);
 

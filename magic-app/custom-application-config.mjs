@@ -16,6 +16,9 @@ const config = {
       url: '${env:APPLICATION_URL}',
     },
   },
+  additionalEnv:{
+    appKey: '${env:APP_KEY}',
+  },
   oAuthScopes: {
     view: ['view_products', 'view_customers'],
     manage: ['manage_products', 'manage_customers'],
