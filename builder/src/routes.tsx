@@ -25,7 +25,7 @@ const ApplicationRoutes = (_props: ApplicationRoutesProps) => {
     <Spacings.Inset scale="l">
       <Switch>
         <Route path={`${match.path}/app/:key`}>
-          <AppWrapper />
+          <AppWrapper parentUrl={match.url} />
         </Route>
         <Route>
           <Home />

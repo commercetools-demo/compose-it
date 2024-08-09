@@ -1,18 +1,17 @@
-import React from 'react';
 import PageBuilder from '../page-builder';
 import { useHistory } from 'react-router-dom';
 import { InfoDetailPage } from '@commercetools-frontend/application-components';
 import { useAppContext } from '../../providers/app';
 import AppToolbar from './app-toolbar';
 import Text from '@commercetools-uikit/text';
-export const App: React.FC = () => {
+export const App = ({ parentUrl }: { parentUrl: string }) => {
   const { appConfig, currentPage, updatePage } = useAppContext();
 
   const history = useHistory();
 
   return (
     <InfoDetailPage
-      onPreviousPathClick={() => history.push('/')}
+      onPreviousPathClick={() => history.push(parentUrl)}
       customTitleRow={<AppToolbar />}
     >
       {appConfig && (
