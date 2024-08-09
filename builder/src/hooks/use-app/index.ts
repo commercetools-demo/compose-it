@@ -15,6 +15,7 @@ import { useComponentConfig } from '../../components/page-builder/hooks/use-comp
 
 const CONTAINER = `${APP_NAME}_apps`;
 const APPS_KEY_PREFIX = 'app-';
+const PRODUCTION_APPS_KEY_PREFIX = 'production_';
 
 export const useApps = () => {
   const context = useApplicationContext((context) => context);
@@ -84,6 +85,25 @@ export const useApps = () => {
       actions.get({
         mcApiProxyTarget: MC_API_PROXY_TARGETS.COMMERCETOOLS_PLATFORM,
         uri: `/${context?.project?.key}/custom-objects/${CONTAINER}/${appKey}`,
+      })
+    );
+    return result;
+  };
+
+  const publishToProduction = async (appKey: string): Promise<App> => {
+    if (!appKey) {
+      return {} as App;
+    }
+    const app = await getApp(appKey);
+    const result = await dispatchAppsAction(
+      actions.post({
+        mcApiProxyTarget: MC_API_PROXY_TARGETS.COMMERCETOOLS_PLATFORM,
+        uri: `/${context?.project?.key}/custom-objects`,
+        payload: {
+          container: CONTAINER,
+          key: `${PRODUCTION_APPS_KEY_PREFIX}${appKey}`,
+          value: app.value as AppDraft,
+        },
       })
     );
     return result;
