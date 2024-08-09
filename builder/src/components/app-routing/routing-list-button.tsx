@@ -55,18 +55,7 @@ const RoutingListButton: React.FC = () => {
     console.log('page', page);
 
     if (page) {
-      const componentProps = getComponentProps(page.type);
-      const props = componentProps?.props || {};
-      const config = {
-        propsBindings: componentProps?.propsBindings || {},
-      };
-      const isThispage = {
-        ...page,
-        props,
-        config,
-      };
-
-      setSelectedPage(isThispage);
+      setSelectedPage(page);
       editDrawerState.openModal();
     } else {
       editDrawerState.openModal();
