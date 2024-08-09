@@ -20,8 +20,8 @@ const config = {
     appKey: '${env:APP_KEY}',
   },
   oAuthScopes: {
-    view: ['view_products', 'view_customers'],
-    manage: ['manage_products', 'manage_customers'],
+    view: ['view_products', 'view_customers', 'view_orders'],
+    manage: ['manage_products', 'manage_customers', 'manage_orders'],
   },
   icon: '${path:@commercetools-frontend/assets/application-icons/rocket.svg}',
   mainMenuLink: {
