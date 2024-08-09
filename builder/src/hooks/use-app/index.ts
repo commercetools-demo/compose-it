@@ -148,11 +148,39 @@ export const useApps = () => {
     return result;
   };
 
+  const updateAppGeneralInfo = async (
+    appKey: string,
+    app?: AppDraft
+  ): Promise<App> => {
+    if (!appKey || !app) {
+      return {} as App;
+    }
+
+    const result = await getApp(appKey).then((process) => {
+      return dispatchAppsAction(
+        actions.post({
+          mcApiProxyTarget: MC_API_PROXY_TARGETS.COMMERCETOOLS_PLATFORM,
+          uri: `/${context?.project?.key}/custom-objects`,
+          payload: {
+            container: CONTAINER,
+            key: appKey,
+            value: {
+              ...app,
+              appConfig: process.value?.appConfig,
+            } as AppDraft,
+          },
+        })
+      );
+    });
+    return result;
+  };
+
   return {
     fetchAllApps,
     getApp,
     updateAppConfig,
     deleteApp,
     createApp,
+    updateAppGeneralInfo,
   };
 };

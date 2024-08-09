@@ -7,12 +7,12 @@ import React, {
 } from 'react';
 import { AppConfig, PageConfig } from '../../components/library/general';
 import { useApps } from '../../hooks/use-app';
+import { AppDraft } from '../../types/app';
 
 interface AppContextType {
   appConfig: AppConfig;
   currentPage?: PageConfig;
-  //   history: AppConfig[];
-  //   currentHistoryIndex: number;
+  appGeneralInfo?: Omit<AppDraft, 'appConfig'>;
   hasUndo: boolean;
   hasRedo: boolean;
   isPageDirty: boolean;
@@ -31,6 +31,8 @@ export const AppProvider: React.FC<{
   children: React.ReactNode;
   appKey: string;
 }> = ({ children, appKey }) => {
+  const [appGeneralInfo, setAppGeneralInfo] =
+    useState<Omit<AppDraft, 'appConfig'>>();
   const [appConfig, setAppConfig] = useState<AppConfig>();
   const [history, setHistory] = useState<(AppConfig | undefined)[]>([]);
   const [currentHistoryIndex, setCurrentHistoryIndex] = useState(0);
@@ -93,8 +95,10 @@ export const AppProvider: React.FC<{
   const fetchAppInitial = async () => {
     const result = await getApp(appKey);
     if (result?.value) {
-      setAppConfig(result.value?.appConfig || {});
-      setHistory([result.value?.appConfig]);
+      const { appConfig, ...rest } = result.value;
+      setAppGeneralInfo(rest);
+      setAppConfig(appConfig || {});
+      setHistory([appConfig]);
     }
   };
 
@@ -163,6 +167,7 @@ export const AppProvider: React.FC<{
     <AppContext.Provider
       value={{
         appConfig,
+        appGeneralInfo,
         currentPage,
         hasRedo,
         hasUndo,

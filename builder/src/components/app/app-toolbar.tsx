@@ -12,6 +12,7 @@ import {
 import { useRouteMatch } from 'react-router';
 import styled from 'styled-components';
 import RoutingListButton from '../app-routing/routing-list-button';
+import EditAppButton from './components/edit-app-button';
 
 const RotatingIcon = styled.div`
   animation: rotate 2s linear infinite;
@@ -34,6 +35,7 @@ const AppToolbar = () => {
     <Spacings.Inline justifyContent="space-between">
       <Spacings.Inline>
         <Text.Headline as="h1">{`App: ${params.key}`}</Text.Headline>
+        <EditAppButton />
         <RoutingListButton />
       </Spacings.Inline>
       <Spacings.Inline alignItems="center">
