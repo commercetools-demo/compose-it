@@ -23,6 +23,9 @@ deployAs:
     applicationType: merchant-center-custom-application
     configuration:
       standardConfiguration:
+        - key: APP_KEY
+          description: App key
+          required: true
         - key: CUSTOM_APPLICATION_ID
           description: The Custom Application ID is provided when you add a Custom Application in the Merchant Center
           required: true
