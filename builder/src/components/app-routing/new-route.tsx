@@ -45,10 +45,6 @@ const NewRouteForm = ({ page, onSubmit, isOpen, onClose }: Props) => {
     return errors;
   };
 
-  const onPageConfigUpdate = (updatedPage: PageConfig) => {
-    setPageData(updatedPage);
-  };
-
   useEffect(() => {
     if (!page) {
       const pageProps = getComponentProps('FormDetailPage');
@@ -91,7 +87,7 @@ const NewRouteForm = ({ page, onSubmit, isOpen, onClose }: Props) => {
       validateOnBlur
       validate={handleValidation}
     >
-      {({ values, errors, handleChange, handleSubmit }) => (
+      {({ values, errors, setFieldValue, handleChange, handleSubmit }) => (
         <Drawer
           title={!!pageData ? `Edit Page ${pageData.route}` : 'Add Page'}
           isOpen={isOpen}
@@ -167,7 +163,10 @@ const NewRouteForm = ({ page, onSubmit, isOpen, onClose }: Props) => {
               <PropertyEditor
                 component={pageData}
                 onUpdateComponent={(pageConfig) =>
-                  onPageConfigUpdate(pageConfig as PageConfig)
+                  setFieldValue(
+                    'config.propsBindings',
+                    pageConfig.config.propsBindings
+                  )
                 }
               />
             )}
