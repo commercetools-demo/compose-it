@@ -2894,6 +2894,21 @@
     prop-types "15.8.1"
     warning "4.0.3"
 
+"@commercetools-uikit/toggle-input@^19.9.0":
+  version "19.9.0"
+  resolved "https://registry.yarnpkg.com/@commercetools-uikit/toggle-input/-/toggle-input-19.9.0.tgz#36cee2d2565ffdf31eddc44b8b42824fc326d713"
+  integrity sha512-n2KwtgZXIWFi5dSpYP6FVEHEDB65a48MGamNZ4QdSsD84t3fEaNU8q4uFDg8hu1NTV6l1QR1MjLsXqzX5fqeoQ==
+  dependencies:
+    "@babel/runtime" "^7.20.13"
+    "@babel/runtime-corejs3" "^7.20.13"
+    "@commercetools-uikit/constraints" "19.9.0"
+    "@commercetools-uikit/design-system" "19.9.0"
+    "@commercetools-uikit/input-utils" "19.9.0"
+    "@commercetools-uikit/utils" "19.9.0"
+    "@emotion/react" "^11.10.5"
+    "@emotion/styled" "^11.10.5"
+    prop-types "15.8.1"
+
 "@commercetools-uikit/tooltip@19.8.0":
   version "19.8.0"
   resolved "https://registry.yarnpkg.com/@commercetools-uikit/tooltip/-/tooltip-19.8.0.tgz#80ecc722575a04c8999ffd3e7839280a2d7636f8"
