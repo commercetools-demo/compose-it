@@ -3,6 +3,7 @@ import { PropsBindingState } from '../../library/general';
 import ArrayEditorInput from './array-editor-input';
 import EventEditorInput from './event-editor-input';
 import Text from '@commercetools-uikit/text-field';
+import ToggleInput from '@commercetools-uikit/toggle-input';
 
 type Props = {
   componentType: string;
@@ -28,6 +29,9 @@ const PropertyValueEditor = ({ propsBinding, value, onChange }: Props) => {
   }
   if (propsBinding.dataType === 'event') {
     return <EventEditorInput value={value as string} onChange={onChange} />;
+  }
+  if (propsBinding.dataType === 'boolean') {
+    return <ToggleInput isChecked={value as boolean} onChange={(e) => onChange(e.target.checked)} />;
   }
   return (
     <Text
