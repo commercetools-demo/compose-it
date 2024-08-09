@@ -8,6 +8,7 @@ import React, {
 import { AppConfig, PageConfig } from '../../components/library/general';
 import { useApps } from '../../hooks/use-app';
 import { AppDraft } from '../../types/app';
+import { useOrderDetailsFetcher } from '../../hooks/use-deployment';
 
 interface AppContextType {
   appConfig: AppConfig;
@@ -39,6 +40,13 @@ export const AppProvider: React.FC<{
   const [currentPageId, updateCurrentPageId] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const currentPage = appConfig?.pages?.find((p) => p.id === currentPageId);
+
+  const {orderDetailsResult, blah} = useOrderDetailsFetcher()
+  console.log(orderDetailsResult);
+
+
+  blah().then((res) => console.log('res', res));
+
 
   const { getApp, updateAppConfig } = useApps();
 
