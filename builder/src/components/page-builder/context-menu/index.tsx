@@ -64,8 +64,10 @@ const ContextMenu: React.FC = () => {
       ref={menuRef}
       style={{ top: contextMenu.y, left: contextMenu.x }}
     >
-      {onCopy && <MenuItem onClick={onCopy}>Copy</MenuItem>}
-      {onPaste && !!hasClipboardContent && (
+      {contextMenu?.type === 'component' && (
+        <MenuItem onClick={onCopy}>Copy</MenuItem>
+      )}
+      {contextMenu?.type === 'cell' && !!hasClipboardContent && (
         <MenuItem onClick={onPaste}>Paste</MenuItem>
       )}
     </MenuContainer>
