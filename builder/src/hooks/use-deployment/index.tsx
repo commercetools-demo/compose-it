@@ -37,24 +37,23 @@ export const useOrderDetailsFetcher = (): {
     TSdkAction,
     any
   >();
-  const context = useApplicationContext((context) => context);
+//   const context = useApplicationContext((context) => context);
 
-  const { data, error, loading } = useMcQuery<{ order: TOrder}>(FetchOrderDetailsQuery, {
-    context: {
-      target: GRAPHQL_TARGETS.SETTINGS_SERVICE,
-    }
-  });
+//   const { data, error, loading } = useMcQuery<{ order: TOrder}>(FetchOrderDetailsQuery, {
+//     context: {
+//       target: GRAPHQL_TARGETS.SETTINGS_SERVICE,
+//     }
+//   });
 
   const blah = async () => {
-    // const result = await dispatchAppsRead(
-    //     actions.post({
-
-    //       mcApiProxyTarget: 'connect?organizationId=5e5bfbc5-2e3d-4ab7-af43-f318333be376',
-    //       uri: '/auth/oauth',
-    //       includeUserPermissions: true,
+    const result = await dispatchAppsRead(
+        actions.get({
+          mcApiProxyTarget: 'connect',
+          uri: '/5e5bfbc5-2e3d-4ab7-af43-f318333be376/connectors',
+          includeUserPermissions: true,
           
-    //     })
-    //   );
+        })
+      );
   }
 
   
@@ -62,7 +61,7 @@ export const useOrderDetailsFetcher = (): {
 
   return {
     blah,
-    orderDetailsResult: data,
+    // orderDetailsResult: data,
   };
 };
 

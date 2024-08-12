@@ -41,8 +41,7 @@ export const AppProvider: React.FC<{
   const [isSaving, setIsSaving] = useState(false);
   const currentPage = appConfig?.pages?.find((p) => p.id === currentPageId);
 
-  const {orderDetailsResult, blah} = useOrderDetailsFetcher()
-  console.log(orderDetailsResult);
+  const {blah} = useOrderDetailsFetcher()
 
 
   blah().then((res) => console.log('res', res));
