@@ -13,23 +13,25 @@ import {
   useModalState,
 } from '@commercetools-frontend/application-components';
 import DeploymentWrapper from './deployment-wrapper';
-import NewDeploymentWizard from './new-deployment-wizard';
+import NewDeploymentWizard from './wizard/new-deployment-wizard';
 
-type Props = {}
+type Props = {};
 
 const NewDeployment = (props: Props) => {
   const pageModalState = useModalState();
 
   return (
     <div>
-    <PrimaryButton
-      iconLeft={<GroupAddIcon />}
-      label="New Deployment"
-      onClick={pageModalState.openModal}
-    />
-    {pageModalState.isModalOpen && <NewDeploymentWizard onClose={pageModalState.closeModal}/>}
-  </div>
-  )
-}
+      <PrimaryButton
+        iconLeft={<GroupAddIcon />}
+        label="New Deployment"
+        onClick={pageModalState.openModal}
+      />
+      {pageModalState.isModalOpen && (
+        <NewDeploymentWizard onClose={pageModalState.closeModal} />
+      )}
+    </div>
+  );
+};
 
-export default NewDeployment
+export default NewDeployment;

@@ -2,68 +2,107 @@
 /// <reference path="../../../@types-extensions/graphql-ctp/index.d.ts" />
 
 import type { ApolloError } from '@apollo/client';
-import { useMcQuery } from '@commercetools-frontend/application-shell';
-import { GRAPHQL_TARGETS, MC_API_PROXY_TARGETS } from '@commercetools-frontend/constants';
-//import type { TDataTableSortingState } from '@commercetools-uikit/hooks';
-import type {
-  TMeQueryInterface_OrdersArgs,
-  TOrder,
-  TTaxedPrice,
-  TTaxPortion,
-} from '../../types/generated/ctp';
-import FetchOrderDetailsQuery from './fetch-orderdetails.ctp.graphql';
 import {
-    useAsyncDispatch,
-    actions,
-    TSdkAction,
-  } from '@commercetools-frontend/sdk';
-import { buildUrlWithParams } from '../../utils/utils';
-import { useApplicationContext } from '@commercetools-frontend/application-shell-connectors';
-/*type PaginationAndSortingProps = {
-  page: { value: number };
-  perPage: { value: number };
-  tableSorting: TDataTableSortingState;
-};*/
-// type TUseOrderDetailsFetcher = (
-//   orderDetailsResult?: TTaxedPrice['totalTax', 'amount'];
-//   error?: ApolloError;
-//   loading: boolean;
-// };
+  useMcQuery,
+  useMcMutation,
+} from '@commercetools-frontend/application-shell';
+import { GRAPHQL_TARGETS } from '@commercetools-frontend/constants';
+//import type { TDataTableSortingState } from '@commercetools-uikit/hooks';
+import FetchMyOrganizationsQuery from './fetch-my-organization.admin.graphql';
+import MyCustomApps from './fetch-my-custom-apps.setting.graphql';
+import CreateCustomApp from './create-custom-app.setting.graphql';
+import FetchLoggedInUser from './fetch-logged-in-user.backend.graphql';
+import {
+  useAsyncDispatch,
+  actions,
+  TSdkAction,
+} from '@commercetools-frontend/sdk';
+import { User } from './types/user';
+import { OrganizationResponse } from './types/organization';
+import { CustomAppDraft, MyCustomApplication } from './types/app';
+import { ConnectorDraft } from './types/connector';
 
-export const useOrderDetailsFetcher = (): {
-  orderDetailsResult: TOrder
-} => {
-    const dispatchAppsRead = useAsyncDispatch<
-    TSdkAction,
-    any
-  >();
-//   const context = useApplicationContext((context) => context);
+export const useDeployment = () => {
+  const dispatchAppsRead = useAsyncDispatch<TSdkAction, any>();
+  //   const context = useApplicationContext((context) => context);
 
-//   const { data, error, loading } = useMcQuery<{ order: TOrder}>(FetchOrderDetailsQuery, {
-//     context: {
-//       target: GRAPHQL_TARGETS.SETTINGS_SERVICE,
-//     }
-//   });
+  const [executeCustomApp, { loading: addLoading }] = useMcMutation<{
+    customApplication: MyCustomApplication;
+  }>(CreateCustomApp, {
+    context: {
+      target: GRAPHQL_TARGETS.SETTINGS_SERVICE,
+    },
+  });
+  const createCustomApp = async (
+    organizationId: string,
+    customAppDraft: CustomAppDraft
+  ) => {
+    await executeCustomApp({
+      variables: {
+        organizationId,
+        data: customAppDraft,
+      },
+    });
+  };
 
-  const blah = async () => {
+  const { data: userData, loading: userLoading } = useMcQuery<{ user: User }>(
+    FetchLoggedInUser,
+    {
+      context: {
+        target: GRAPHQL_TARGETS.MERCHANT_CENTER_BACKEND,
+      },
+    }
+  );
+  const {
+    data: myAppsData,
+    loading: myAppsLoading,
+    refetch: updateApps,
+  } = useMcQuery<{
+    myCustomApplications: MyCustomApplication[];
+  }>(MyCustomApps, {
+    context: {
+      target: GRAPHQL_TARGETS.SETTINGS_SERVICE,
+    },
+  });
+  const { data: organizationData, loading: organizationLoading } = useMcQuery<{
+    myOrganizations: OrganizationResponse;
+  }>(FetchMyOrganizationsQuery, {
+    context: {
+      target: GRAPHQL_TARGETS.ADMINISTRATION_SERVICE,
+    },
+  });
+
+  const getConnectors = async (organizationId: string) => {
     const result = await dispatchAppsRead(
-        actions.get({
-          mcApiProxyTarget: 'connect',
-          uri: '/5e5bfbc5-2e3d-4ab7-af43-f318333be376/connectors',
-          includeUserPermissions: true,
-          
-        })
-      );
-  }
+      actions.get({
+        mcApiProxyTarget: 'connect',
+        uri: `/${organizationId}/connectors`,
+        includeUserPermissions: true,
+      })
+    );
+  };
 
-  
-
+  const createConnectorDraft = async (connectorDraft: ConnectorDraft) => {
+    const result = await dispatchAppsRead(
+      actions.post({
+        payload: connectorDraft,
+        mcApiProxyTarget: 'connect',
+        uri: `/${organizationId}/connectors/drafts`,
+        includeUserPermissions: true,
+      })
+    );
+  };
 
   return {
-    blah,
+    getConnectors,
+    createCustomApp,
+    createConnectorDraft,
+    updateApps,
+    user: userData?.user,
+    myApps: myAppsData?.myCustomApplications,
+    myOrganizations: organizationData?.myOrganizations.results,
     // orderDetailsResult: data,
   };
 };
-
 
 // /proxy/connect/:organizationId

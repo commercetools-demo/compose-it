@@ -1,30 +1,23 @@
-import React from 'react';
-import Spacings from '@commercetools-uikit/spacings';
-import FlatButton from '@commercetools-uikit/flat-button';
-import PrimaryButton from '@commercetools-uikit/primary-button';
-import Text from '@commercetools-uikit/text';
-import {
-  ExportIcon,
-  RefreshIcon,
-  RevertIcon,
-} from '@commercetools-uikit/icons';
-import {
-  InfoModalPage,
-  useModalState,
-} from '@commercetools-frontend/application-components';
+import IconButton from '@commercetools-uikit/icon-button';
+import { TruckIcon } from '@commercetools-uikit/icons';
+import { useModalState } from '@commercetools-frontend/application-components';
 import DeploymentWrapper from './deployment-wrapper';
+import { useDeployment } from '../../hooks/use-deployment';
 
 const Deployment = () => {
   const pageModalState = useModalState();
+  const { myApps, myOrganizations, user } = useDeployment();
 
   return (
     <div>
-      <FlatButton
-        icon={<ExportIcon />}
+      <IconButton
+        icon={<TruckIcon />}
         label="Export"
         onClick={pageModalState.openModal}
       />
-      {pageModalState.isModalOpen && <DeploymentWrapper onClose={pageModalState.closeModal}/>}
+      {pageModalState.isModalOpen && (
+        <DeploymentWrapper onClose={pageModalState.closeModal} />
+      )}
     </div>
   );
 };

@@ -43,9 +43,7 @@ export const AppProvider: React.FC<{
 
   // const {blah} = useOrderDetailsFetcher()
 
-
   // blah().then((res) => console.log('res', res));
-
 
   const { getApp, updateAppConfig } = useApps();
 

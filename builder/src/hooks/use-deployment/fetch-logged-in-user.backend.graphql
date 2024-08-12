@@ -1,0 +1,49 @@
+query FetchLoggedInUser {
+  user: me {
+    id
+    email
+    createdAt
+    gravatarHash
+    firstName
+    lastName
+    language
+    numberFormat
+    timeZone
+    launchdarklyTrackingId
+    launchdarklyTrackingGroup
+    launchdarklyTrackingSubgroup
+    launchdarklyTrackingTeam
+    launchdarklyTrackingTenant
+    defaultProjectKey
+    businessRole
+    projects {
+      total
+      results {
+        name
+        key
+        suspension {
+          isActive
+          __typename
+        }
+        expiry {
+          isActive
+          __typename
+        }
+        __typename
+      }
+      __typename
+    }
+    idTokenUserInfo {
+      iss
+      sub
+      aud
+      exp
+      iat
+      email
+      name
+      additionalClaims
+      __typename
+    }
+    __typename
+  }
+}

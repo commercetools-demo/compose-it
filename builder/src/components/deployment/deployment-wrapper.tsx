@@ -1,16 +1,13 @@
-import React from 'react'
-import {
-    InfoModalPage,
-  } from '@commercetools-frontend/application-components';
+import React from 'react';
+import { InfoModalPage } from '@commercetools-frontend/application-components';
 import Spacings from '@commercetools-uikit/spacings';
 import NewDeployment from './new-deployment';
 
 type Props = {
-    onClose: () => void
-}
+  onClose: () => void;
+};
 
-const DeploymentWrapper = ({onClose}: Props) => {
-
+const DeploymentWrapper = ({ onClose }: Props) => {
   return (
     <InfoModalPage
       title="Deployments"
@@ -19,12 +16,12 @@ const DeploymentWrapper = ({onClose}: Props) => {
       topBarCurrentPathLabel="Lorem ipsum"
       topBarPreviousPathLabel="Back"
     >
-      <Spacings.Stack scale="l"> 
+      <Spacings.Stack scale="l">
         <div>Current deployments here</div>
         <NewDeployment />
       </Spacings.Stack>
     </InfoModalPage>
-  )
-}
+  );
+};
 
-export default DeploymentWrapper
+export default DeploymentWrapper;

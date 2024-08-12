@@ -1,0 +1,8 @@
+query MyCustomApplications {
+  myCustomApplications {
+    id,
+    name,
+    description,
+    organizationId
+  }
+}
