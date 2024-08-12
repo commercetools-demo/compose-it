@@ -1,4 +1,3 @@
-import PrimaryButton from '@commercetools-uikit/primary-button';
 import Spacings from '@commercetools-uikit/spacings';
 import {
   Drawer,
@@ -8,6 +7,8 @@ import NewAppForm from '../../apps-list/new-app';
 import { AppDraft } from '../../../types/app';
 import { useAppContext } from '../../../providers/app';
 import { useApps } from '../../../hooks/use-app';
+import IconButton from '@commercetools-uikit/icon-button';
+import { GearIcon } from '@commercetools-uikit/icons';
 
 const EditAppButton = () => {
   const drawerState = useModalState();
@@ -23,10 +24,11 @@ const EditAppButton = () => {
   };
   return (
     <Spacings.Inline>
-      <PrimaryButton
+      <IconButton
         label="Edit App"
         onClick={() => drawerState.openModal()}
-      ></PrimaryButton>
+        icon={<GearIcon />}
+      ></IconButton>
       <Drawer
         title={'Edit App ' + appGeneralInfo?.key}
         isOpen={drawerState.isModalOpen}

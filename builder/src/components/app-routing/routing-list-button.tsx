@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import PrimaryButton from '@commercetools-uikit/primary-button';
 import Spacings from '@commercetools-uikit/spacings';
 import {
   Drawer,
@@ -10,6 +9,8 @@ import { PageConfig } from '../library/general';
 import NewRouteForm from './new-route';
 import { useAppContext } from '../../providers/app';
 import { useBuilderStateContext } from '../../providers/process';
+import IconButton from '@commercetools-uikit/icon-button';
+import { NestedViewIcon } from '@commercetools-uikit/icons';
 
 const RoutingListButton: React.FC = () => {
   const { getComponentProps } = useBuilderStateContext();
@@ -64,10 +65,11 @@ const RoutingListButton: React.FC = () => {
 
   return (
     <Spacings.Inline>
-      <PrimaryButton
+      <IconButton
         label="Routing"
         onClick={() => listDrawerState.openModal()}
-      ></PrimaryButton>
+        icon={<NestedViewIcon />}
+      ></IconButton>
       <Drawer
         title="Manage routing"
         isOpen={listDrawerState.isModalOpen}

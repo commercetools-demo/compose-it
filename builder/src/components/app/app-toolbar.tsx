@@ -8,6 +8,7 @@ import {
   ArrowRightIcon,
   ExportIcon,
   RefreshIcon,
+  RevertIcon,
 } from '@commercetools-uikit/icons';
 import { useRouteMatch } from 'react-router';
 import styled from 'styled-components';
@@ -26,6 +27,14 @@ const RotatingIcon = styled.div`
   }
 `;
 
+const ReverseIcon = styled.div`
+  transform: rotate(180deg);
+  & svg {
+    width: 16px;
+    height: 16px;
+  }
+`;
+
 const AppToolbar = () => {
   const { params }: { params: { key: string } } = useRouteMatch();
 
@@ -40,7 +49,7 @@ const AppToolbar = () => {
       </Spacings.Inline>
       <Spacings.Inline alignItems="center">
         <FlatButton
-          icon={<ArrowRightIcon />}
+          icon={<RevertIcon />}
           onClick={undo}
           label="Undo"
           isDisabled={!hasUndo}
@@ -48,7 +57,11 @@ const AppToolbar = () => {
           Undo
         </FlatButton>
         <FlatButton
-          icon={<ArrowLeftIcon />}
+          icon={
+            <ReverseIcon>
+              <RevertIcon />
+            </ReverseIcon>
+          }
           onClick={redo}
           label="Redo"
           isDisabled={!hasRedo}

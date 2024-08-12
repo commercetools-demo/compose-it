@@ -31,7 +31,12 @@ const PropertyValueEditor = ({ propsBinding, value, onChange }: Props) => {
     return <EventEditorInput value={value as string} onChange={onChange} />;
   }
   if (propsBinding.dataType === 'boolean') {
-    return <ToggleInput isChecked={value as boolean} onChange={(e) => onChange(e.target.checked)} />;
+    return (
+      <ToggleInput
+        isChecked={value as boolean}
+        onChange={(e) => onChange(e.target.checked)}
+      />
+    );
   }
   return (
     <Text
