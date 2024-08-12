@@ -4,8 +4,6 @@ import FlatButton from '@commercetools-uikit/flat-button';
 import PrimaryButton from '@commercetools-uikit/primary-button';
 import Text from '@commercetools-uikit/text';
 import {
-  ArrowLeftIcon,
-  ArrowRightIcon,
   ExportIcon,
   RefreshIcon,
   RevertIcon,
@@ -14,6 +12,7 @@ import { useRouteMatch } from 'react-router';
 import styled from 'styled-components';
 import RoutingListButton from '../app-routing/routing-list-button';
 import EditAppButton from './components/edit-app-button';
+import Deployment from '../deployment';
 
 const RotatingIcon = styled.div`
   animation: rotate 2s linear infinite;
@@ -46,6 +45,7 @@ const AppToolbar = () => {
         <Text.Headline as="h1">{`App: ${params.key}`}</Text.Headline>
         <EditAppButton />
         <RoutingListButton />
+        <Deployment />
       </Spacings.Inline>
       <Spacings.Inline alignItems="center">
         <FlatButton
