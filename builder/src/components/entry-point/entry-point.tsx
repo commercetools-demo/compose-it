@@ -6,6 +6,7 @@ import {
 import type { ApplicationWindow } from '@commercetools-frontend/constants';
 import loadMessages from '../../load-messages';
 import BuilderStateProvider from '../../providers/process';
+import { ClipboardProvider } from '../../providers/clipboard';
 
 declare let window: ApplicationWindow;
 
@@ -27,7 +28,9 @@ const EntryPoint = () => (
     applicationMessages={loadMessages}
   >
     <BuilderStateProvider>
-      <AsyncApplicationRoutes />
+      <ClipboardProvider>
+        <AsyncApplicationRoutes />
+      </ClipboardProvider>
     </BuilderStateProvider>
   </ApplicationShell>
 );

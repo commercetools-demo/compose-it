@@ -3,22 +3,24 @@ import { ComponentConfig } from '../../library/general';
 
 export const useComponentConfig = () => {
   const removeComponentById = (
-    components: ComponentConfig[],
+    components: ComponentConfig[] | undefined,
     id: string
   ): ComponentConfig[] => {
-    return components.filter((component) => {
-      if (component.id === id) return false;
-      if (
-        component.props?.children &&
-        Array.isArray(component.props.children)
-      ) {
-        component.props.children = removeComponentById(
-          component.props.children,
-          id
-        );
-      }
-      return true;
-    });
+    return !components
+      ? []
+      : components.filter((component) => {
+          if (component.id === id) return false;
+          if (
+            component.props?.children &&
+            Array.isArray(component.props.children)
+          ) {
+            component.props.children = removeComponentById(
+              component.props.children,
+              id
+            );
+          }
+          return true;
+        });
   };
 
   const addComponentToTarget = (
@@ -60,7 +62,7 @@ export const useComponentConfig = () => {
   };
 
   const updateComponentInComponents = (
-    components: ComponentConfig[],
+    components: ComponentConfig[] | undefined,
     updatedComponent: ComponentConfig
   ) => {
     if (!Array.isArray(components)) {
@@ -82,7 +84,7 @@ export const useComponentConfig = () => {
   };
 
   const findComponentById = (
-    components: ComponentConfig[],
+    components: ComponentConfig[] | undefined,
     id?: string
   ): ComponentConfig | undefined => {
     if (!id || !Array.isArray(components)) {

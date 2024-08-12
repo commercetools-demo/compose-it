@@ -2,6 +2,7 @@ import React from 'react';
 import { ComponentConfig } from '../library/general';
 import ComponentWrapper from '../library/wrapper';
 import ResizeHandle from './resize-handle';
+import { useContextMenu } from '../../providers/context-menu';
 
 interface ComponentRendererProps {
   component: ComponentConfig;
@@ -33,6 +34,12 @@ const ComponentRenderer: React.FC<ComponentRendererProps> = ({
   startDrag,
   startResize,
 }) => {
+  const { handleContextMenu } = useContextMenu();
+
+  const onContextMenu = (e: React.MouseEvent) => {
+    handleContextMenu(e, 'component', component.id);
+  };
+
   if (!component) return null;
   if (typeof component === 'string') return component;
   const style = {
@@ -55,6 +62,7 @@ const ComponentRenderer: React.FC<ComponentRendererProps> = ({
       draggable={true}
       onDragStart={(e) => startDrag(e, component.id, component.type)}
       onDragOver={(e) => e.preventDefault()}
+      onContextMenu={onContextMenu}
       onDrop={(e) =>
         handleDrop(
           e,

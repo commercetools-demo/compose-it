@@ -1,8 +1,10 @@
-import React, { useMemo, useRef } from 'react';
+import React, { useRef } from 'react';
 import { ComponentConfig, PageConfig } from '../library/general';
 import ComponentRenderer from './component-renderer';
 import { useResizeAndDrag } from './hooks/use-resize-and-drag';
 import { useGridDimensions } from './hooks/use-grid-dimensions';
+import ContextMenu from './context-menu';
+import { useContextMenu } from '../../providers/context-menu';
 
 interface GridLayoutProps {
   page: PageConfig;
@@ -41,6 +43,7 @@ const GridLayout: React.FC<GridLayoutProps> = ({
     dragPosition,
   } = useResizeAndDrag(page, onUpdatePage, gridRef);
   const { gridOccupancy } = useGridDimensions(page);
+  const { handleContextMenu } = useContextMenu();
 
   const renderEmptyCells = () => {
     const cells = [];
@@ -65,6 +68,9 @@ const GridLayout: React.FC<GridLayoutProps> = ({
               onDragOver={(e) => handleDragOver(e, col + 1, row + 1)}
               onDragLeave={handleDragLeave}
               onDrop={(e) => handleCellDrop(e, col + 1, row + 1)}
+              onContextMenu={(e) =>
+                handleContextMenu(e, 'cell', undefined, col + 1, row + 1)
+              }
             />
           );
         }
@@ -74,34 +80,37 @@ const GridLayout: React.FC<GridLayoutProps> = ({
   };
 
   return (
-    <div
-      className="grid-layout"
-      ref={gridRef}
-      style={{
-        display: 'grid',
-        gridTemplateColumns: `repeat(${gridDimensions.columns}, 1fr)`,
-        gridTemplateRows: `repeat(${gridDimensions.rows}, 1fr)`,
-        gap: '4px',
-        position: 'relative',
-        minHeight: `${gridDimensions.rows * 50}px`,
-      }}
-      onMouseMove={handleResize}
-      onMouseUp={stopResize}
-      onMouseLeave={stopResize}
-    >
-      {renderEmptyCells()}
-      {page.components?.map((component) => (
-        <ComponentRenderer
-          key={component.id}
-          component={component}
-          selectedComponent={selectedComponent}
-          setSelectedComponent={setSelectedComponent}
-          handleDrop={handleDrop}
-          startDrag={startDrag}
-          startResize={startResize}
-        />
-      ))}
-    </div>
+    <>
+      <div
+        className="grid-layout"
+        ref={gridRef}
+        style={{
+          display: 'grid',
+          gridTemplateColumns: `repeat(${gridDimensions.columns}, 1fr)`,
+          gridTemplateRows: `repeat(${gridDimensions.rows}, 1fr)`,
+          gap: '4px',
+          position: 'relative',
+          minHeight: `${gridDimensions.rows * 50}px`,
+        }}
+        onMouseMove={handleResize}
+        onMouseUp={stopResize}
+        onMouseLeave={stopResize}
+      >
+        {renderEmptyCells()}
+        {page.components?.map((component) => (
+          <ComponentRenderer
+            key={component.id}
+            component={component}
+            selectedComponent={selectedComponent}
+            setSelectedComponent={setSelectedComponent}
+            handleDrop={handleDrop}
+            startDrag={startDrag}
+            startResize={startResize}
+          />
+        ))}
+      </div>
+      <ContextMenu />
+    </>
   );
 };
 
