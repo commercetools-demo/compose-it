@@ -63,6 +63,11 @@ export type DatasourceRef = {
   typeId: 'datasource';
 };
 
+export type ActionRef = {
+  key: string;
+  typeId: 'action';
+};
+
 export type DatasourceSample = {
   key: string;
   typeId: 'datasource';

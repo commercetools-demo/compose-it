@@ -1,6 +1,6 @@
 // Types for our component configurations
 
-import { DatasourceRef } from '../../types/datasource';
+import { ActionRef, DatasourceRef } from '../../types/datasource';
 
 export type PropsBindingState = {
   type: 'datasource' | 'property' | 'action';
@@ -58,7 +58,8 @@ export type PageConfig = {
   };
   name?: string;
   components?: ComponentConfig[];
-  datasources?: DatasourceRef[];
+  datasourceRefs?: DatasourceRef[];
+  actionRefs?: ActionRef[];
 };
 
 export type AppConfig = {

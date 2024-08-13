@@ -1,4 +1,4 @@
-import { DatasourceRef } from '../../../types/datasource';
+import { ActionRef, DatasourceRef } from '../../../types/datasource';
 import { ComponentConfig } from '../../library/general';
 
 export const useComponentConfig = () => {
@@ -155,11 +155,67 @@ export const useComponentConfig = () => {
     });
   };
 
+  const getActionRefs = (components: ComponentConfig[]): ActionRef[] => {
+    const actionRefs: ActionRef[] = [];
+
+    function extractActionRefs(component: ComponentConfig) {
+      // Check propsBindings for datasource type
+      Object.entries(component.config.propsBindings).forEach(
+        ([key, binding]) => {
+          if (
+            binding.type === 'property' &&
+            binding.dataType === 'event' &&
+            typeof binding?.value === 'string' &&
+            !!binding?.value
+          ) {
+            let action: { type: string; value: string } | undefined = undefined;
+            try {
+              action = JSON.parse(binding.value);
+            } catch (e) {
+              console.log(e);
+            }
+            if (
+              !!action &&
+              !!action.value &&
+              !!action.type &&
+              action.type !== 'route'
+            ) {
+              actionRefs.push({
+                typeId: 'action',
+                key: action.value,
+              });
+            }
+          }
+        }
+      );
+
+      // Recursively check children if they exist
+      if (
+        'children' in component.props &&
+        Array.isArray(component.props.children)
+      ) {
+        component.props.children.forEach((child) => {
+          if (typeof child !== 'string') {
+            extractActionRefs(child);
+          }
+        });
+      }
+    }
+
+    // Process each component in the list
+    components.forEach((component) => extractActionRefs(component));
+
+    return actionRefs.filter((value, index, self) => {
+      return self.findIndex((item) => item.key === value.key) === index;
+    });
+  };
+
   return {
     removeComponentById,
     addComponentToTarget,
     findComponentById,
     getDatasourceRefs,
+    getActionRefs,
     updateComponentInComponents,
   };
 };
