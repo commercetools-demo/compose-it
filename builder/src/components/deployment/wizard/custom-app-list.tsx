@@ -1,3 +1,4 @@
+import { useModalState } from '@commercetools-frontend/application-components';
 import DataTable from '@commercetools-uikit/data-table';
 import { ArrowRightIcon, PlusThinIcon } from '@commercetools-uikit/icons';
 import PrimaryButton from '@commercetools-uikit/primary-button';
@@ -9,11 +10,8 @@ import {
   MyCustomApplication,
 } from '../../../hooks/use-deployment/types/app';
 import { useDeploymentContext } from '../../../providers/deployment';
-import {
-  useModalState,
-  Drawer,
-} from '@commercetools-frontend/application-components';
 import NewCustomAppForm from './new-custom-app';
+import Text from '@commercetools-uikit/text';
 
 const columns = [
   { key: 'id', label: 'ID' },
@@ -83,7 +81,10 @@ const CustomApplicationList = ({ parentUrl }: { parentUrl: string }) => {
   return (
     <>
       <Spacings.Stack scale="l">
-        <Spacings.Inline justifyContent="flex-end">
+        <Spacings.Inline justifyContent="space-between">
+          <Text.Subheadline>
+            Select a custom MC application to deploy to
+          </Text.Subheadline>
           <PrimaryButton
             label="Add a Custom Application"
             iconLeft={<PlusThinIcon />}

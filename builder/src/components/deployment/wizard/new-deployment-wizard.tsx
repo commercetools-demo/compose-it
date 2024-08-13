@@ -16,6 +16,7 @@ import Spacings from '@commercetools-uikit/spacings';
 import { useDeploymentContext } from '../../../providers/deployment';
 import PrimaryButton from '@commercetools-uikit/primary-button';
 import CustomApplicationList from './custom-app-list';
+import { useAppContext } from '../../../providers/app';
 
 type Props = {
   onClose: () => void;
@@ -23,8 +24,9 @@ type Props = {
 
 const NewDeploymentWizard = ({ onClose }: Props) => {
   const { selectedOrganization } = useDeploymentContext();
+  const { appGeneralInfo } = useAppContext();
   const match = useRouteMatch();
-  const { replace, goBack, push } = useHistory();
+  const { replace } = useHistory();
 
   const handleClose = (e: SyntheticEvent) => {
     // e.stopPropagation();
@@ -40,7 +42,7 @@ const NewDeploymentWizard = ({ onClose }: Props) => {
   return (
     <Router>
       <TabularModalPage
-        title="Manage your account"
+        title={`Deploy "${appGeneralInfo?.name}" app`}
         isOpen={true}
         onClose={handleClose}
         shouldDelayOnClose={false}
@@ -48,11 +50,11 @@ const NewDeploymentWizard = ({ onClose }: Props) => {
           <>
             <TabHeader
               to={`${match.url}/organization`}
-              label="Select Organization"
+              label="1. Select organization"
             />
             <TabHeader
               to={`${match.url}/custom-applications`}
-              label="Custom Applications"
+              label="2. Select custom application"
               isDisabled={!selectedOrganization}
             />
           </>
@@ -63,7 +65,7 @@ const NewDeploymentWizard = ({ onClose }: Props) => {
             <OrganizationList parentUrl={match.url} />
           </Route>
           <Route path={`${match.path}/custom-applications`}>
-            <CustomApplicationList />
+            <CustomApplicationList parentUrl={match.url} />
           </Route>
         </Switch>
       </TabularModalPage>

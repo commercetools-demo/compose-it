@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { Organization } from '../../../hooks/use-deployment/types/organization';
 import { useDeploymentContext } from '../../../providers/deployment';
-
+import Text from '@commercetools-uikit/text';
 const columns = [
   { key: 'id', label: 'ID' },
   { key: 'name', label: 'Name' },
@@ -50,12 +50,17 @@ const OrganizationList = ({ parentUrl }: { parentUrl: string }) => {
     }
   };
   return (
-    <DataTable
-      rows={organizations}
-      columns={columns}
-      onRowClick={(row) => onSelectOrganization(row.id)}
-      itemRenderer={handleRenderItem}
-    />
+    <Spacings.Stack scale="l">
+      <Spacings.Inline scale="l">
+        <Text.Subheadline>Select an organization to deploy to</Text.Subheadline>
+      </Spacings.Inline>
+      <DataTable
+        rows={organizations}
+        columns={columns}
+        onRowClick={(row) => onSelectOrganization(row.id)}
+        itemRenderer={handleRenderItem}
+      />
+    </Spacings.Stack>
   );
 };
 
