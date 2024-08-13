@@ -5,6 +5,10 @@ export type MyCustomApplication = {
   organizationId: string;
   entryPointUriPath: string;
   url?: string;
+  icon?: string;
+  permissions?: CustomApplicationPermissionDataInput[];
+  mainMenuLink?: CustomApplicationMenuLinkDraftDataInput;
+  submenuLinks?: CustomApplicationSubmenuLinkDraftDataInput[];
   __typename?: string;
 };
 

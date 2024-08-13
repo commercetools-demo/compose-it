@@ -5,5 +5,14 @@ mutation CustomApplication($organizationId: String!, $data: CustomApplicationDra
     description,
     entryPointUriPath,
     url
+    permissions{ 
+      name,
+      oAuthScopes
+    }
+    mainMenuLink {
+      defaultLabel
+      permissions
+    }
+    icon
   }
 }

@@ -2,6 +2,7 @@ import {
   useMcMutation,
   useMcQuery,
 } from '@commercetools-frontend/application-shell-connectors';
+import UpdateCustomApp from './update-custom-app.setting.graphql';
 import CreateCustomApp from './create-custom-app.setting.graphql';
 import MyCustomApps from './fetch-my-custom-apps.setting.graphql';
 import { CustomAppDraft, MyCustomApplication } from './types/app';
@@ -26,6 +27,15 @@ export const useCustomApplications = () => {
       target: GRAPHQL_TARGETS.SETTINGS_SERVICE,
     },
   });
+
+  const [updateCustomApp, { loading: updateLoading }] = useMcMutation<{
+    updateCustomApplication: MyCustomApplication;
+  }>(UpdateCustomApp, {
+    context: {
+      target: GRAPHQL_TARGETS.SETTINGS_SERVICE,
+    },
+  });
+
   const createCustomApp = async (
     organizationId: string,
     customAppDraft: CustomAppDraft
@@ -42,6 +52,7 @@ export const useCustomApplications = () => {
 
   return {
     createCustomApp,
+    updateCustomApp,
     myCustomApplications: myAppsData?.myCustomApplications,
     updateApps,
   };

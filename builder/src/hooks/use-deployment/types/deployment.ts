@@ -69,6 +69,7 @@ export type Deployment = {
 
 export interface DeployedStatus extends Deployment {
   app?: MyCustomApplication;
+  organizationId: string;
 }
 
 export type Configuration = {

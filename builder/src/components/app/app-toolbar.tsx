@@ -14,7 +14,7 @@ import RoutingListButton from '../app-routing/routing-list-button';
 import EditAppButton from './components/edit-app-button';
 import Deployment from '../deployment';
 
-const RotatingIcon = styled.div`
+export const RotatingIcon = styled.div`
   animation: rotate 2s linear infinite;
   @keyframes rotate {
     from {

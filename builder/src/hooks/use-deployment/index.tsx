@@ -12,7 +12,7 @@ import { useDeploymentStatuses } from './use-deployment-statuses';
 import { useConnect } from './use-connect';
 
 export const useDeployment = () => {
-  const { createCustomApp, myCustomApplications, updateApps } =
+  const { createCustomApp, myCustomApplications, updateApps, updateCustomApp } =
     useCustomApplications();
   const { createDeploymentStatus, getDeploymentStatuses } =
     useDeploymentStatuses({ updateApps, myCustomApplications });
@@ -46,6 +46,7 @@ export const useDeployment = () => {
     createConnectorDraft,
     createDeployment,
     createCustomApp,
+    updateCustomApp,
     updateApps,
     createDeploymentStatus,
     getDeploymentStatuses,

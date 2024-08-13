@@ -98,7 +98,7 @@ export const useDeploymentStatuses = ({
     }
     await updateApps();
 
-    const deploymentResults: Deployment[][] = await Promise.all(
+    const deploymentResults: DeployedStatus[][] = await Promise.all(
       statuses.map((status) => {
         return dispatchDeploymentsRead(
           actions.get({
@@ -119,6 +119,7 @@ export const useDeploymentStatuses = ({
               return {
                 ...deployment,
                 app,
+                organizationId: status.organizationId,
               };
             })
         );

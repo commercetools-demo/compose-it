@@ -1,0 +1,17 @@
+mutation CustomApplication($organizationId: String!, $data: CustomApplicationDraftDataInput!, $applicationId:ID!) {
+  updateCustomApplication (organizationId: $organizationId, applicationId:$applicationId, data: $data) {
+    id,
+    name,
+    description,
+    url,
+    permissions{ 
+      name,
+      oAuthScopes
+    }
+    mainMenuLink {
+      defaultLabel
+      permissions
+    }
+    icon
+  }
+}
