@@ -19,7 +19,7 @@ type Props = {
 const NewConnectAppForm = ({ onSubmit, isOpen, onClose }: Props) => {
   const [isLoading, setIsLoading] = useState(false);
   const context = useApplicationContext((context) => context);
-  const {user} = useDeploymentContext();
+  const { user } = useDeploymentContext();
 
   const initialData: Partial<ConnectorDraft> = {
     name: '',
@@ -122,7 +122,6 @@ const NewConnectAppForm = ({ onSubmit, isOpen, onClose }: Props) => {
                     onChange={handleChange}
                   />
                 </Spacings.Inline>
-
               </Grid.Item>
               <Grid.Item gridColumn="span 2">
                 <Spacings.Inline alignItems="center">

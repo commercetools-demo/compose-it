@@ -29,8 +29,14 @@ const ConnectApplicationList = ({ parentUrl }: { parentUrl: string }) => {
   const showSuccessNotification = useShowNotification();
 
   const modalState = useModalState();
-  const { connectors, onSelectConnector, selectedConnector, selectedApp, selectedOrganization, onCreateConnectApp } =
-    useDeploymentContext();
+  const {
+    connectors,
+    onSelectConnector,
+    selectedConnector,
+    selectedApp,
+    selectedOrganization,
+    onCreateConnectApp,
+  } = useDeploymentContext();
 
   const handleNewCustomAppOpen = () => {
     modalState.openModal();
@@ -63,9 +69,7 @@ const ConnectApplicationList = ({ parentUrl }: { parentUrl: string }) => {
     switch (col.key) {
       case 'action':
         return selectedConnector?.id === row.id ? (
-          <Link
-            to={!!selectedConnector ? `${parentUrl}/deployments` : ''}
-          >
+          <Link to={!!selectedConnector ? `${parentUrl}/deployments` : ''}>
             <Spacings.Inline alignItems="center">
               Select for deployment
               <ArrowRightIcon />

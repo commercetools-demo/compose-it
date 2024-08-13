@@ -1,4 +1,4 @@
-import { PagedQueryResponse } from "../../../types/general";
+import { PagedQueryResponse } from '../../../types/general';
 
 export type ConnectorDraft = {
   id?: string;
@@ -17,4 +17,4 @@ export type ConnectorDraft = {
   };
 };
 
-export type ConnectorResponse  = PagedQueryResponse<ConnectorDraft>
+export type ConnectorResponse = PagedQueryResponse<ConnectorDraft>;

@@ -1,4 +1,4 @@
-import { PagedQueryResponse } from "../../../types/general";
+import { PagedQueryResponse } from '../../../types/general';
 
 export type Connector = {
   id?: string;
@@ -66,9 +66,9 @@ export type Deployment = {
 };
 
 export type Configuration = {
-    key: string;
-    value: string;
-}
+  key: string;
+  value: string;
+};
 
 export type Application = {
   applicationName: string;
@@ -77,13 +77,13 @@ export type Application = {
   url: string;
 };
 
-
 export type DeploymentDraft = {
   key: string;
   connector: {
     key: string;
     version: number;
     staged: boolean;
+    id?: string;
   };
   region: string;
   configurations: Array<{
@@ -99,12 +99,11 @@ export type DeploymentStatusValue = {
   organizationId: string;
   customAppId: string;
   connectorId: string;
-}
-
+};
 
 export type DeploymentStatus = {
   id: string;
   createdAt: string;
   key: string;
   value?: DeploymentStatusValue[];
-}
+};

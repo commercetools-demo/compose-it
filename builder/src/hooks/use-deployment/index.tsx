@@ -6,7 +6,10 @@ import {
   useMcQuery,
   useMcMutation,
 } from '@commercetools-frontend/application-shell';
-import { GRAPHQL_TARGETS, MC_API_PROXY_TARGETS } from '@commercetools-frontend/constants';
+import {
+  GRAPHQL_TARGETS,
+  MC_API_PROXY_TARGETS,
+} from '@commercetools-frontend/constants';
 //import type { TDataTableSortingState } from '@commercetools-uikit/hooks';
 import FetchMyOrganizationsQuery from './fetch-my-organization.admin.graphql';
 import MyCustomApps from './fetch-my-custom-apps.setting.graphql';
@@ -39,11 +42,18 @@ import { useAppContext } from '../../providers/app';
 const CONTAINER = `${APP_NAME}_deployments`;
 const DEPLOYMENT_KEY_PREFIX = 'deployment-';
 
-const getDeploymentKey = (appKey?: string) => `${DEPLOYMENT_KEY_PREFIX}${appKey}`;
+const getDeploymentKey = (appKey?: string) =>
+  `${DEPLOYMENT_KEY_PREFIX}${appKey}`;
 
 export const useDeployment = () => {
-  const dispatchCustomObjectsRead = useAsyncDispatch<TSdkAction, DeploymentStatus>();
-  const dispatchCustomObjectCreate = useAsyncDispatch<TSdkAction, DeploymentStatus>();
+  const dispatchCustomObjectsRead = useAsyncDispatch<
+    TSdkAction,
+    DeploymentStatus
+  >();
+  const dispatchCustomObjectCreate = useAsyncDispatch<
+    TSdkAction,
+    DeploymentStatus
+  >();
   const dispatchAppsRead = useAsyncDispatch<TSdkAction, ConnectorResponse>();
   const dispatchDeploymentsRead = useAsyncDispatch<
     TSdkAction,
@@ -52,34 +62,48 @@ export const useDeployment = () => {
   const dispatchAppsCreate = useAsyncDispatch<TSdkAction, ConnectorDraft>();
   const dispatchDeploymentCreate = useAsyncDispatch<TSdkAction, Deployment>();
   const context = useApplicationContext((context) => context);
-  const {appGeneralInfo} = useAppContext();
+  const { appGeneralInfo } = useAppContext();
 
   const fetchDeploymentStatuses = async () => {
-
     const result = await dispatchCustomObjectsRead(
       actions.get({
         mcApiProxyTarget: MC_API_PROXY_TARGETS.COMMERCETOOLS_PLATFORM,
         uri: buildUrlWithParams(
-          `/${context?.project?.key}/custom-objects/${CONTAINER}/${getDeploymentKey(appGeneralInfo?.key)}`,
+          `/${
+            context?.project?.key
+          }/custom-objects/${CONTAINER}/${getDeploymentKey(
+            appGeneralInfo?.key
+          )}`,
           {}
         ),
       })
-    );
+    ).catch((e) => {
+      return {
+        value: [],
+      };
+    });
     return result.value;
   };
 
-  const createDeploymentStatus = async (deploymentStatus: DeploymentStatusValue) => {
-
-    const result = await fetchDeploymentStatuses().then(result => dispatchCustomObjectCreate(
-      actions.post({
-        mcApiProxyTarget: MC_API_PROXY_TARGETS.COMMERCETOOLS_PLATFORM,
-        uri: buildUrlWithParams(
-          `/${context?.project?.key}/custom-objects/${CONTAINER}/${getDeploymentKey(appGeneralInfo?.key)}`,
-          {}
-        ),
-        payload: [...(result || []), deploymentStatus]
-      })
-    ));
+  const createDeploymentStatus = async (
+    deploymentStatus: DeploymentStatusValue
+  ) => {
+    const result = await fetchDeploymentStatuses().then((result) =>
+      dispatchCustomObjectCreate(
+        actions.post({
+          mcApiProxyTarget: MC_API_PROXY_TARGETS.COMMERCETOOLS_PLATFORM,
+          uri: buildUrlWithParams(
+            `/${context?.project?.key}/custom-objects`,
+            {}
+          ),
+          payload: {
+            container: CONTAINER,
+            key: getDeploymentKey(appGeneralInfo?.key),
+            value: [...(result || []), deploymentStatus],
+          },
+        })
+      )
+    );
     return result;
   };
 
@@ -168,6 +192,33 @@ export const useDeployment = () => {
     ) as Deployment[];
   };
 
+  const getDeploymentStatuses = async (): Promise<Deployment[]> => {
+    const statuses = await fetchDeploymentStatuses();
+    if (!statuses) {
+      return [];
+    }
+
+    const results: Deployment[] = [];
+    for await (const status of statuses) {
+      const result = await dispatchDeploymentsRead(
+        actions.get({
+          // @ts-ignore
+          mcApiProxyTarget: 'connect',
+          uri: buildUrlWithParams(`/${status.organizationId}/deployments`, {
+            limit: 100,
+          }),
+        })
+      );
+      const filteredResults = result?.results.filter(
+        (deployment) => deployment.id === status.deploymentId
+      ) as Deployment[];
+
+      results.push(...(filteredResults || []));
+    }
+
+    return results;
+  };
+
   const createConnectorDraft = async (
     organizationId: string,
     connectorDraft: ConnectorDraft
@@ -181,7 +232,19 @@ export const useDeployment = () => {
   ) => {
     const result = await dispatchDeploymentCreate(
       actions.post({
-        payload: deploymentDraft,
+        payload: {
+          projectKey: context?.project?.key,
+          draft: {
+            key: deploymentDraft.key,
+            connector: deploymentDraft.connector,
+            region: deploymentDraft.region,
+            applications: deploymentDraft.configurations.map((config) => ({
+              applicationName: config.applicationName,
+              standardConfiguration: config.standardConfiguration,
+              securedConfiguration: [],
+            })),
+          },
+        },
         mcApiProxyTarget: 'connect',
         uri: `/${organizationId}/deployments`,
         includeUserPermissions: true,
@@ -197,8 +260,8 @@ export const useDeployment = () => {
     createConnectorDraft,
     createDeployment,
     updateApps,
-    fetchDeploymentStatuses,
     createDeploymentStatus,
+    getDeploymentStatuses,
     user: userData?.user,
     myApps: myAppsData?.myCustomApplications,
     myOrganizations: organizationData?.myOrganizations.results,

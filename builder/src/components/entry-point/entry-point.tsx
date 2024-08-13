@@ -28,9 +28,9 @@ const EntryPoint = () => (
     applicationMessages={loadMessages}
   >
     <BuilderStateProvider>
-        <ClipboardProvider>
-          <AsyncApplicationRoutes />
-        </ClipboardProvider>
+      <ClipboardProvider>
+        <AsyncApplicationRoutes />
+      </ClipboardProvider>
     </BuilderStateProvider>
   </ApplicationShell>
 );

@@ -29,6 +29,7 @@ const NewDeploymentForm = ({ onSubmit, isOpen, onClose }: Props) => {
     connector: {
       key: selectedConnector?.key || '',
       version: selectedConnector?.version,
+      id: selectedConnector?.id || '',
     },
     region: extractRegionFromUrl(context.environment.mcApiUrl) || '',
     configurations: [

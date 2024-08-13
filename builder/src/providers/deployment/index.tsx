@@ -17,7 +17,10 @@ import {
   ConnectorDraft,
   ConnectorResponse,
 } from '../../hooks/use-deployment/types/connector';
-import { Deployment, DeploymentDraft } from '../../hooks/use-deployment/types/deployment';
+import {
+  Deployment,
+  DeploymentDraft,
+} from '../../hooks/use-deployment/types/deployment';
 
 interface DeploymentContextType {
   user?: User;
@@ -28,10 +31,11 @@ interface DeploymentContextType {
   selectedOrganization?: string;
   selectedApp?: MyCustomApplication;
   selectedConnector?: ConnectorDraft;
-  selectedDeployment?: DeploymentDraft | Deployment;
+  selectedDeployment?: DeploymentDraft;
   onSelectConnector: (connector?: ConnectorDraft) => void;
   onSelectOrganization: (organizationId?: string) => void;
-  onSelectDeployment: (deployment?: DeploymentDraft | Deployment) => void;
+  onSelectDeployment: (deployment?: Deployment) => void;
+  onSelectDeploymentDraft: (deployment?: DeploymentDraft) => void;
   onSelectApp: (app?: MyCustomApplication) => void;
   onCreateCustomApp: (
     organizationId: string,
@@ -41,6 +45,7 @@ interface DeploymentContextType {
     organizationId: string,
     connectAppDraft: ConnectorDraft
   ) => Promise<ConnectorDraft | undefined>;
+  onStartDeployment: () => Promise<Deployment | undefined>;
 }
 
 const DeploymentContext = createContext<DeploymentContextType | undefined>(
@@ -66,10 +71,38 @@ export const DeploymentProvider: React.FC<{
   const [selectedOrganization, onSelectOrganization] = useState<string>();
   const [selectedApp, onSelectApp] = useState<MyCustomApplication>();
   const [selectedConnector, onSelectConnector] = useState<ConnectorDraft>();
-  const [selectedDeployment, onSelectDeployment] = useState< DeploymentDraft | Deployment>();
-  const [draftDeployment, onDraftDeployment] = useState<DeploymentDraft>();
+  const [selectedDeployment, setSelectedDeployment] =
+    useState<DeploymentDraft>();
   const [connectors, setConnectors] = useState<ConnectorDraft[]>([]);
   const [deployments, setDeployments] = useState<Deployment[]>([]);
+
+  const onSelectDeploymentDraft = (deploymentDraft?: DeploymentDraft) => {
+    setDeployments([...(deployments || []), deploymentDraft]);
+  };
+
+  const onSelectDeployment = (deployment?: Deployment | DeploymentDraft) => {
+    if (!deployment) {
+      return;
+    }
+    if ('deployedRegion' in deployment) {
+      setSelectedDeployment({
+        region: deployment.deployedRegion,
+        configurations: deployment.applications.map((app) => ({
+          applicationName: app.applicationName,
+          standardConfiguration: app.standardConfiguration,
+        })),
+        connector: {
+          key: deployment.connector.key,
+          id: deployment.connector.id,
+          version: deployment.connector.version,
+          staged: false,
+        },
+        key: deployment.key,
+      });
+    } else {
+      setSelectedDeployment(deployment);
+    }
+  };
 
   const updateConnectors = async () => {
     if (!selectedOrganization) {
@@ -84,9 +117,11 @@ export const DeploymentProvider: React.FC<{
     if (!selectedOrganization || !selectedConnector) {
       setDeployments([]);
     } else {
-      getDeployments(selectedOrganization, selectedConnector?.id).then((result) => {
-        setDeployments(result);
-      });
+      getDeployments(selectedOrganization, selectedConnector?.id).then(
+        (result) => {
+          setDeployments(result);
+        }
+      );
     }
   };
   const onCreateCustomApp = async (
@@ -119,14 +154,17 @@ export const DeploymentProvider: React.FC<{
     return result;
   };
 
-  const onStartDeployment = async (
-    organizationId: string,
-    deploymentDraft: DeploymentDraft
-  ): Promise<Deployment | undefined> => {
-    const result = await createDeployment(organizationId, deploymentDraft);
+  const onStartDeployment = async (): Promise<Deployment | undefined> => {
+    if (!selectedOrganization || !selectedDeployment) {
+      return;
+    }
+    const result = await createDeployment(
+      selectedOrganization,
+      selectedDeployment
+    );
     await createDeploymentStatus({
       deploymentId: result.id,
-      organizationId,
+      organizationId: selectedOrganization,
       customAppId: selectedApp?.id || '',
       connectorId: selectedConnector?.id || '',
     });
@@ -162,7 +200,9 @@ export const DeploymentProvider: React.FC<{
         onCreateCustomApp,
         onSelectConnector,
         onCreateConnectApp,
+        onSelectDeploymentDraft,
         onSelectDeployment,
+        onStartDeployment,
       }}
     >
       {children}

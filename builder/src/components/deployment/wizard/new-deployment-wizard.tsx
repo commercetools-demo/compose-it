@@ -23,7 +23,12 @@ type Props = {
 };
 
 const NewDeploymentWizard = ({ onClose }: Props) => {
-  const { selectedOrganization, selectedApp, selectedConnector, selectedDeployment } = useDeploymentContext();
+  const {
+    selectedOrganization,
+    selectedApp,
+    selectedConnector,
+    selectedDeployment,
+  } = useDeploymentContext();
   const { appGeneralInfo } = useAppContext();
   const match = useRouteMatch();
   const { replace } = useHistory();

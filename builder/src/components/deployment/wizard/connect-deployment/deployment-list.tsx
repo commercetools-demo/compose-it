@@ -2,14 +2,15 @@ import { useModalState } from '@commercetools-frontend/application-components';
 import DataTable from '@commercetools-uikit/data-table';
 import { ArrowRightIcon, PlusThinIcon } from '@commercetools-uikit/icons';
 import Spacings from '@commercetools-uikit/spacings';
-import { Link, useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { useDeploymentContext } from '../../../../providers/deployment';
 import Text from '@commercetools-uikit/text';
-import { useShowNotification } from '@commercetools-frontend/actions-global';
-
 import PrimaryButton from '@commercetools-uikit/primary-button';
-import { Deployment, DeploymentDraft } from '../../../../hooks/use-deployment/types/deployment';
+import {
+  Deployment,
+  DeploymentDraft,
+} from '../../../../hooks/use-deployment/types/deployment';
 import NewDeploymentForm from './new-deployment';
 
 const columns = [
@@ -21,20 +22,18 @@ const columns = [
 ];
 
 const StyledRow = styled.div`
-  ${({ key, deploymentKey }) => `${key === deploymentKey ? 'color: blue;' : ''}`}
+  ${({ rowKey, deploymentKey }) =>
+    `${rowKey === deploymentKey ? 'color: blue;' : ''}`}
 `;
 
 const DeploymentList = ({ parentUrl }: { parentUrl: string }) => {
-  const showSuccessNotification = useShowNotification();
-
-  const {push} = useHistory();
-
   const modalState = useModalState();
   const {
     selectedDeployment,
     deployments,
     selectedConnector,
     onSelectDeployment,
+    onSelectDeploymentDraft,
   } = useDeploymentContext();
 
   const handleNewCustomAppOpen = () => {
@@ -52,9 +51,9 @@ const DeploymentList = ({ parentUrl }: { parentUrl: string }) => {
     //   kind: NOTIFICATION_KINDS_SIDE.success,
     //   text: 'Connect application created successfully',
     // });
-    onSelectDeployment(deployment);
+    onSelectDeploymentDraft(deployment);
     modalState.closeModal();
-    push(`${parentUrl}/deploy`);
+    // push(`${parentUrl}/deploy`);
 
     // if (result) {
     //   onSelectConnector(result.id);
@@ -77,7 +76,7 @@ const DeploymentList = ({ parentUrl }: { parentUrl: string }) => {
         ) : null;
       default:
         return (
-          <StyledRow key={row.key} deploymentKey={selectedDeployment?.key}>
+          <StyledRow rowKey={row.key} deploymentKey={selectedDeployment?.key}>
             {row?.[col.key]}
           </StyledRow>
         );

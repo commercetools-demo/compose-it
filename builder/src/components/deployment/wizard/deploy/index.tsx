@@ -5,25 +5,43 @@ import Text from '@commercetools-uikit/text';
 import PrimaryButton from '@commercetools-uikit/primary-button';
 import SecondaryButton from '@commercetools-uikit/secondary-button';
 import { useHistory } from 'react-router';
+import { useShowNotification } from '@commercetools-frontend/actions-global';
+import {
+  DOMAINS,
+  NOTIFICATION_KINDS_SIDE,
+} from '@commercetools-frontend/constants';
 type Props = {
   parentUrl: string;
 };
 
 const Deploy = ({ parentUrl }: Props) => {
+  const showSuccessNotification = useShowNotification();
+
   const {
     selectedDeployment,
     selectedApp,
     selectedConnector,
     selectedOrganization,
-    
+    onStartDeployment,
   } = useDeploymentContext();
 
-  const {goBack} = useHistory();
+  const handleStartDeployment = async () => {
+    onStartDeployment();
+    showSuccessNotification({
+      domain: DOMAINS.SIDE,
+      kind: NOTIFICATION_KINDS_SIDE.info,
+      text: 'Deployment started, go to deployment logs to see status',
+    });
+  };
 
-  console.log('selectedDeployment', selectedDeployment);
-  
+  const { goBack } = useHistory();
+
+  if (!selectedDeployment) {
+    return null;
+  }
+
   return (
-    <Spacings.Stack scale='l'>
+    <Spacings.Stack scale="l">
       <Text.Headline as="h2">Review and Start deployment</Text.Headline>
       <Spacings.Inline>
         <Text.Body isBold>Organization</Text.Body>
@@ -41,19 +59,17 @@ const Deploy = ({ parentUrl }: Props) => {
         <Text.Body isBold>Deployment key</Text.Body>
         <Text.Body>{selectedDeployment?.key}</Text.Body>
       </Spacings.Inline>
-    <Spacings.Inline>
-      <SecondaryButton
-      label='Go back and edit'
-      onClick={() => {
-        goBack();
-      }}
-      />
-      <PrimaryButton
-      label='Start deployment'
-      onClick={() => {
-        goBack();
-      }}
-      />
+      <Spacings.Inline>
+        <SecondaryButton
+          label="Go back and edit"
+          onClick={() => {
+            goBack();
+          }}
+        />
+        <PrimaryButton
+          label="Start deployment"
+          onClick={handleStartDeployment}
+        />
       </Spacings.Inline>
     </Spacings.Stack>
   );
