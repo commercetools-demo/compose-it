@@ -19,7 +19,7 @@ interface DeploymentContextType {
   onCreateCustomApp: (
     organizationId: string,
     customAppDraft: CustomAppDraft
-  ) => Promise<void>;
+  ) => Promise<MyCustomApplication | undefined>;
 }
 
 const DeploymentContext = createContext<DeploymentContextType | undefined>(
@@ -38,13 +38,11 @@ export const DeploymentProvider: React.FC<{
   const onCreateCustomApp = async (
     organizationId: string,
     customAppDraft: CustomAppDraft
-  ) => {
-    console.log('customAppDraft', customAppDraft);
-
+  ): Promise<MyCustomApplication | undefined> => {
     const { manageCamelCase, managePascalCase, viewCamelCase, viewPascalCase } =
       convertToRouteNames(customAppDraft.entryPointUriPath);
 
-    await createCustomApp(organizationId, {
+    const result = await createCustomApp(organizationId, {
       ...customAppDraft,
       permissions: customAppDraft.permissions.map((permission, index) => ({
         ...permission,
@@ -56,6 +54,7 @@ export const DeploymentProvider: React.FC<{
       },
     });
     await updateApps();
+    return result;
   };
 
   const apps = useMemo(() => {

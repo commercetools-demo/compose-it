@@ -3,7 +3,6 @@ import {
   Switch,
   Route,
   useRouteMatch,
-  Link,
   useHistory,
 } from 'react-router-dom';
 import {
@@ -12,9 +11,7 @@ import {
 } from '@commercetools-frontend/application-components';
 import { SyntheticEvent, useEffect } from 'react';
 import OrganizationList from './organization-list';
-import Spacings from '@commercetools-uikit/spacings';
 import { useDeploymentContext } from '../../../providers/deployment';
-import PrimaryButton from '@commercetools-uikit/primary-button';
 import CustomApplicationList from './custom-app-list';
 import { useAppContext } from '../../../providers/app';
 

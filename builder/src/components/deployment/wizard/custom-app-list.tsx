@@ -12,6 +12,11 @@ import {
 import { useDeploymentContext } from '../../../providers/deployment';
 import NewCustomAppForm from './new-custom-app';
 import Text from '@commercetools-uikit/text';
+import { useShowNotification } from '@commercetools-frontend/actions-global';
+import {
+  DOMAINS,
+  NOTIFICATION_KINDS_SIDE,
+} from '@commercetools-frontend/constants';
 
 const columns = [
   { key: 'id', label: 'ID' },
@@ -25,6 +30,8 @@ const StyledRow = styled.div`
 `;
 
 const CustomApplicationList = ({ parentUrl }: { parentUrl: string }) => {
+  const showSuccessNotification = useShowNotification();
+
   const modalState = useModalState();
   const {
     selectedOrganization,
@@ -40,15 +47,21 @@ const CustomApplicationList = ({ parentUrl }: { parentUrl: string }) => {
   };
 
   const handleCreateNewCustomApp = async (customApp: CustomAppDraft) => {
-    console.log('customApp', customApp);
-
     if (!selectedOrganization) {
       return;
     }
-    console.log('selectedOrganization', selectedOrganization);
 
-    await onCreateCustomApp(selectedOrganization, customApp);
+    const result = await onCreateCustomApp(selectedOrganization, customApp);
+    showSuccessNotification({
+      domain: DOMAINS.SIDE,
+      kind: NOTIFICATION_KINDS_SIDE.success,
+      text: 'Custom application created successfully',
+    });
     modalState.closeModal();
+    if (result) {
+      onSelectApp(result.id);
+    }
+
     // onSelectApp(app.id);
   };
 

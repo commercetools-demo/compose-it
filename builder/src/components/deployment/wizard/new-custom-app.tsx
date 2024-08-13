@@ -1,11 +1,15 @@
 import Spacings from '@commercetools-uikit/spacings';
-import { Form, Formik } from 'formik';
+import { Form, Formik, FieldArray } from 'formik';
 import FieldLabel from '@commercetools-uikit/field-label';
 import TextInput from '@commercetools-uikit/text-input';
+import TextField from '@commercetools-uikit/text-field';
 import Text from '@commercetools-uikit/text';
 import Grid from '@commercetools-uikit/grid';
 import { Drawer } from '@commercetools-frontend/application-components';
 import { CustomAppDraft } from '../../../hooks/use-deployment/types/app';
+import IconButton from '@commercetools-uikit/icon-button';
+import { BinLinearIcon, PlusBoldIcon } from '@commercetools-uikit/icons';
+import { useState } from 'react';
 
 type Props = {
   onSubmit: (customAppDraft: CustomAppDraft) => Promise<void>;
@@ -14,6 +18,7 @@ type Props = {
 };
 
 const NewCustomAppForm = ({ onSubmit, isOpen, onClose }: Props) => {
+  const [isLoading, setIsLoading] = useState(false);
   const initialData: Partial<CustomAppDraft> = {
     name: '',
     description: '',
@@ -36,6 +41,12 @@ const NewCustomAppForm = ({ onSubmit, isOpen, onClose }: Props) => {
       permissions: ['ViewMyCustomApp', 'ManageMyCustomApp'],
     },
     submenuLinks: [],
+  };
+
+  const handleOnSubmit = async (values: CustomAppDraft) => {
+    setIsLoading(true);
+    await onSubmit(values);
+    setIsLoading(false);
   };
 
   const handleValidation = (values: CustomAppDraft) => {
@@ -62,11 +73,11 @@ const NewCustomAppForm = ({ onSubmit, isOpen, onClose }: Props) => {
   return (
     <Formik
       initialValues={initialData}
-      onSubmit={onSubmit}
+      onSubmit={handleOnSubmit}
       validateOnBlur
       validate={handleValidation}
     >
-      {({ values, errors, setFieldValue, handleChange, handleSubmit }) => (
+      {({ values, errors, isValid, handleChange, handleSubmit }) => (
         <Drawer
           title={'New Custom App'}
           isOpen={isOpen}
@@ -74,6 +85,8 @@ const NewCustomAppForm = ({ onSubmit, isOpen, onClose }: Props) => {
           size={10}
           onPrimaryButtonClick={() => handleSubmit()}
           onSecondaryButtonClick={onClose}
+          isPrimaryButtonDisabled={!isValid || isLoading}
+          labelPrimaryButton={!isLoading ? 'Create' : 'Loading...'}
         >
           <Form>
             <Grid
@@ -149,6 +162,70 @@ const NewCustomAppForm = ({ onSubmit, isOpen, onClose }: Props) => {
                     {errors.mainMenuLink}
                   </Text.Caption>
                 )}
+              </Grid.Item>
+              <Grid.Item gridColumn="span 2">
+                <FieldArray name="permissions.0.oAuthScopes">
+                  {({ insert, remove, push }) => (
+                    <Spacings.Stack scale="m">
+                      {values.permissions?.[0]?.oAuthScopes?.map(
+                        (item, index) => (
+                          <Spacings.Inline key={index} alignItems="flex-end">
+                            <TextField
+                              title="View oAuth scope"
+                              value={item || ''}
+                              name={`permissions.0.oAuthScopes.${index}`}
+                              onChange={handleChange}
+                            />
+                            <IconButton
+                              type="button"
+                              label="remove"
+                              icon={<BinLinearIcon />}
+                              onClick={() => remove(index)}
+                            />
+                          </Spacings.Inline>
+                        )
+                      )}
+                      <IconButton
+                        type="button"
+                        label="Add"
+                        icon={<PlusBoldIcon />}
+                        onClick={() => push('view_')}
+                      />
+                    </Spacings.Stack>
+                  )}
+                </FieldArray>
+              </Grid.Item>
+              <Grid.Item gridColumn="span 2">
+                <FieldArray name="permissions.1.oAuthScopes">
+                  {({ insert, remove, push }) => (
+                    <Spacings.Stack scale="m">
+                      {values.permissions?.[1]?.oAuthScopes?.map(
+                        (item, index) => (
+                          <Spacings.Inline key={index} alignItems="flex-end">
+                            <TextField
+                              title="Manage oAuth scope"
+                              value={item || ''}
+                              name={`permissions.1.oAuthScopes.${index}`}
+                              onChange={handleChange}
+                            />
+                            <IconButton
+                              type="button"
+                              label="remove"
+                              icon={<BinLinearIcon />}
+                              onClick={() => remove(index)}
+                            />
+                          </Spacings.Inline>
+                        )
+                      )}
+                      <IconButton
+                        type="button"
+                        label="Add"
+                        icon={<PlusBoldIcon />}
+                        onClick={() => push('manage_')}
+                      />
+                    </Spacings.Stack>
+                  )}
+                </FieldArray>
               </Grid.Item>
             </Grid>
           </Form>

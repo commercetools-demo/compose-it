@@ -27,7 +27,7 @@ export const useDeployment = () => {
   //   const context = useApplicationContext((context) => context);
 
   const [executeCustomApp, { loading: addLoading }] = useMcMutation<{
-    customApplication: MyCustomApplication;
+    createCustomApplication: MyCustomApplication;
   }>(CreateCustomApp, {
     context: {
       target: GRAPHQL_TARGETS.SETTINGS_SERVICE,
@@ -36,13 +36,15 @@ export const useDeployment = () => {
   const createCustomApp = async (
     organizationId: string,
     customAppDraft: CustomAppDraft
-  ) => {
-    await executeCustomApp({
+  ): Promise<MyCustomApplication | undefined> => {
+    const result = await executeCustomApp({
       variables: {
         organizationId,
         data: customAppDraft,
       },
     });
+
+    return result?.data?.createCustomApplication;
   };
 
   const { data: userData, loading: userLoading } = useMcQuery<{ user: User }>(
