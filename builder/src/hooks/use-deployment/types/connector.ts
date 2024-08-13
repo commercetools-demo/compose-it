@@ -1,8 +1,12 @@
+import { PagedQueryResponse } from "../../../types/general";
+
 export type ConnectorDraft = {
+  id?: string;
   key: string;
   name: string;
-  description: string;
-  creator: {
+  description?: string;
+  version?: number;
+  creator?: {
     name: string;
     email: string;
     company: string;
@@ -12,3 +16,5 @@ export type ConnectorDraft = {
     tag: string;
   };
 };
+
+export type ConnectorResponse  = PagedQueryResponse<ConnectorDraft>

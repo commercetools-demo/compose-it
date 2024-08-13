@@ -72,7 +72,7 @@ const CustomApplicationList = ({ parentUrl }: { parentUrl: string }) => {
     switch (col.key) {
       case 'action':
         return selectedApp === row.id ? (
-          <Link to={!!selectedApp ? `${parentUrl}/custom-applications` : ''}>
+          <Link to={!!selectedApp ? `${parentUrl}/connect-applications` : ''}>
             <Spacings.Inline alignItems="center">
               Select for update
               <ArrowRightIcon />

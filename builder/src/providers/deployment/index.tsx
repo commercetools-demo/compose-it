@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useMemo, useState } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import { User } from '../../hooks/use-deployment/types/user';
 import {
   CustomAppDraft,
@@ -7,19 +13,31 @@ import {
 import { Organization } from '../../hooks/use-deployment/types/organization';
 import { useDeployment } from '../../hooks/use-deployment';
 import { convertToRouteNames } from './utils';
+import {
+  ConnectorDraft,
+  ConnectorResponse,
+} from '../../hooks/use-deployment/types/connector';
+import { Deployment } from '../../hooks/use-deployment/types/deployment';
 
 interface DeploymentContextType {
   user?: User;
   apps?: MyCustomApplication[];
   organizations?: Organization[];
+  connectors?: ConnectorDraft[];
   selectedOrganization?: string;
   selectedApp?: string;
+  selectedConnector?: string;
+  onSelectConnector: (connectorId?: string) => void;
   onSelectOrganization: (organizationId?: string) => void;
   onSelectApp: (appId?: string) => void;
   onCreateCustomApp: (
     organizationId: string,
     customAppDraft: CustomAppDraft
   ) => Promise<MyCustomApplication | undefined>;
+  onCreateConnectApp: (
+    organizationId: string,
+    connectAppDraft: ConnectorDraft
+  ) => Promise<ConnectorDraft | undefined>;
 }
 
 const DeploymentContext = createContext<DeploymentContextType | undefined>(
@@ -29,12 +47,41 @@ const DeploymentContext = createContext<DeploymentContextType | undefined>(
 export const DeploymentProvider: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => {
-  const { user, myApps, myOrganizations, createCustomApp, updateApps } =
-    useDeployment();
+  const {
+    user,
+    myApps,
+    myOrganizations,
+    createCustomApp,
+    createConnectorDraft,
+    updateApps,
+    getConnectors,
+    getDeployments,
+  } = useDeployment();
 
   const [selectedOrganization, onSelectOrganization] = useState<string>();
   const [selectedApp, onSelectApp] = useState<string>();
+  const [selectedConnector, onSelectConnector] = useState<string>();
+  const [connectors, setConnectors] = useState<ConnectorDraft[]>([]);
+  const [deployments, setDeployments] = useState<Deployment[]>([]);
 
+  const updateConnectors = async () => {
+    if (!selectedOrganization) {
+      setConnectors([]);
+    } else {
+      getConnectors(selectedOrganization).then((result) => {
+        setConnectors(result);
+      });
+    }
+  };
+  const updateDeployments = async () => {
+    if (!selectedOrganization || !selectedConnector) {
+      setDeployments([]);
+    } else {
+      getDeployments(selectedOrganization, selectedConnector).then((result) => {
+        setDeployments(result);
+      });
+    }
+  };
   const onCreateCustomApp = async (
     organizationId: string,
     customAppDraft: CustomAppDraft
@@ -56,10 +103,26 @@ export const DeploymentProvider: React.FC<{
     await updateApps();
     return result;
   };
+  const onCreateConnectApp = async (
+    organizationId: string,
+    connectAppDraft: ConnectorDraft
+  ): Promise<ConnectorDraft | undefined> => {
+    const result = await createConnectorDraft(organizationId, connectAppDraft);
+    await updateConnectors();
+    return result;
+  };
 
   const apps = useMemo(() => {
     return myApps?.filter((app) => app.organizationId === selectedOrganization);
   }, [myApps, selectedOrganization]);
+
+  useEffect(() => {
+    updateConnectors();
+  }, [selectedOrganization]);
+
+  useEffect(() => {
+    updateDeployments();
+  }, [selectedOrganization, selectedConnector]);
 
   return (
     <DeploymentContext.Provider
@@ -69,9 +132,13 @@ export const DeploymentProvider: React.FC<{
         organizations: myOrganizations,
         selectedOrganization,
         selectedApp,
+        selectedConnector,
+        connectors,
         onSelectOrganization,
         onSelectApp,
         onCreateCustomApp,
+        onSelectConnector,
+        onCreateConnectApp,
       }}
     >
       {children}

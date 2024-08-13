@@ -1,11 +1,10 @@
 export type User = {
-  user: {
-    id: string;
-    email: string;
-    firstName: string;
-    businessRole: string;
-    gravatarHash: string;
-    createdAt: string;
-    defaultProjectKey: string;
-  };
+  id: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  businessRole: string;
+  gravatarHash: string;
+  createdAt: string;
+  defaultProjectKey: string;
 };

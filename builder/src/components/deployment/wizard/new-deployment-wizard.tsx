@@ -14,13 +14,14 @@ import OrganizationList from './organization-list';
 import { useDeploymentContext } from '../../../providers/deployment';
 import CustomApplicationList from './custom-app-list';
 import { useAppContext } from '../../../providers/app';
+import ConnectApplicationList from './connect-app-list';
 
 type Props = {
   onClose: () => void;
 };
 
 const NewDeploymentWizard = ({ onClose }: Props) => {
-  const { selectedOrganization } = useDeploymentContext();
+  const { selectedOrganization, selectedApp } = useDeploymentContext();
   const { appGeneralInfo } = useAppContext();
   const match = useRouteMatch();
   const { replace } = useHistory();
@@ -54,6 +55,11 @@ const NewDeploymentWizard = ({ onClose }: Props) => {
               label="2. Select custom application"
               isDisabled={!selectedOrganization}
             />
+            <TabHeader
+              to={`${match.url}/connect-applications`}
+              label="3. Select a connector"
+              isDisabled={!selectedApp}
+            />
           </>
         }
       >
@@ -63,6 +69,9 @@ const NewDeploymentWizard = ({ onClose }: Props) => {
           </Route>
           <Route path={`${match.path}/custom-applications`}>
             <CustomApplicationList parentUrl={match.url} />
+          </Route>
+          <Route path={`${match.path}/connect-applications`}>
+            <ConnectApplicationList parentUrl={match.url} />
           </Route>
         </Switch>
       </TabularModalPage>

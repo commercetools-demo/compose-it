@@ -20,11 +20,19 @@ import {
 import { User } from './types/user';
 import { OrganizationResponse } from './types/organization';
 import { CustomAppDraft, MyCustomApplication } from './types/app';
-import { ConnectorDraft } from './types/connector';
+import { ConnectorDraft, ConnectorResponse } from './types/connector';
+import {
+  buildApiUrl,
+  useApplicationContext,
+} from '@commercetools-frontend/application-shell-connectors';
+import { buildUrlWithParams } from '../../utils/utils';
+import { Deployment, DeploymentResponse } from './types/deployment';
 
 export const useDeployment = () => {
-  const dispatchAppsRead = useAsyncDispatch<TSdkAction, any>();
-  //   const context = useApplicationContext((context) => context);
+  const dispatchAppsRead = useAsyncDispatch<TSdkAction, ConnectorResponse>();
+  const dispatchDeploymentsRead = useAsyncDispatch<TSdkAction, DeploymentResponse>();
+  const dispatchAppsCreate = useAsyncDispatch<TSdkAction, ConnectorDraft>();
+  const context = useApplicationContext((context) => context);
 
   const [executeCustomApp, { loading: addLoading }] = useMcMutation<{
     createCustomApplication: MyCustomApplication;
@@ -74,29 +82,59 @@ export const useDeployment = () => {
     },
   });
 
-  const getConnectors = async (organizationId: string) => {
+  const getConnectors = async (
+    organizationId: string
+  ): Promise<ConnectorDraft[]> => {
     const result = await dispatchAppsRead(
       actions.get({
+        // @ts-ignore
         mcApiProxyTarget: 'connect',
-        uri: `/${organizationId}/connectors`,
-        includeUserPermissions: true,
+        uri: buildUrlWithParams(`/${organizationId}/connectors`, {
+          limit: 100,
+        }),
       })
     );
+
+    return result?.results.filter((connector) =>
+      connector.repository.url.includes(context.environment.repoUrl || '')
+    ) as ConnectorDraft[];
   };
 
-  const createConnectorDraft = async (connectorDraft: ConnectorDraft) => {
-    const result = await dispatchAppsRead(
+  const getDeployments = async (
+    organizationId: string,
+    connectorId?: string
+  ): Promise<Deployment[]> => {
+    const result = await dispatchDeploymentsRead(
+      actions.get({
+        // @ts-ignore
+        mcApiProxyTarget: 'connect',
+        uri: buildUrlWithParams(`/${organizationId}/deployments`, {
+          limit: 100,
+        }),
+      })
+    );
+
+    return result?.results.filter(deployment => deployment.connector.id === connectorId) as Deployment[];
+  };
+
+  const createConnectorDraft = async (
+    organizationId: string,
+    connectorDraft: ConnectorDraft
+  ) => {
+    const result = await dispatchAppsCreate(
       actions.post({
         payload: connectorDraft,
         mcApiProxyTarget: 'connect',
-        uri: `/${organizationId}/connectors/drafts`,
+        uri: `/${organizationId}/deployments`,
         includeUserPermissions: true,
       })
     );
+    return result;
   };
 
   return {
     getConnectors,
+    getDeployments,
     createCustomApp,
     createConnectorDraft,
     updateApps,
