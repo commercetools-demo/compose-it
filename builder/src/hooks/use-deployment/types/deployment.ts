@@ -1,4 +1,5 @@
 import { PagedQueryResponse } from '../../../types/general';
+import { MyCustomApplication } from './app';
 
 export type Connector = {
   id?: string;
@@ -37,6 +38,7 @@ export type Connector = {
   certified: boolean;
   documentationUrl: null;
 };
+
 export type Deployment = {
   id: string;
   key: string;
@@ -65,6 +67,10 @@ export type Deployment = {
   createdAt: string;
 };
 
+export interface DeployedStatus extends Deployment {
+  app?: MyCustomApplication;
+}
+
 export type Configuration = {
   key: string;
   value: string;
@@ -74,7 +80,7 @@ export type Application = {
   applicationName: string;
   standardConfiguration: Configuration[];
   securedConfiguration: Configuration[];
-  url: string;
+  url?: string;
 };
 
 export type DeploymentDraft = {

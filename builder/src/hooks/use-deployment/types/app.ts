@@ -4,6 +4,7 @@ export type MyCustomApplication = {
   description: string;
   organizationId: string;
   entryPointUriPath: string;
+  url?: string;
   __typename?: string;
 };
 

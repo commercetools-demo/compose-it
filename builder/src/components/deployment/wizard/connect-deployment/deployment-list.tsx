@@ -42,22 +42,8 @@ const DeploymentList = ({ parentUrl }: { parentUrl: string }) => {
   };
 
   const handleNewDeployment = (deployment: DeploymentDraft) => {
-    // if (!selectedApp || !selectedOrganization) {
-    //   return;
-    // }
-    // const result = await onCreateConnectApp(selectedOrganization, connectApp);
-    // showSuccessNotification({
-    //   domain: DOMAINS.SIDE,
-    //   kind: NOTIFICATION_KINDS_SIDE.success,
-    //   text: 'Connect application created successfully',
-    // });
     onSelectDeploymentDraft(deployment);
     modalState.closeModal();
-    // push(`${parentUrl}/deploy`);
-
-    // if (result) {
-    //   onSelectConnector(result.id);
-    // }
   };
 
   const handleRenderItem = (
