@@ -12,16 +12,18 @@ import {
 import { SyntheticEvent, useEffect } from 'react';
 import OrganizationList from './organization-list';
 import { useDeploymentContext } from '../../../providers/deployment';
-import CustomApplicationList from './custom-app-list';
+import CustomApplicationList from './custom-app/custom-app-list';
 import { useAppContext } from '../../../providers/app';
-import ConnectApplicationList from './connect-app-list';
+import ConnectApplicationList from './connect-app/connect-app-list';
+import DeploymentList from './connect-deployment/deployment-list';
+import Deploy from './deploy';
 
 type Props = {
   onClose: () => void;
 };
 
 const NewDeploymentWizard = ({ onClose }: Props) => {
-  const { selectedOrganization, selectedApp } = useDeploymentContext();
+  const { selectedOrganization, selectedApp, selectedConnector, selectedDeployment } = useDeploymentContext();
   const { appGeneralInfo } = useAppContext();
   const match = useRouteMatch();
   const { replace } = useHistory();
@@ -60,6 +62,16 @@ const NewDeploymentWizard = ({ onClose }: Props) => {
               label="3. Select a connector"
               isDisabled={!selectedApp}
             />
+            <TabHeader
+              to={`${match.url}/deployments`}
+              label="4. Select a deployment"
+              isDisabled={!selectedConnector}
+            />
+            <TabHeader
+              to={`${match.url}/deploy`}
+              label="5. Deploy"
+              isDisabled={!selectedDeployment}
+            />
           </>
         }
       >
@@ -72,6 +84,12 @@ const NewDeploymentWizard = ({ onClose }: Props) => {
           </Route>
           <Route path={`${match.path}/connect-applications`}>
             <ConnectApplicationList parentUrl={match.url} />
+          </Route>
+          <Route path={`${match.path}/deployments`}>
+            <DeploymentList parentUrl={match.url} />
+          </Route>
+          <Route path={`${match.path}/deploy`}>
+            <Deploy parentUrl={match.url} />
           </Route>
         </Switch>
       </TabularModalPage>

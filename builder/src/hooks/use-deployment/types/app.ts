@@ -3,6 +3,7 @@ export type MyCustomApplication = {
   name: string;
   description: string;
   organizationId: string;
+  entryPointUriPath: string;
   __typename?: string;
 };
 

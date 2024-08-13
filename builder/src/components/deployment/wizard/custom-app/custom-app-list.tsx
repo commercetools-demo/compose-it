@@ -8,9 +8,9 @@ import styled from 'styled-components';
 import {
   CustomAppDraft,
   MyCustomApplication,
-} from '../../../hooks/use-deployment/types/app';
-import { useDeploymentContext } from '../../../providers/deployment';
-import NewCustomAppForm from './new-custom-app';
+} from '../../../../hooks/use-deployment/types/app';
+import { useDeploymentContext } from '../../../../providers/deployment';
+import NewCustomAppForm from '../custom-app/new-custom-app';
 import Text from '@commercetools-uikit/text';
 import { useShowNotification } from '@commercetools-frontend/actions-global';
 import {
@@ -59,7 +59,7 @@ const CustomApplicationList = ({ parentUrl }: { parentUrl: string }) => {
     });
     modalState.closeModal();
     if (result) {
-      onSelectApp(result.id);
+      onSelectApp(result);
     }
 
     // onSelectApp(app.id);
@@ -71,7 +71,7 @@ const CustomApplicationList = ({ parentUrl }: { parentUrl: string }) => {
   ) => {
     switch (col.key) {
       case 'action':
-        return selectedApp === row.id ? (
+        return selectedApp?.id === row.id ? (
           <Link to={!!selectedApp ? `${parentUrl}/connect-applications` : ''}>
             <Spacings.Inline alignItems="center">
               Select for update
@@ -81,7 +81,7 @@ const CustomApplicationList = ({ parentUrl }: { parentUrl: string }) => {
         ) : null;
       default:
         return (
-          <StyledRow id={row.id} appId={selectedApp}>
+          <StyledRow id={row.id} appId={selectedApp?.id}>
             {row?.[col.key]}
           </StyledRow>
         );
@@ -110,7 +110,7 @@ const CustomApplicationList = ({ parentUrl }: { parentUrl: string }) => {
         <DataTable
           rows={apps}
           columns={columns}
-          onRowClick={(row) => onSelectApp(row.id)}
+          onRowClick={(row) => onSelectApp(row)}
           itemRenderer={handleRenderItem}
         />
       </Spacings.Stack>

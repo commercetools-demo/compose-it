@@ -6,7 +6,7 @@ import {
   useMcQuery,
   useMcMutation,
 } from '@commercetools-frontend/application-shell';
-import { GRAPHQL_TARGETS } from '@commercetools-frontend/constants';
+import { GRAPHQL_TARGETS, MC_API_PROXY_TARGETS } from '@commercetools-frontend/constants';
 //import type { TDataTableSortingState } from '@commercetools-uikit/hooks';
 import FetchMyOrganizationsQuery from './fetch-my-organization.admin.graphql';
 import MyCustomApps from './fetch-my-custom-apps.setting.graphql';
@@ -26,13 +26,62 @@ import {
   useApplicationContext,
 } from '@commercetools-frontend/application-shell-connectors';
 import { buildUrlWithParams } from '../../utils/utils';
-import { Deployment, DeploymentResponse } from './types/deployment';
+import {
+  Deployment,
+  DeploymentDraft,
+  DeploymentResponse,
+  DeploymentStatus,
+  DeploymentStatusValue,
+} from './types/deployment';
+import { APP_NAME } from '../../constants';
+import { useAppContext } from '../../providers/app';
+
+const CONTAINER = `${APP_NAME}_deployments`;
+const DEPLOYMENT_KEY_PREFIX = 'deployment-';
+
+const getDeploymentKey = (appKey?: string) => `${DEPLOYMENT_KEY_PREFIX}${appKey}`;
 
 export const useDeployment = () => {
+  const dispatchCustomObjectsRead = useAsyncDispatch<TSdkAction, DeploymentStatus>();
+  const dispatchCustomObjectCreate = useAsyncDispatch<TSdkAction, DeploymentStatus>();
   const dispatchAppsRead = useAsyncDispatch<TSdkAction, ConnectorResponse>();
-  const dispatchDeploymentsRead = useAsyncDispatch<TSdkAction, DeploymentResponse>();
+  const dispatchDeploymentsRead = useAsyncDispatch<
+    TSdkAction,
+    DeploymentResponse
+  >();
   const dispatchAppsCreate = useAsyncDispatch<TSdkAction, ConnectorDraft>();
+  const dispatchDeploymentCreate = useAsyncDispatch<TSdkAction, Deployment>();
   const context = useApplicationContext((context) => context);
+  const {appGeneralInfo} = useAppContext();
+
+  const fetchDeploymentStatuses = async () => {
+
+    const result = await dispatchCustomObjectsRead(
+      actions.get({
+        mcApiProxyTarget: MC_API_PROXY_TARGETS.COMMERCETOOLS_PLATFORM,
+        uri: buildUrlWithParams(
+          `/${context?.project?.key}/custom-objects/${CONTAINER}/${getDeploymentKey(appGeneralInfo?.key)}`,
+          {}
+        ),
+      })
+    );
+    return result.value;
+  };
+
+  const createDeploymentStatus = async (deploymentStatus: DeploymentStatusValue) => {
+
+    const result = await fetchDeploymentStatuses().then(result => dispatchCustomObjectCreate(
+      actions.post({
+        mcApiProxyTarget: MC_API_PROXY_TARGETS.COMMERCETOOLS_PLATFORM,
+        uri: buildUrlWithParams(
+          `/${context?.project?.key}/custom-objects/${CONTAINER}/${getDeploymentKey(appGeneralInfo?.key)}`,
+          {}
+        ),
+        payload: [...(result || []), deploymentStatus]
+      })
+    ));
+    return result;
+  };
 
   const [executeCustomApp, { loading: addLoading }] = useMcMutation<{
     createCustomApplication: MyCustomApplication;
@@ -114,16 +163,25 @@ export const useDeployment = () => {
       })
     );
 
-    return result?.results.filter(deployment => deployment.connector.id === connectorId) as Deployment[];
+    return result?.results.filter(
+      (deployment) => deployment.connector.id === connectorId
+    ) as Deployment[];
   };
 
   const createConnectorDraft = async (
     organizationId: string,
     connectorDraft: ConnectorDraft
   ) => {
-    const result = await dispatchAppsCreate(
+    return undefined;
+  };
+
+  const createDeployment = async (
+    organizationId: string,
+    deploymentDraft: DeploymentDraft
+  ) => {
+    const result = await dispatchDeploymentCreate(
       actions.post({
-        payload: connectorDraft,
+        payload: deploymentDraft,
         mcApiProxyTarget: 'connect',
         uri: `/${organizationId}/deployments`,
         includeUserPermissions: true,
@@ -137,7 +195,10 @@ export const useDeployment = () => {
     getDeployments,
     createCustomApp,
     createConnectorDraft,
+    createDeployment,
     updateApps,
+    fetchDeploymentStatuses,
+    createDeploymentStatus,
     user: userData?.user,
     myApps: myAppsData?.myCustomApplications,
     myOrganizations: organizationData?.myOrganizations.results,

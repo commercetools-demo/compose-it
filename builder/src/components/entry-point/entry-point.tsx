@@ -7,7 +7,6 @@ import type { ApplicationWindow } from '@commercetools-frontend/constants';
 import loadMessages from '../../load-messages';
 import BuilderStateProvider from '../../providers/process';
 import { ClipboardProvider } from '../../providers/clipboard';
-import { DeploymentProvider } from '../../providers/deployment';
 
 declare let window: ApplicationWindow;
 
@@ -29,11 +28,9 @@ const EntryPoint = () => (
     applicationMessages={loadMessages}
   >
     <BuilderStateProvider>
-      <DeploymentProvider>
         <ClipboardProvider>
           <AsyncApplicationRoutes />
         </ClipboardProvider>
-      </DeploymentProvider>
     </BuilderStateProvider>
   </ApplicationShell>
 );

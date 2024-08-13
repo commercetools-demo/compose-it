@@ -6,9 +6,9 @@ import Text from '@commercetools-uikit/text';
 import Grid from '@commercetools-uikit/grid';
 import { Drawer } from '@commercetools-frontend/application-components';
 import { useState } from 'react';
-import { ConnectorDraft } from '../../../hooks/use-deployment/types/connector';
+import { ConnectorDraft } from '../../../../hooks/use-deployment/types/connector';
 import { useApplicationContext } from '@commercetools-frontend/application-shell-connectors';
-import { useDeploymentContext } from '../../../providers/deployment';
+import { useDeploymentContext } from '../../../../providers/deployment';
 
 type Props = {
   onSubmit: (connectAppDraft: ConnectorDraft) => Promise<void>;

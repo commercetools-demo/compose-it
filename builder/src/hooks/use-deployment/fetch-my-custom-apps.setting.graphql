@@ -3,6 +3,7 @@ query MyCustomApplications {
     id,
     name,
     description,
-    organizationId
+    organizationId,
+    entryPointUriPath
   }
 }

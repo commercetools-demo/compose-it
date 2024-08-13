@@ -1,18 +1,17 @@
 import { useModalState } from '@commercetools-frontend/application-components';
 import DataTable from '@commercetools-uikit/data-table';
-import { ArrowRightIcon, PlusThinIcon } from '@commercetools-uikit/icons';
-import PrimaryButton from '@commercetools-uikit/primary-button';
+import { ArrowRightIcon } from '@commercetools-uikit/icons';
 import Spacings from '@commercetools-uikit/spacings';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { useDeploymentContext } from '../../../providers/deployment';
+import { useDeploymentContext } from '../../../../providers/deployment';
 import Text from '@commercetools-uikit/text';
 import { useShowNotification } from '@commercetools-frontend/actions-global';
 import {
   DOMAINS,
   NOTIFICATION_KINDS_SIDE,
 } from '@commercetools-frontend/constants';
-import { ConnectorDraft } from '../../../hooks/use-deployment/types/connector';
+import { ConnectorDraft } from '../../../../hooks/use-deployment/types/connector';
 import NewConnectAppForm from './new-connect-app';
 
 const columns = [
@@ -51,7 +50,7 @@ const ConnectApplicationList = ({ parentUrl }: { parentUrl: string }) => {
     });
     modalState.closeModal();
     if (result) {
-      onSelectConnector(result.id);
+      onSelectConnector(result);
     }
 
     // onSelectApp(app.id);
@@ -63,7 +62,7 @@ const ConnectApplicationList = ({ parentUrl }: { parentUrl: string }) => {
   ) => {
     switch (col.key) {
       case 'action':
-        return selectedConnector === row.id ? (
+        return selectedConnector?.id === row.id ? (
           <Link
             to={!!selectedConnector ? `${parentUrl}/deployments` : ''}
           >
@@ -75,7 +74,7 @@ const ConnectApplicationList = ({ parentUrl }: { parentUrl: string }) => {
         ) : null;
       default:
         return (
-          <StyledRow id={row.id} connectorId={selectedConnector}>
+          <StyledRow id={row.id} connectorId={selectedConnector?.id}>
             {row?.[col.key]}
           </StyledRow>
         );
@@ -113,7 +112,7 @@ const ConnectApplicationList = ({ parentUrl }: { parentUrl: string }) => {
           <DataTable
             rows={connectors}
             columns={columns}
-            onRowClick={(row) => onSelectConnector(row.id)}
+            onRowClick={(row) => onSelectConnector(row)}
             itemRenderer={handleRenderItem}
           />
         )}

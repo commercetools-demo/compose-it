@@ -30,3 +30,14 @@ export const convertToRouteNames = (
     managePascalCase,
   };
 };
+
+export function extractRegionFromUrl(url: string): string | null {
+  const regex = /\/\/mc-api\.([\w-]+\.[\w]+)\.commercetools\.com/;
+  const match = url.match(regex);
+  
+  if (match && match[1]) {
+    return match[1];
+  }
+  
+  return null;
+}

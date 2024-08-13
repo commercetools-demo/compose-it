@@ -3,5 +3,6 @@ mutation CustomApplication($organizationId: String!, $data: CustomApplicationDra
     id,
     name,
     description,
+    entryPointUriPath
   }
 }

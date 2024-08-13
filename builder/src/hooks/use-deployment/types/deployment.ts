@@ -93,3 +93,18 @@ export type DeploymentDraft = {
 };
 
 export type DeploymentResponse = PagedQueryResponse<Deployment>;
+
+export type DeploymentStatusValue = {
+  deploymentId: string;
+  organizationId: string;
+  customAppId: string;
+  connectorId: string;
+}
+
+
+export type DeploymentStatus = {
+  id: string;
+  createdAt: string;
+  key: string;
+  value?: DeploymentStatusValue[];
+}
