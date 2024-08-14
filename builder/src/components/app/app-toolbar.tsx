@@ -8,7 +8,6 @@ import {
   RefreshIcon,
   RevertIcon,
 } from '@commercetools-uikit/icons';
-import { useRouteMatch } from 'react-router';
 import styled from 'styled-components';
 import RoutingListButton from '../app-routing/routing-list-button';
 import EditAppButton from './components/edit-app-button';
@@ -34,7 +33,7 @@ const ReverseIcon = styled.div`
   }
 `;
 
-const AppToolbar = () => {
+const AppToolbar = ({ parentUrl }: { parentUrl: string }) => {
   const { appGeneralInfo } = useAppContext();
 
   const { redo, undo, savePage, isSaving, hasRedo, hasUndo, isPageDirty } =
@@ -43,7 +42,7 @@ const AppToolbar = () => {
     <Spacings.Inline justifyContent="space-between">
       <Spacings.Inline>
         <Text.Headline as="h1">{`App: ${appGeneralInfo?.name}`}</Text.Headline>
-        <EditAppButton />
+        <EditAppButton parentUrl={parentUrl} />
         <RoutingListButton />
         <Deployment />
       </Spacings.Inline>

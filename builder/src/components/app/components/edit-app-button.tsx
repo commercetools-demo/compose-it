@@ -9,11 +9,13 @@ import { useAppContext } from '../../../providers/app';
 import { useApps } from '../../../hooks/use-app';
 import IconButton from '@commercetools-uikit/icon-button';
 import { GearIcon } from '@commercetools-uikit/icons';
+import { useHistory } from 'react-router';
 
-const EditAppButton = () => {
+const EditAppButton = ({ parentUrl }: { parentUrl: string }) => {
   const drawerState = useModalState();
   const { appGeneralInfo } = useAppContext();
-  const { updateAppGeneralInfo } = useApps();
+  const { replace } = useHistory();
+  const { updateAppGeneralInfo, deleteApp } = useApps();
 
   const handleUpdateApp = async (app: AppDraft) => {
     if (!appGeneralInfo) {
@@ -21,6 +23,15 @@ const EditAppButton = () => {
     }
     await updateAppGeneralInfo(appGeneralInfo.key, app);
     drawerState.closeModal();
+  };
+
+  const handleDeleteApp = async (app: AppDraft) => {
+    if (!app) {
+      return;
+    }
+    await deleteApp(app.key);
+    drawerState.closeModal();
+    replace(`${parentUrl}`);
   };
   return (
     <Spacings.Inline>
@@ -39,6 +50,7 @@ const EditAppButton = () => {
         <NewAppForm
           app={appGeneralInfo as AppDraft}
           onSubmit={handleUpdateApp}
+          onDeleteApp={handleDeleteApp}
           onCancel={drawerState.closeModal}
         />
       </Drawer>

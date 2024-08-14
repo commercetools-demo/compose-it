@@ -12,7 +12,7 @@ export const App = ({ parentUrl }: { parentUrl: string }) => {
   return (
     <InfoDetailPage
       onPreviousPathClick={() => history.push(parentUrl)}
-      customTitleRow={<AppToolbar />}
+      customTitleRow={<AppToolbar parentUrl={parentUrl} />}
     >
       {appConfig && (
         <div className="builder-layout">

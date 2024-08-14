@@ -10,12 +10,14 @@ import { AppDraft } from '../../../types/app';
 
 type Props = {
   onSubmit: (app: AppDraft) => Promise<void>;
+  onDeleteApp: (app: AppDraft) => Promise<void>;
   onCancel: () => void;
   app?: AppDraft;
 };
 
 const NewAppForm = ({
   onSubmit,
+  onDeleteApp,
   onCancel,
   app = {
     name: '',
@@ -32,63 +34,79 @@ const NewAppForm = ({
   };
 
   return (
-    <Formik
-      initialValues={app}
-      onSubmit={onSubmit}
-      validateOnBlur
-      validate={handleValidation}
-    >
-      {({ values, errors, handleChange, submitForm }) => (
-        <Form>
-          <div style={{ paddingBottom: '16px' }}>
-            <Spacings.Inline
-              alignItems="center"
-              justifyContent="flex-end"
-              scale="m"
+    <Spacings.Stack scale="l">
+      <Formik
+        initialValues={app}
+        onSubmit={onSubmit}
+        validateOnBlur
+        validate={handleValidation}
+      >
+        {({ values, errors, handleChange, submitForm }) => (
+          <Form>
+            <div style={{ paddingBottom: '16px' }}>
+              <Spacings.Inline
+                alignItems="center"
+                justifyContent="flex-end"
+                scale="m"
+              >
+                <SecondaryButton
+                  label="Cancel"
+                  onClick={onCancel}
+                  type="button"
+                />
+                <PrimaryButton
+                  label="Save"
+                  onClick={submitForm}
+                  type="button"
+                />
+              </Spacings.Inline>
+            </div>
+            <Grid
+              gridGap="16px"
+              gridTemplateColumns="repeat(2, 1fr)"
+              gridAutoColumns="1fr"
             >
-              <SecondaryButton
-                label="Cancel"
-                onClick={onCancel}
-                type="button"
-              />
-              <PrimaryButton label="Save" onClick={submitForm} type="button" />
-            </Spacings.Inline>
-          </div>
-          <Grid
-            gridGap="16px"
-            gridTemplateColumns="repeat(2, 1fr)"
-            gridAutoColumns="1fr"
-          >
-            <Grid.Item gridColumn="span 2">
-              <Spacings.Inline alignItems="center">
-                <FieldLabel title="Name" />
-                <TextInput
-                  value={values?.name}
-                  name="name"
-                  onChange={handleChange}
-                />
-              </Spacings.Inline>
-              {errors.name && (
-                <Text.Caption tone="warning">{errors.name}</Text.Caption>
-              )}
-            </Grid.Item>
-            <Grid.Item gridColumn="span 2">
-              <Spacings.Inline alignItems="center">
-                <FieldLabel title="Description" />
-                <TextInput
-                  value={values?.description}
-                  name="description"
-                  onChange={handleChange}
-                />
-              </Spacings.Inline>
-              {errors.description && (
-                <Text.Caption tone="warning">{errors.description}</Text.Caption>
-              )}
-            </Grid.Item>
-          </Grid>
-        </Form>
-      )}
-    </Formik>
+              <Grid.Item gridColumn="span 2">
+                <Spacings.Inline alignItems="center">
+                  <FieldLabel title="Name" />
+                  <TextInput
+                    value={values?.name}
+                    name="name"
+                    onChange={handleChange}
+                  />
+                </Spacings.Inline>
+                {errors.name && (
+                  <Text.Caption tone="warning">{errors.name}</Text.Caption>
+                )}
+              </Grid.Item>
+              <Grid.Item gridColumn="span 2">
+                <Spacings.Inline alignItems="center">
+                  <FieldLabel title="Description" />
+                  <TextInput
+                    value={values?.description}
+                    name="description"
+                    onChange={handleChange}
+                  />
+                </Spacings.Inline>
+                {errors.description && (
+                  <Text.Caption tone="warning">
+                    {errors.description}
+                  </Text.Caption>
+                )}
+              </Grid.Item>
+            </Grid>
+          </Form>
+        )}
+      </Formik>
+      <Spacings.Inline alignItems="center" justifyContent="flex-end">
+        <PrimaryButton
+          label="Delete app"
+          onClick={() => onDeleteApp(app)}
+          type="button"
+          tone="critical"
+        />
+      </Spacings.Inline>
+    </Spacings.Stack>
   );
 };
 export default NewAppForm;
