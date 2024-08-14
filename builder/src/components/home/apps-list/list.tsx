@@ -9,8 +9,8 @@ import LoadingSpinner from '@commercetools-uikit/loading-spinner';
 import { Pagination } from '@commercetools-uikit/pagination';
 import Spacings from '@commercetools-uikit/spacings';
 import { useHistory, useRouteMatch } from 'react-router';
-import { App } from '../../types/app';
-import { useBuilderStateContext } from '../../providers/process';
+import { useBuilderStateContext } from '../../../providers/process';
+import { App } from '../../../types/app';
 
 const columns = [
   { key: 'key', label: 'Key' },

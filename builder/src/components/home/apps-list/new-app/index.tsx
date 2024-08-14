@@ -6,7 +6,7 @@ import { Form, Formik } from 'formik';
 import FieldLabel from '@commercetools-uikit/field-label';
 import TextInput from '@commercetools-uikit/text-input';
 import Text from '@commercetools-uikit/text';
-import { AppDraft } from '../../../types/app';
+import { AppDraft } from '../../../../types/app';
 
 type Props = {
   onSubmit: (app: AppDraft) => Promise<void>;

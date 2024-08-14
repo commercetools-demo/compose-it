@@ -6,11 +6,11 @@ import { PlusBoldIcon } from '@commercetools-uikit/icons';
 import PrimaryButton from '@commercetools-uikit/primary-button';
 import Spacings from '@commercetools-uikit/spacings';
 import Text from '@commercetools-uikit/text';
-import { useApps } from '../../hooks/use-app';
-import { useBuilderStateContext } from '../../providers/process';
-import { AppDraft } from '../../types/app';
 import AppsList from './list';
 import NewAppForm from './new-app';
+import { useApps } from '../../../hooks/use-app';
+import { useBuilderStateContext } from '../../../providers/process';
+import { AppDraft } from '../../../types/app';
 
 const Apps = () => {
   const drawerState = useModalState();

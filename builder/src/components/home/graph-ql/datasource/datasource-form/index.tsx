@@ -6,13 +6,13 @@ import { Form, Formik } from 'formik';
 import FieldLabel from '@commercetools-uikit/field-label';
 import TextInput from '@commercetools-uikit/text-input';
 import Text from '@commercetools-uikit/text';
-import { Action } from '../../../../types/datasource';
-import Editor from '../../datasource/editor';
+import Editor from '../editor';
+import { Datasource } from '../../../../../types/datasource';
 
 type Props = {
-  onSubmit: (action: Action) => Promise<void>;
+  onSubmit: (datasource: Datasource) => Promise<void>;
   onCancel: () => void;
-  action?: Action;
+  datasource?: Datasource;
 };
 
 const initialQueryCtp = `# shift-option/alt-click on a query below to jump to it in the explorer
@@ -25,22 +25,22 @@ query ProjectInfo {
 }
 `;
 
-const ActionForm = ({
+const DatasourceForm = ({
   onSubmit,
   onCancel,
-  action = {
+  datasource = {
     name: '',
-    mutation: initialQueryCtp,
+    query: initialQueryCtp,
     variables: '',
-  } as Action,
+  } as Datasource,
 }: Props) => {
-  const handleValidation = (values: Action) => {
-    const errors: Record<keyof Action, string> = {} as never;
+  const handleValidation = (values: Datasource) => {
+    const errors: Record<keyof Datasource, string> = {} as never;
     if (!values.name) {
       errors['name'] = 'Required';
     }
-    if (!values.mutation) {
-      errors['mutation'] = 'Required';
+    if (!values.query) {
+      errors['query'] = 'Required';
     }
 
     return errors;
@@ -48,7 +48,7 @@ const ActionForm = ({
 
   return (
     <Formik
-      initialValues={action}
+      initialValues={datasource}
       onSubmit={onSubmit}
       validateOnBlur
       validate={handleValidation}
@@ -90,19 +90,19 @@ const ActionForm = ({
           </Grid>
           <Editor
             target="ctp"
-            query={action.mutation}
-            onUpdateQuery={(mutation) => setFieldValue('mutation', mutation)}
-            variables={action.variables}
+            query={datasource.query}
+            onUpdateQuery={(query) => setFieldValue('query', query)}
+            variables={datasource.variables}
             onUpdateVariables={(variables) =>
               setFieldValue('variables', variables)
             }
           />
-          {errors.mutation && (
-            <Text.Caption tone="warning">{errors.mutation}</Text.Caption>
+          {errors.query && (
+            <Text.Caption tone="warning">{errors.query}</Text.Caption>
           )}
         </Form>
       )}
     </Formik>
   );
 };
-export default ActionForm;
+export default DatasourceForm;

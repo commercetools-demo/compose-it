@@ -1,6 +1,6 @@
 import Constraints from '@commercetools-uikit/constraints';
 import { useState } from 'react';
-import { Action, ActionResponse } from '../../../../types/datasource';
+import { Action, ActionResponse } from '../../../../../types/datasource';
 
 import {
   Drawer,
@@ -13,9 +13,9 @@ import {
 } from '@commercetools-uikit/hooks';
 import { Pagination } from '@commercetools-uikit/pagination';
 import Spacings from '@commercetools-uikit/spacings';
-import { useBuilderStateContext } from '../../../../providers/process';
+import { useBuilderStateContext } from '../../../../../providers/process';
 import LoadingSpinner from '@commercetools-uikit/loading-spinner';
-import { useAction } from '../../../../hooks/use-action';
+import { useAction } from '../../../../../hooks/use-action';
 import ActionForm from '../action-form';
 
 const columns = [

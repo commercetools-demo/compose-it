@@ -6,6 +6,8 @@ export type PropsBindingState = {
   type: 'datasource' | 'property' | 'action';
   dataType?: string;
   value: string | number | boolean | null | object;
+  hint?: string;
+  sortOrder?: number;
 };
 
 type ComponentLayout = {

@@ -1,9 +1,9 @@
 import Spacings from '@commercetools-uikit/spacings';
-import Apps from '../apps-list';
-import Datasources from '../graph-ql/datasource';
+import Apps from './apps-list';
+import Datasources from './graph-ql/datasource';
 import Text from '@commercetools-uikit/text';
 import styled from 'styled-components';
-import Actions from '../graph-ql/action';
+import Actions from './graph-ql/action';
 
 const StyledDiv = styled.div`
   padding-top: 32px;

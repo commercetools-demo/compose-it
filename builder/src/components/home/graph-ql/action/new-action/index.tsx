@@ -4,8 +4,8 @@ import {
 } from '@commercetools-frontend/application-components';
 import { PlusBoldIcon } from '@commercetools-uikit/icons';
 import PrimaryButton from '@commercetools-uikit/primary-button';
-import { ActionDraft } from '../../../../types/datasource';
-import { useAction } from '../../../../hooks/use-action';
+import { ActionDraft } from '../../../../../types/datasource';
+import { useAction } from '../../../../../hooks/use-action';
 import ActionForm from '../action-form';
 
 const NewAction = () => {

@@ -3,13 +3,13 @@ import {
   Drawer,
   useModalState,
 } from '@commercetools-frontend/application-components';
-import NewAppForm from '../../apps-list/new-app';
 import { AppDraft } from '../../../types/app';
 import { useAppContext } from '../../../providers/app';
 import { useApps } from '../../../hooks/use-app';
 import IconButton from '@commercetools-uikit/icon-button';
 import { GearIcon } from '@commercetools-uikit/icons';
 import { useHistory } from 'react-router';
+import NewAppForm from '../../home/apps-list/new-app';
 
 const EditAppButton = ({ parentUrl }: { parentUrl: string }) => {
   const drawerState = useModalState();
