@@ -1,5 +1,5 @@
 import { ActionRef, DatasourceRef } from '../../../types/datasource';
-import { ComponentConfig } from '../../library/general';
+import { ComponentConfig, PropsBindingState } from '../../library/general';
 
 export const useComponentConfig = () => {
   const removeComponentById = (
@@ -210,6 +210,40 @@ export const useComponentConfig = () => {
     });
   };
 
+  // TODO: refactor this to make configurable
+  // e.g Form.config.propsBindings.initialData can have a property called affectedChildProps
+  // affectedChildProps: ['value', ...]
+  // that can be used to update the props of the affected children
+  const setDefaultPropsBindings = (
+    propsBindings: Record<string, PropsBindingState>,
+    targetComponent: ComponentConfig
+  ): Record<string, PropsBindingState> => {
+    switch (targetComponent.type) {
+      case 'Form':
+        if (
+          targetComponent.config?.propsBindings?.initialData?.type ===
+          'datasource'
+        ) {
+          if (propsBindings?.value) {
+            return {
+              ...propsBindings,
+              value: {
+                ...propsBindings.value,
+                type: 'datasource',
+                value:
+                  targetComponent.config?.propsBindings?.initialData?.value,
+              },
+            };
+          }
+        }
+        break;
+      default:
+        break;
+    }
+
+    return propsBindings;
+  };
+
   return {
     removeComponentById,
     addComponentToTarget,
@@ -217,5 +251,6 @@ export const useComponentConfig = () => {
     getDatasourceRefs,
     getActionRefs,
     updateComponentInComponents,
+    setDefaultPropsBindings,
   };
 };

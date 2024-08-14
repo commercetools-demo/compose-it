@@ -21,7 +21,12 @@ export const useResizeAndDrag = (
 
   const { getComponentProps } = useBuilderStateContext();
 
-  const { removeComponentById, addComponentToTarget } = useComponentConfig();
+  const {
+    removeComponentById,
+    addComponentToTarget,
+    findComponentById,
+    setDefaultPropsBindings,
+  } = useComponentConfig();
 
   const handleResize = (e: React.MouseEvent) => {
     if (!resizing || !gridRef.current) return;
@@ -161,6 +166,13 @@ export const useResizeAndDrag = (
 
     if (targetId) {
       // Dropping into another component
+      const targetComponent = findComponentById(updatedComponents, targetId);
+      if (targetComponent) {
+        newComponent.config.propsBindings = setDefaultPropsBindings(
+          newComponent.config.propsBindings,
+          targetComponent
+        );
+      }
       updatedComponents = addComponentToTarget(
         updatedComponents,
         targetId,
