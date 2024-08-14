@@ -1,7 +1,7 @@
 import Spacings from '@commercetools-uikit/spacings';
 import { FieldArray, Form, Formik } from 'formik';
 import React from 'react';
-import IconButton from '@commercetools-uikit/icon-button';
+import FlatButton from '@commercetools-uikit/flat-button';
 import { PlusBoldIcon } from '@commercetools-uikit/icons';
 import ArrayEditoInputItem from './array-editor-input-item';
 
@@ -25,7 +25,7 @@ const ArrayEditorInput: React.FC<Props> = ({ value, onChange }) => {
         <Form>
           <FieldArray name="value">
             {({ insert, remove, push }) => (
-              <Spacings.Stack scale="m">
+              <Spacings.Stack scale="m" alignItems="flex-start">
                 {values.value.map((item, index) => (
                   <ArrayEditoInputItem
                     key={`value.${index}`}
@@ -35,9 +35,9 @@ const ArrayEditorInput: React.FC<Props> = ({ value, onChange }) => {
                     remove={remove}
                   />
                 ))}
-                <IconButton
+                <FlatButton
                   type="button"
-                  label="Add"
+                  label="Add a new index to the array"
                   icon={<PlusBoldIcon />}
                   onClick={() => push({ key: '', label: '' })}
                 />

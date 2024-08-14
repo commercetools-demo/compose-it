@@ -44,7 +44,7 @@ export const useComponentProps = () => {
     return result?.results;
   };
 
-  const createComponentProp = async (
+  const updateComponentProp = async (
     componentType: string,
     payload: ComponentProp
   ): Promise<ComponentPropResponse> => {
@@ -65,5 +65,6 @@ export const useComponentProps = () => {
 
   return {
     fetchAllComponentProps,
+    updateComponentProp,
   };
 };

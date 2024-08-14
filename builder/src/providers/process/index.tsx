@@ -15,6 +15,7 @@ import { useComponentProps } from '../../hooks/use-components';
 interface BuilderStateContextReturn {
   apps?: PagedQueryResponse<App>;
   datasources?: PagedQueryResponse<DatasourceResponse>;
+  components?: ComponentPropResponse[];
   actions?: PagedQueryResponse<ActionResponse>;
   getComponentProps: (componentType: string) => ComponentProp | undefined;
   refreshData?: () => void;
@@ -81,6 +82,7 @@ const BuilderStateProvider = ({ children }: React.PropsWithChildren<{}>) => {
         apps,
         datasources,
         actions,
+        components: componentProps,
         getComponentProps,
         refreshData,
         isLoading,

@@ -42,6 +42,7 @@ const PropertyValueEditor = ({ propsBinding, value, onChange }: Props) => {
     <Text
       isCondensed
       title="Enter a value"
+      hint={propsBinding.hint}
       value={propsBinding.value as string}
       onChange={(e) => onChange(e.target.value)}
     />

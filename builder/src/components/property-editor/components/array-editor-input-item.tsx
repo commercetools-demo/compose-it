@@ -13,7 +13,7 @@ type Props = {
 
 const ArrayEditoInputItem = ({ index, item, remove, handleChange }: Props) => {
   return (
-    <Spacings.Inline key={`value.${index}`}>
+    <Spacings.Inline key={`value.${index}`} alignItems="flex-end">
       <TextInput
         isCondensed
         title="Key"

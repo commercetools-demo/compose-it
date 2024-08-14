@@ -4,6 +4,7 @@ import PropertyValueEditor from './components/property-value-editor';
 import DatasourceSelector from './components/datasource-selector';
 import ViewSwitcher from '@commercetools-uikit/view-switcher';
 import ActionSelector from './components/action-selector';
+import Spacings from '@commercetools-uikit/spacings';
 
 type Props = {
   propertyKey: string;
@@ -47,53 +48,59 @@ export const PropertyItem = ({
       isDefaultClosed
       header={`${propertyKey} (${component.config?.propsBindings?.[propertyKey]?.dataType})`}
     >
-      <ViewSwitcher.Group
-        isCondensed
-        defaultSelected="property"
-        selectedValue={component.config?.propsBindings?.[propertyKey]?.type}
-        onChange={(value) => updatePropsBinding('type', value)}
-      >
-        <ViewSwitcher.Button value="property">Property</ViewSwitcher.Button>
-        <ViewSwitcher.Button value="datasource">Datasource</ViewSwitcher.Button>
-        {/* <ViewSwitcher.Button value="action">Action</ViewSwitcher.Button> */}
-      </ViewSwitcher.Group>
-      <DatasourceSelector
-        isDatasourceSelected={
-          component.config?.propsBindings?.[propertyKey]?.type === 'datasource'
-        }
-        onDatasourceSelect={(datasourceKey?: string, path?: string) => {
-          if (datasourceKey && path) {
-            updatePropsBinding('value', `${datasourceKey}.${path}`);
-          } else if (datasourceKey) {
-            updatePropsBinding('value', datasourceKey);
-          } else {
-            updatePropsBinding('type', 'datasource');
+      <Spacings.Stack scale="m">
+        <ViewSwitcher.Group
+          isCondensed
+          defaultSelected="property"
+          selectedValue={component.config?.propsBindings?.[propertyKey]?.type}
+          onChange={(value) => updatePropsBinding('type', value)}
+        >
+          <ViewSwitcher.Button value="property">Property</ViewSwitcher.Button>
+          <ViewSwitcher.Button value="datasource">
+            Datasource
+          </ViewSwitcher.Button>
+          {/* <ViewSwitcher.Button value="action">Action</ViewSwitcher.Button> */}
+        </ViewSwitcher.Group>
+        <DatasourceSelector
+          isDatasourceSelected={
+            component.config?.propsBindings?.[propertyKey]?.type ===
+            'datasource'
           }
-        }}
-        value={component.config?.propsBindings?.[propertyKey]?.value}
-      />
-      <ActionSelector
-        isActionSelected={
-          component.config?.propsBindings?.[propertyKey]?.type === 'action'
-        }
-        onActionSelect={(actionKey?: string) => {
-          if (actionKey) {
-            updatePropsBinding('value', actionKey);
-          } else {
-            updatePropsBinding('type', 'action');
-          }
-        }}
-        value={component.config?.propsBindings?.[propertyKey]?.value}
-      />
-
-      {component.config?.propsBindings?.[propertyKey]?.type === 'property' && (
-        <PropertyValueEditor
-          propsBinding={component.config?.propsBindings?.[propertyKey]}
-          componentType={component.type}
+          onDatasourceSelect={(datasourceKey?: string, path?: string) => {
+            if (datasourceKey && path) {
+              updatePropsBinding('value', `${datasourceKey}.${path}`);
+            } else if (datasourceKey) {
+              updatePropsBinding('value', datasourceKey);
+            } else {
+              updatePropsBinding('type', 'datasource');
+            }
+          }}
           value={component.config?.propsBindings?.[propertyKey]?.value}
-          onChange={handlePropertyChange}
         />
-      )}
+        <ActionSelector
+          isActionSelected={
+            component.config?.propsBindings?.[propertyKey]?.type === 'action'
+          }
+          onActionSelect={(actionKey?: string) => {
+            if (actionKey) {
+              updatePropsBinding('value', actionKey);
+            } else {
+              updatePropsBinding('type', 'action');
+            }
+          }}
+          value={component.config?.propsBindings?.[propertyKey]?.value}
+        />
+
+        {component.config?.propsBindings?.[propertyKey]?.type ===
+          'property' && (
+          <PropertyValueEditor
+            propsBinding={component.config?.propsBindings?.[propertyKey]}
+            componentType={component.type}
+            value={component.config?.propsBindings?.[propertyKey]?.value}
+            onChange={handlePropertyChange}
+          />
+        )}
+      </Spacings.Stack>
     </CollapsiblePanel>
   );
 };
