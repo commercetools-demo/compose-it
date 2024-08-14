@@ -79,7 +79,7 @@ const DeploymentList = ({ parentUrl }: { parentUrl: string }) => {
               },
               {
                 key: 'APPLICATION_URL',
-                value: 'https://todo.com',
+                value: deployment.applications[0].url || 'https://todo.com',
               },
               {
                 key: 'INITIAL_PROJECT_KEY',
