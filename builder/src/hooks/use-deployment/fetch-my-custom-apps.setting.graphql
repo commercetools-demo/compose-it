@@ -15,5 +15,6 @@ query MyCustomApplications {
       permissions
     }
     icon
+    status
   }
 }

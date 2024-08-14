@@ -9,6 +9,7 @@ export type MyCustomApplication = {
   permissions?: CustomApplicationPermissionDataInput[];
   mainMenuLink?: CustomApplicationMenuLinkDraftDataInput;
   submenuLinks?: CustomApplicationSubmenuLinkDraftDataInput[];
+  status: string;
   __typename?: string;
 };
 

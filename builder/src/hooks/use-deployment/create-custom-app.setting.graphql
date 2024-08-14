@@ -14,5 +14,6 @@ mutation CustomApplication($organizationId: String!, $data: CustomApplicationDra
       permissions
     }
     icon
+    status
   }
 }

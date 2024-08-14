@@ -89,6 +89,38 @@ export const useDeploymentStatuses = ({
     );
     return result;
   };
+
+  const updateDeploymentStatus = async (
+    deploymentId: string,
+    customAppInstallationId: string
+  ) => {
+    const result = await fetchDeploymentStatuses().then((result) =>
+      dispatchCustomObjectCreate(
+        actions.post({
+          mcApiProxyTarget: MC_API_PROXY_TARGETS.COMMERCETOOLS_PLATFORM,
+          uri: buildUrlWithParams(
+            `/${context?.project?.key}/custom-objects`,
+            {}
+          ),
+          payload: {
+            container: CONTAINER,
+            key: getDeploymentKey(appGeneralInfo?.key),
+            value: result?.map((status) => {
+              if (status.deploymentId === deploymentId) {
+                return {
+                  ...status,
+                  customAppInstallationId,
+                };
+              }
+              return status;
+            }),
+          },
+        })
+      )
+    );
+    return result;
+  };
+
   const getDeploymentStatuses = useCallback(async (): Promise<
     DeployedStatus[]
   > => {
@@ -119,7 +151,7 @@ export const useDeploymentStatuses = ({
               return {
                 ...deployment,
                 app,
-                organizationId: status.organizationId,
+                statusValue: status,
               };
             })
         );
@@ -134,5 +166,6 @@ export const useDeploymentStatuses = ({
   return {
     createDeploymentStatus,
     getDeploymentStatuses,
+    updateDeploymentStatus,
   };
 };

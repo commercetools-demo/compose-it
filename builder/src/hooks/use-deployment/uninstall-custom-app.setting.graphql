@@ -1,0 +1,12 @@
+mutation CustomApplication($organizationId: String!, $installedApplicationId: ID!) {
+  uninstallCustomApplication (organizationId: $organizationId, installedApplicationId:$installedApplicationId) {
+    id
+    application {
+      id
+      status
+      name
+      description
+      url
+    }
+  }
+}

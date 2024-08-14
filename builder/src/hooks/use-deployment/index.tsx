@@ -12,10 +12,20 @@ import { useDeploymentStatuses } from './use-deployment-statuses';
 import { useConnect } from './use-connect';
 
 export const useDeployment = () => {
-  const { createCustomApp, myCustomApplications, updateApps, updateCustomApp } =
-    useCustomApplications();
-  const { createDeploymentStatus, getDeploymentStatuses } =
-    useDeploymentStatuses({ updateApps, myCustomApplications });
+  const {
+    createCustomApp,
+    myCustomApplications,
+    updateApps,
+    updateCustomApp,
+    changeCustomAppStatus,
+    installCustomApp,
+    uninstallCustomApp,
+  } = useCustomApplications();
+  const {
+    createDeploymentStatus,
+    getDeploymentStatuses,
+    updateDeploymentStatus,
+  } = useDeploymentStatuses({ updateApps, myCustomApplications });
   const {
     getConnectors,
     getDeployments,
@@ -47,9 +57,13 @@ export const useDeployment = () => {
     createDeployment,
     createCustomApp,
     updateCustomApp,
+    changeCustomAppStatus,
+    installCustomApp,
+    uninstallCustomApp,
     updateApps,
     createDeploymentStatus,
     getDeploymentStatuses,
+    updateDeploymentStatus,
     user: userData?.user,
     myApps: myCustomApplications,
     myOrganizations: organizationData?.myOrganizations.results,

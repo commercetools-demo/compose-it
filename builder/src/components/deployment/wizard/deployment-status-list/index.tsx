@@ -19,21 +19,9 @@ const DeploymentStatusList = (props: Props) => {
   const [statuses, setStatuses] = useState<DeployedStatus[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleRenderItem = (
-    row: DeployedStatus,
-    col: { key: string; label: string }
-  ) => {
-    switch (col.key) {
-      case 'action':
-        return <DeployedStatusActions deployedStatus={row} />;
-      default:
-        return row?.[col.key];
-    }
-  };
-
-  const getDeployments = () => {
+  const getDeployments = async () => {
     setIsLoading(true);
-    getDeploymentStatuses()
+    await getDeploymentStatuses()
       .then((statuses) => {
         setStatuses(statuses);
         setIsLoading(false);
@@ -42,6 +30,23 @@ const DeploymentStatusList = (props: Props) => {
         console.error(error);
         setIsLoading(false);
       });
+  };
+
+  const handleRenderItem = (
+    row: DeployedStatus,
+    col: { key: string; label: string }
+  ) => {
+    switch (col.key) {
+      case 'action':
+        return (
+          <DeployedStatusActions
+            deployedStatus={row}
+            onUpdate={getDeployments}
+          />
+        );
+      default:
+        return row?.[col.key];
+    }
   };
 
   useEffect(() => {
