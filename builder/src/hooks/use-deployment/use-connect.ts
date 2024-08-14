@@ -92,10 +92,45 @@ export const useConnect = () => {
     );
     return result;
   };
+
+  const updateDeployment = async (
+    organizationId: string,
+    deployment: Deployment
+  ) => {
+    const result = await dispatchDeploymentCreate(
+      actions.post({
+        payload: {
+          version: deployment.version,
+          actions: [
+            {
+              applications: deployment.applications.map((config) => ({
+                applicationName: config.applicationName,
+                standardConfiguration: config.standardConfiguration,
+                securedConfiguration: [],
+              })),
+              action: 'redeploy',
+            },
+          ],
+
+          // projectKey: context?.project?.key,
+          // draft: {
+          //   key: deploymentDraft.key,
+          //   connector: deploymentDraft.connector,
+          //   region: deploymentDraft.region,
+          // },
+        },
+        mcApiProxyTarget: 'connect',
+        uri: `/${organizationId}/deployments/${deployment.id}`,
+        includeUserPermissions: true,
+      })
+    );
+    return result;
+  };
   return {
     getConnectors,
     getDeployments,
     createConnectorDraft,
     createDeployment,
+    updateDeployment,
   };
 };

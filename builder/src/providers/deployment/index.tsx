@@ -21,6 +21,11 @@ import {
   Deployment,
   DeploymentDraft,
 } from '../../hooks/use-deployment/types/deployment';
+import { useShowNotification } from '@commercetools-frontend/actions-global';
+import {
+  DOMAINS,
+  NOTIFICATION_KINDS_SIDE,
+} from '@commercetools-frontend/constants';
 
 interface DeploymentContextType {
   user?: User;
@@ -31,7 +36,8 @@ interface DeploymentContextType {
   selectedOrganization?: string;
   selectedApp?: MyCustomApplication;
   selectedConnector?: ConnectorDraft;
-  selectedDeployment?: DeploymentDraft;
+  selectedDeployment?: Deployment;
+  selectedDeploymentDraft?: DeploymentDraft;
   onSelectConnector: (connector?: ConnectorDraft) => void;
   onSelectOrganization: (organizationId?: string) => void;
   onSelectDeployment: (deployment?: Deployment) => void;
@@ -55,6 +61,8 @@ const DeploymentContext = createContext<DeploymentContextType | undefined>(
 export const DeploymentProvider: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => {
+  const showSuccessNotification = useShowNotification();
+
   const {
     user,
     myApps,
@@ -66,42 +74,32 @@ export const DeploymentProvider: React.FC<{
     getDeployments,
     createDeployment,
     createDeploymentStatus,
+    updateDeployment,
   } = useDeployment();
 
   const [selectedOrganization, onSelectOrganization] = useState<string>();
   const [selectedApp, onSelectApp] = useState<MyCustomApplication>();
   const [selectedConnector, onSelectConnector] = useState<ConnectorDraft>();
-  const [selectedDeployment, setSelectedDeployment] =
+  const [selectedDeployment, setSelectedDeployment] = useState<Deployment>();
+  const [selectedDeploymentDraft, setSelectedDeploymentDraft] =
     useState<DeploymentDraft>();
   const [connectors, setConnectors] = useState<ConnectorDraft[]>([]);
   const [deployments, setDeployments] = useState<Deployment[]>([]);
 
   const onSelectDeploymentDraft = (deploymentDraft?: DeploymentDraft) => {
     setDeployments([...(deployments || []), deploymentDraft]);
+    setSelectedDeployment(undefined);
+    setSelectedDeploymentDraft(deploymentDraft);
   };
 
-  const onSelectDeployment = (deployment?: Deployment | DeploymentDraft) => {
+  const onSelectDeployment = (deployment?: Deployment) => {
     if (!deployment) {
+      setSelectedDeployment(undefined);
+      setSelectedDeploymentDraft(undefined);
       return;
     }
-    if ('deployedRegion' in deployment) {
-      setSelectedDeployment({
-        region: deployment.deployedRegion,
-        configurations: deployment.applications.map((app) => ({
-          applicationName: app.applicationName,
-          standardConfiguration: app.standardConfiguration,
-        })),
-        connector: {
-          key: deployment.connector.key,
-          id: deployment.connector.id,
-          version: deployment.connector.version,
-          staged: false,
-        },
-        key: deployment.key,
-      });
-    } else {
-      setSelectedDeployment(deployment);
-    }
+    setSelectedDeployment(deployment);
+    setSelectedDeploymentDraft(undefined);
   };
 
   const updateConnectors = async () => {
@@ -158,13 +156,39 @@ export const DeploymentProvider: React.FC<{
   };
 
   const onStartDeployment = async (): Promise<Deployment | undefined> => {
-    if (!selectedOrganization || !selectedDeployment) {
+    if (!selectedOrganization) {
       return;
     }
-    const result = await createDeployment(
-      selectedOrganization,
-      selectedDeployment
-    );
+    if (!selectedDeployment && !selectedDeploymentDraft) {
+      showSuccessNotification({
+        domain: DOMAINS.SIDE,
+        kind: NOTIFICATION_KINDS_SIDE.error,
+        text: 'No deployment selected',
+      });
+    }
+
+    let result = {} as Deployment;
+
+    if (selectedDeployment) {
+      // update
+      result = await updateDeployment(selectedOrganization, selectedDeployment);
+    } else if (selectedDeploymentDraft) {
+      // create
+      result = await createDeployment(
+        selectedOrganization,
+        selectedDeploymentDraft
+      );
+    }
+
+    if (!result.id) {
+      showSuccessNotification({
+        domain: DOMAINS.SIDE,
+        kind: NOTIFICATION_KINDS_SIDE.error,
+        text: 'Error starting deployment',
+      });
+      return;
+    }
+
     await createDeploymentStatus({
       deploymentId: result.id,
       organizationId: selectedOrganization,
@@ -198,6 +222,7 @@ export const DeploymentProvider: React.FC<{
         connectors,
         deployments,
         selectedDeployment,
+        selectedDeploymentDraft,
         onSelectOrganization,
         onSelectApp,
         onCreateCustomApp,

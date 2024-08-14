@@ -12,6 +12,8 @@ import {
   DeploymentDraft,
 } from '../../../../hooks/use-deployment/types/deployment';
 import NewDeploymentForm from './new-deployment';
+import { useApplicationContext } from '@commercetools-frontend/application-shell-connectors';
+import { useAppContext } from '../../../../providers/app';
 
 const columns = [
   { key: 'id', label: 'ID', isTruncated: true },
@@ -27,9 +29,13 @@ const StyledRow = styled.div`
 `;
 
 const DeploymentList = ({ parentUrl }: { parentUrl: string }) => {
+  const { selectedApp } = useDeploymentContext();
+  const context = useApplicationContext((context) => context);
+  const { appGeneralInfo } = useAppContext();
   const modalState = useModalState();
   const {
     selectedDeployment,
+    selectedDeploymentDraft,
     deployments,
     selectedConnector,
     onSelectDeployment,
@@ -46,23 +52,71 @@ const DeploymentList = ({ parentUrl }: { parentUrl: string }) => {
     modalState.closeModal();
   };
 
+  const handleSelectDeployment = (deployment: Deployment | DeploymentDraft) => {
+    if ('deployedRegion' in deployment) {
+      onSelectDeployment({
+        ...deployment,
+        applications: [
+          {
+            // TODO: move to .env
+            applicationName: 'magic-app',
+            standardConfiguration: [
+              {
+                key: 'CUSTOM_APPLICATION_ID',
+                value: selectedApp?.id || '',
+              },
+              {
+                key: 'APP_KEY',
+                value: appGeneralInfo?.key || '',
+              },
+              {
+                key: 'CLOUD_IDENTIFIER',
+                value: context.environment.location,
+              },
+              {
+                key: 'ENTRY_POINT_URI_PATH',
+                value: selectedApp?.entryPointUriPath,
+              },
+              {
+                key: 'APPLICATION_URL',
+                value: 'https://todo.com',
+              },
+              {
+                key: 'INITIAL_PROJECT_KEY',
+                value: context.project?.key || '',
+              },
+            ],
+          },
+        ],
+      });
+    } else {
+      onSelectDeploymentDraft(deployment);
+    }
+  };
+
   const handleRenderItem = (
     row: Deployment,
     col: { key: string; label: string }
   ) => {
     switch (col.key) {
       case 'action':
-        return selectedDeployment?.key === row.key ? (
+        return selectedDeployment?.key === row.key ||
+          selectedDeploymentDraft?.key === row.key ? (
           <Link to={!!selectedDeployment ? `${parentUrl}/deploy` : ''}>
             <Spacings.Inline alignItems="center">
-              Deploy
+              Install
               <ArrowRightIcon />
             </Spacings.Inline>
           </Link>
         ) : null;
       default:
         return (
-          <StyledRow rowKey={row.key} deploymentKey={selectedDeployment?.key}>
+          <StyledRow
+            rowKey={row.key}
+            deploymentKey={
+              selectedDeployment?.key || selectedDeploymentDraft?.key
+            }
+          >
             {row?.[col.key]}
           </StyledRow>
         );
@@ -99,7 +153,7 @@ const DeploymentList = ({ parentUrl }: { parentUrl: string }) => {
           <DataTable
             rows={deployments}
             columns={columns}
-            onRowClick={(row) => onSelectDeployment(row)}
+            onRowClick={(row) => handleSelectDeployment(row)}
             itemRenderer={handleRenderItem}
           />
         )}

@@ -34,6 +34,7 @@ const NewDeploymentForm = ({ onSubmit, isOpen, onClose }: Props) => {
     region: extractRegionFromUrl(context.environment.mcApiUrl) || '',
     configurations: [
       {
+        // TODO: move to .env
         applicationName: 'magic-app',
         standardConfiguration: [
           {
@@ -92,7 +93,7 @@ const NewDeploymentForm = ({ onSubmit, isOpen, onClose }: Props) => {
     >
       {({ values, errors, isValid, handleChange, handleSubmit }) => (
         <Drawer
-          title={'New Connect Deployment'}
+          title={'New Connect Installation'}
           isOpen={isOpen}
           onClose={onClose}
           size={10}
@@ -109,7 +110,7 @@ const NewDeploymentForm = ({ onSubmit, isOpen, onClose }: Props) => {
             >
               <Grid.Item gridColumn="span 2">
                 <Spacings.Inline alignItems="center">
-                  <FieldLabel title="Deployment Key" />
+                  <FieldLabel title="Installation Key" />
                   <TextInput
                     value={values?.key || ''}
                     name="key"

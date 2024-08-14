@@ -31,6 +31,7 @@ export const useDeployment = () => {
     getDeployments,
     createConnectorDraft,
     createDeployment,
+    updateDeployment,
   } = useConnect();
 
   const { data: userData, loading: userLoading } = useMcQuery<{ user: User }>(
@@ -53,6 +54,7 @@ export const useDeployment = () => {
   return {
     getConnectors,
     getDeployments,
+    updateDeployment,
     createConnectorDraft,
     createDeployment,
     createCustomApp,
