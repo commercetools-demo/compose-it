@@ -87,7 +87,16 @@ export const DeploymentProvider: React.FC<{
   const [deployments, setDeployments] = useState<Deployment[]>([]);
 
   const onSelectDeploymentDraft = (deploymentDraft?: DeploymentDraft) => {
-    setDeployments([...(deployments || []), deploymentDraft]);
+    setDeployments((prev) => {
+      if (!deploymentDraft) {
+        return prev;
+      }
+      const found = prev.find((d) => d.key === deploymentDraft.key);
+      if (found) {
+        return prev;
+      }
+      return [...prev, deploymentDraft];
+    });
     setSelectedDeployment(undefined);
     setSelectedDeploymentDraft(deploymentDraft);
   };

@@ -19,6 +19,7 @@ const Deploy = ({ parentUrl }: Props) => {
 
   const {
     selectedDeployment,
+    selectedDeploymentDraft,
     selectedApp,
     selectedConnector,
     selectedOrganization,
@@ -36,7 +37,7 @@ const Deploy = ({ parentUrl }: Props) => {
 
   const { goBack } = useHistory();
 
-  if (!selectedDeployment) {
+  if (!selectedDeployment && !selectedDeploymentDraft) {
     return null;
   }
 
@@ -57,7 +58,9 @@ const Deploy = ({ parentUrl }: Props) => {
       </Spacings.Inline>
       <Spacings.Inline>
         <Text.Body isBold>Deployment key</Text.Body>
-        <Text.Body>{selectedDeployment?.key}</Text.Body>
+        <Text.Body>
+          {selectedDeployment?.key || selectedDeploymentDraft?.key}
+        </Text.Body>
       </Spacings.Inline>
       <Spacings.Inline>
         <SecondaryButton

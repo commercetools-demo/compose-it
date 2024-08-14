@@ -17,7 +17,6 @@ const DeploymentWrapper = ({ onClose }: Props) => {
       title="Deployments"
       isOpen={true}
       onClose={onClose}
-      topBarCurrentPathLabel="Lorem ipsum"
       topBarPreviousPathLabel="Back"
     >
       <Spacings.Stack scale="l">

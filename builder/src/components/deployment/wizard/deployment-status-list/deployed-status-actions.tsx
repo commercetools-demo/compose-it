@@ -122,6 +122,22 @@ const DeployedStatusActions = ({ deployedStatus, onUpdate }: Props) => {
     setIsLoading(false);
   };
 
+  if (deployedStatus?.status === 'Deploying') {
+    return (
+      <PrimaryButton
+        label="Deploying..."
+        isDisabled
+        size="10"
+        onClick={() => {}}
+        iconLeft={
+          <RotatingIcon>
+            <RefreshIcon />
+          </RotatingIcon>
+        }
+      />
+    );
+  }
+
   if (deployedStatus?.app?.url !== deployedStatus?.applications?.[0]?.url) {
     return (
       <PrimaryButton

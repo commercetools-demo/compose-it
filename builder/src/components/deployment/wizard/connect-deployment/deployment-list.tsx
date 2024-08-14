@@ -102,7 +102,13 @@ const DeploymentList = ({ parentUrl }: { parentUrl: string }) => {
       case 'action':
         return selectedDeployment?.key === row.key ||
           selectedDeploymentDraft?.key === row.key ? (
-          <Link to={!!selectedDeployment ? `${parentUrl}/deploy` : ''}>
+          <Link
+            to={
+              !!selectedDeployment || !!selectedDeploymentDraft
+                ? `${parentUrl}/deploy`
+                : ''
+            }
+          >
             <Spacings.Inline alignItems="center">
               Install
               <ArrowRightIcon />
