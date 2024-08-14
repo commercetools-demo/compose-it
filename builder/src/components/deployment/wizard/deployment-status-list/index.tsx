@@ -4,8 +4,13 @@ import { DeployedStatus } from '../../../../hooks/use-deployment/types/deploymen
 import { useDeployment } from '../../../../hooks/use-deployment';
 import { CheckActiveIcon } from '@commercetools-uikit/icons';
 import DeployedStatusActions from './deployed-status-actions';
+import styled from 'styled-components';
 
 type Props = {};
+
+const PaddedDiv = styled.div`
+  padding: 10px 0;
+`;
 
 const columns = [
   { key: 'id', label: 'ID', isTruncated: true },
@@ -45,7 +50,7 @@ const DeploymentStatusList = (props: Props) => {
           />
         );
       default:
-        return row?.[col.key];
+        return <PaddedDiv>{row?.[col.key]}</PaddedDiv>;
     }
   };
 
