@@ -77,20 +77,20 @@ const DeploymentList = ({ parentUrl }: { parentUrl: string }) => {
       <Spacings.Stack scale="l">
         <Spacings.Inline justifyContent="space-between">
           <Text.Subheadline>
-            Select a connect app that deploys your application
+            Select a connect app installation to update or install a new one
           </Text.Subheadline>
           <PrimaryButton
-            label="Add a new deloyment"
+            label="Install connector"
             iconLeft={<PlusThinIcon />}
             onClick={handleNewCustomAppOpen}
           >
-            Add a new deployment
+            Install connector
           </PrimaryButton>
         </Spacings.Inline>
         {!deployments?.length && (
           <Spacings.Stack>
             <Text.Headline as="h3">
-              There are no deployments compatible with your application
+              There are no installation compatible with your application
             </Text.Headline>
             <Text.Body>Please create one</Text.Body>
           </Spacings.Stack>

@@ -69,7 +69,7 @@ const NewDeploymentWizard = ({ onClose }: Props) => {
             />
             <TabHeader
               to={`${match.url}/deployments`}
-              label="4. Select a deployment"
+              label="4. Select an installation"
               isDisabled={!selectedConnector}
             />
             <TabHeader

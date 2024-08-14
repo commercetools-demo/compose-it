@@ -37,6 +37,7 @@ const CustomApplicationList = ({ parentUrl }: { parentUrl: string }) => {
     selectedOrganization,
     apps,
     selectedApp,
+    selectedConnector,
     onSelectApp,
     onCreateCustomApp,
   } = useDeploymentContext();
@@ -71,8 +72,11 @@ const CustomApplicationList = ({ parentUrl }: { parentUrl: string }) => {
   ) => {
     switch (col.key) {
       case 'action':
+        const url = !!selectedConnector
+          ? `/deployments`
+          : '/connect-applications';
         return selectedApp?.id === row.id ? (
-          <Link to={!!selectedApp ? `${parentUrl}/connect-applications` : ''}>
+          <Link to={!!selectedApp ? `${parentUrl}${url}` : ''}>
             <Spacings.Inline alignItems="center">
               Select for update
               <ArrowRightIcon />

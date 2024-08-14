@@ -110,6 +110,9 @@ export const DeploymentProvider: React.FC<{
     } else {
       getConnectors(selectedOrganization).then((result) => {
         setConnectors(result);
+        if (result.length === 1) {
+          onSelectConnector(result[0]);
+        }
       });
     }
   };
