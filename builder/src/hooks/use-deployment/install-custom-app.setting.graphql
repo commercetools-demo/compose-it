@@ -1,0 +1,12 @@
+mutation CustomApplication($organizationId: String!, $projectKeys: [String], $applicationId: ID!) {
+  installCustomApplication (organizationId: $organizationId, applicationId:$applicationId, projectKeys: $projectKeys) {
+    id
+    application {
+      id
+      status
+      name
+      description
+      url
+    }
+  }
+}

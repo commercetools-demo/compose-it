@@ -25,7 +25,7 @@ export const useApps = () => {
   >();
   const dispatchAppsAction = useAsyncDispatch<TSdkAction, App>();
 
-  const { getDatasourceRefs } = useComponentConfig();
+  const { getDatasourceRefs, getActionRefs } = useComponentConfig();
 
   const fetchAllApps = async (limit: number = 20, page: number = 1) => {
     const offset = (page - 1) * limit;
@@ -114,6 +114,7 @@ export const useApps = () => {
       ? pages.map((page) => ({
           ...page,
           datasourceRefs: getDatasourceRefs(page.components || []),
+          actionRefs: getActionRefs(page.components || []),
         }))
       : pages;
   };

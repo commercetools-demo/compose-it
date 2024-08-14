@@ -1,0 +1,15 @@
+query FetchMyOrganizationsQuery {
+  myOrganizations(limit: 500, sort: "name asc") {
+    results {
+      id
+      name
+      teams {
+        id
+        name
+        __typename
+      }
+      __typename
+    }
+    __typename
+  }
+}

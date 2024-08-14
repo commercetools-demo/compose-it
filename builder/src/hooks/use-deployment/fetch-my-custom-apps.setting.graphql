@@ -1,0 +1,20 @@
+query MyCustomApplications {
+  myCustomApplications {
+    id,
+    name,
+    description,
+    organizationId,
+    entryPointUriPath,
+    url
+    permissions{ 
+      name,
+      oAuthScopes
+    }
+    mainMenuLink {
+      defaultLabel
+      permissions
+    }
+    icon
+    status
+  }
+}

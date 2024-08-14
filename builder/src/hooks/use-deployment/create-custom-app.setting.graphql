@@ -1,0 +1,19 @@
+mutation CustomApplication($organizationId: String!, $data: CustomApplicationDraftDataInput!) {
+  createCustomApplication (organizationId: $organizationId, data: $data) {
+    id,
+    name,
+    description,
+    entryPointUriPath,
+    url
+    permissions{ 
+      name,
+      oAuthScopes
+    }
+    mainMenuLink {
+      defaultLabel
+      permissions
+    }
+    icon
+    status
+  }
+}

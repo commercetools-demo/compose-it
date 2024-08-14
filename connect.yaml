@@ -3,6 +3,10 @@ deployAs:
     applicationType: merchant-center-custom-application
     configuration:
       standardConfiguration:
+        - key: REPO_URL
+          description: the repo for deploying magic-app
+          required: false
+          default: 'git@github.com:commercetools-demo/compose-it.git'
         - key: CUSTOM_APPLICATION_ID
           description: The Custom Application ID is provided when you add a Custom Application in the Merchant Center
           required: true

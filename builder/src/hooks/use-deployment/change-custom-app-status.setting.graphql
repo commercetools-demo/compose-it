@@ -1,0 +1,18 @@
+mutation CustomApplication($organizationId: String!, $status: CustomApplicationStatus!, $applicationId: ID!) {
+  changeCustomApplicationStatus (organizationId: $organizationId, applicationId:$applicationId, status: $status) {
+    id,
+    name,
+    description,
+    url,
+    permissions{ 
+      name,
+      oAuthScopes
+    }
+    mainMenuLink {
+      defaultLabel
+      permissions
+    }
+    icon
+    status
+  }
+}
