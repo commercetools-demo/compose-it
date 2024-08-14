@@ -35,14 +35,14 @@ const ReverseIcon = styled.div`
 `;
 
 const AppToolbar = () => {
-  const { params }: { params: { key: string } } = useRouteMatch();
+  const { appGeneralInfo } = useAppContext();
 
   const { redo, undo, savePage, isSaving, hasRedo, hasUndo, isPageDirty } =
     useAppContext();
   return (
     <Spacings.Inline justifyContent="space-between">
       <Spacings.Inline>
-        <Text.Headline as="h1">{`App: ${params.key}`}</Text.Headline>
+        <Text.Headline as="h1">{`App: ${appGeneralInfo?.name}`}</Text.Headline>
         <EditAppButton />
         <RoutingListButton />
         <Deployment />
