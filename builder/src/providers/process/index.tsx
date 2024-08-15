@@ -10,7 +10,7 @@ import {
 } from '../../types/datasource';
 import { useDatasource } from '../../hooks/use-datasource';
 import { useAction } from '../../hooks/use-action';
-import { useComponentProps } from '../../hooks/use-components';
+import { useComponentProps } from '../../hooks/use-component-props';
 
 interface BuilderStateContextReturn {
   apps?: PagedQueryResponse<App>;

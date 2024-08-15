@@ -11,7 +11,7 @@ import {
 import { useState } from 'react';
 import ComponentList from './component-list';
 import ComponentPropEditForm from './component-prop-edit-form';
-import { useComponentProps } from '../../../hooks/use-components';
+import { useComponentProps } from '../../../hooks/use-component-props';
 import { useBuilderStateContext } from '../../../providers/process';
 
 const BuiltInComponents = () => {
