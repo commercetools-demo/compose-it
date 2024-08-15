@@ -8,6 +8,7 @@ import React, {
 import { AppConfig, PageConfig } from '../../components/library/general';
 import { useApps } from '../../hooks/use-app';
 import { AppDraft } from '../../types/app';
+import { useQuery } from '../../hooks/use-query';
 // import { useOrderDetailsFetcher } from '../../hooks/use-deployment';
 
 interface AppContextType {
@@ -37,13 +38,11 @@ export const AppProvider: React.FC<{
   const [appConfig, setAppConfig] = useState<AppConfig>();
   const [history, setHistory] = useState<(AppConfig | undefined)[]>([]);
   const [currentHistoryIndex, setCurrentHistoryIndex] = useState(0);
-  const [currentPageId, updateCurrentPageId] = useState<string | null>(null);
+  const [currentPageId, setCurrentPageId] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const currentPage = appConfig?.pages?.find((p) => p.id === currentPageId);
 
-  // const {blah} = useOrderDetailsFetcher()
-
-  // blah().then((res) => console.log('res', res));
+  const query = useQuery();
 
   const { getApp, updateAppConfig } = useApps();
 
@@ -54,6 +53,11 @@ export const AppProvider: React.FC<{
     setHistory([]);
     setCurrentHistoryIndex(0);
     setIsSaving(false);
+  };
+
+  const updateCurrentPageId = (pageId: string) => {
+    query.setQuery('page', pageId);
+    setCurrentPageId(pageId);
   };
 
   const addPage = (page: PageConfig) => {
@@ -152,16 +156,13 @@ export const AppProvider: React.FC<{
   const hasRedo = currentHistoryIndex < history.length - 1;
   const isPageDirty = history.length > 1;
 
-  //   useEffect(() => {
-  //     const timer = setTimeout(() => {
-  //       debounceUpdateAppConfig(appConfig);
-  //     }, 500);
-
-  //     return () => clearTimeout(timer);
-  //   }, [appConfig]);
-
   useEffect(() => {
     fetchAppInitial();
+    const currentPage = query.getQuery('page');
+
+    if (currentPage) {
+      setCurrentPageId(currentPage);
+    }
   }, [appKey]);
 
   if (!appConfig) {

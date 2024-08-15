@@ -5,6 +5,8 @@ import { useGridDimensions } from './hooks/use-grid-dimensions';
 import { useComponentConfig } from './hooks/use-component-config';
 import styled from 'styled-components';
 import TabbedSidebar from './tabbed-sidebar';
+import Spacings from '@commercetools-uikit/spacings';
+import Text from '@commercetools-uikit/text';
 
 interface PageBuilderProps {
   page: PageConfig;
@@ -55,6 +57,11 @@ const PageBuilder: React.FC<PageBuilderProps> = ({ page, onUpdatePage }) => {
 
   return (
     <div className="page-builder">
+      <Spacings.Stack scale="xs">
+        <Text.Subheadline as="h4">{`Editing Route: ${
+          !!page.route ? page.route : '/'
+        }`}</Text.Subheadline>
+      </Spacings.Stack>
       <StyledDiv>
         <GridLayout
           page={page}

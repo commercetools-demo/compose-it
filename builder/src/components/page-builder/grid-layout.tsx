@@ -90,7 +90,8 @@ const GridLayout: React.FC<GridLayoutProps> = ({
           gridTemplateRows: `repeat(${gridDimensions.rows}, 1fr)`,
           gap: '4px',
           position: 'relative',
-          minHeight: `${gridDimensions.rows * 50}px`,
+          minHeight: `600px`,
+          maxHeight: '780px',
         }}
         onMouseMove={handleResize}
         onMouseUp={stopResize}
