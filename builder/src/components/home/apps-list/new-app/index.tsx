@@ -98,14 +98,16 @@ const NewAppForm = ({
           </Form>
         )}
       </Formik>
-      <Spacings.Inline alignItems="center" justifyContent="flex-end">
-        <PrimaryButton
-          label="Delete app"
-          onClick={() => onDeleteApp(app)}
-          type="button"
-          tone="critical"
-        />
-      </Spacings.Inline>
+      {!!app.key && (
+        <Spacings.Inline alignItems="center" justifyContent="flex-end">
+          <PrimaryButton
+            label="Delete app"
+            onClick={() => onDeleteApp(app)}
+            type="button"
+            tone="critical"
+          />
+        </Spacings.Inline>
+      )}
     </Spacings.Stack>
   );
 };

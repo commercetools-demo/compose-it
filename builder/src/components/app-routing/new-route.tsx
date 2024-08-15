@@ -2,7 +2,7 @@ import { PAGE_TYPES, PageConfig } from '../library/general';
 import Spacings from '@commercetools-uikit/spacings';
 import { Form, Formik } from 'formik';
 import FieldLabel from '@commercetools-uikit/field-label';
-import TextInput from '@commercetools-uikit/text-input';
+import TextInput from '@commercetools-uikit/text-field';
 import NumberInput from '@commercetools-uikit/number-input';
 import SelectInput from '@commercetools-uikit/select-input';
 import Text from '@commercetools-uikit/text';
@@ -20,13 +20,20 @@ const Divider = styled.div`
 `;
 
 type Props = {
+  hasMorePages?: boolean;
   page?: PageConfig;
   onSubmit: (page: PageConfig) => Promise<void>;
   isOpen: boolean;
   onClose: () => void;
 };
 
-const NewRouteForm = ({ page, onSubmit, isOpen, onClose }: Props) => {
+const NewRouteForm = ({
+  page,
+  onSubmit,
+  isOpen,
+  hasMorePages,
+  onClose,
+}: Props) => {
   const [pageData, setPageData] = useState<PageConfig>(page);
   const { getComponentProps } = useBuilderStateContext();
 
@@ -47,12 +54,14 @@ const NewRouteForm = ({ page, onSubmit, isOpen, onClose }: Props) => {
 
   useEffect(() => {
     if (!page) {
-      const pageProps = getComponentProps('FormDetailPage');
+      const pageProps = hasMorePages
+        ? getComponentProps('FormDetailPage')
+        : null;
       setPageData({
         layout: { type: 'grid', columns: 12 },
         route: '',
-        type: 'FormDetailPage',
-        name: '',
+        type: hasMorePages ? 'FormDetailPage' : 'landing',
+        name: hasMorePages ? '' : 'Home',
         id: Date.now().toString(),
         props: pageProps?.props || {},
         config: {
@@ -87,7 +96,15 @@ const NewRouteForm = ({ page, onSubmit, isOpen, onClose }: Props) => {
       validateOnBlur
       validate={handleValidation}
     >
-      {({ values, errors, setFieldValue, handleChange, handleSubmit }) => (
+      {({
+        values,
+        errors,
+        setFieldValue,
+        handleChange,
+        handleSubmit,
+        isValid,
+        dirty,
+      }) => (
         <Drawer
           title={!!pageData ? `Edit Page ${pageData.route}` : 'Add Page'}
           isOpen={isOpen}
@@ -95,6 +112,7 @@ const NewRouteForm = ({ page, onSubmit, isOpen, onClose }: Props) => {
           size={10}
           onPrimaryButtonClick={() => handleSubmit()}
           onSecondaryButtonClick={onClose}
+          isPrimaryButtonDisabled={!isValid}
         >
           <Form>
             <Grid
@@ -103,27 +121,28 @@ const NewRouteForm = ({ page, onSubmit, isOpen, onClose }: Props) => {
               gridAutoColumns="1fr"
             >
               <Grid.Item gridColumn="span 2">
-                <Spacings.Inline alignItems="center">
-                  <FieldLabel title="Name" />
-                  <TextInput
-                    value={values?.name || ''}
-                    name="name"
-                    onChange={handleChange}
-                  />
-                </Spacings.Inline>
+                <TextInput
+                  title="Name"
+                  value={values?.name || ''}
+                  name="name"
+                  onChange={handleChange}
+                />
                 {errors.name && (
                   <Text.Caption tone="warning">{errors.name}</Text.Caption>
                 )}
               </Grid.Item>
               <Grid.Item gridColumn="span 2">
-                <Spacings.Inline alignItems="center">
-                  <FieldLabel title="Route" />
-                  <TextInput
-                    value={values?.route || ''}
-                    name="route"
-                    onChange={handleChange}
-                  />
-                </Spacings.Inline>
+                <TextInput
+                  title="Route"
+                  hint={
+                    hasMorePages
+                      ? 'use /<path>/:id format for details page'
+                      : 'keep empty for home page'
+                  }
+                  value={values?.route || ''}
+                  name="route"
+                  onChange={handleChange}
+                />
                 {errors.route && (
                   <Text.Caption tone="warning">{errors.route}</Text.Caption>
                 )}

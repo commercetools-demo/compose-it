@@ -13,8 +13,12 @@ import IconButton from '@commercetools-uikit/icon-button';
 import { NestedViewIcon } from '@commercetools-uikit/icons';
 
 const RoutingListButton: React.FC = () => {
-  const { getComponentProps } = useBuilderStateContext();
-  const { addPage, updatePage, savePage } = useAppContext();
+  const {
+    addPage,
+    updatePage,
+    savePage,
+    appConfig: { pages },
+  } = useAppContext();
   const [selectedPage, setSelectedPage] = useState<PageConfig>();
   const listDrawerState = useModalState();
   const editDrawerState = useModalState();
@@ -57,10 +61,8 @@ const RoutingListButton: React.FC = () => {
 
     if (page) {
       setSelectedPage(page);
-      editDrawerState.openModal();
-    } else {
-      editDrawerState.openModal();
     }
+    editDrawerState.openModal();
   };
 
   return (
@@ -86,6 +88,7 @@ const RoutingListButton: React.FC = () => {
 
       {editDrawerState.isModalOpen && (
         <NewRouteForm
+          hasMorePages={pages?.length > 0}
           page={selectedPage}
           onSubmit={handlePageAction}
           isOpen={editDrawerState.isModalOpen}
