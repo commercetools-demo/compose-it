@@ -4,7 +4,7 @@ import Datasources from './graph-ql/datasource';
 import Text from '@commercetools-uikit/text';
 import styled from 'styled-components';
 import Actions from './graph-ql/action';
-import Components from './components';
+import BuiltInComponents from './build-in-components';
 
 const StyledDiv = styled.div`
   padding-top: 32px;
@@ -26,7 +26,7 @@ const Home = () => {
         <Divider />
         <Datasources />
         <Actions />
-        <Components />
+        <BuiltInComponents />
       </Spacings.Stack>
     </StyledDiv>
   );

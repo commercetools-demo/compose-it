@@ -14,7 +14,7 @@ import ComponentPropEditForm from './component-prop-edit-form';
 import { useComponentProps } from '../../../hooks/use-components';
 import { useBuilderStateContext } from '../../../providers/process';
 
-const Components = () => {
+const BuiltInComponents = () => {
   const { updateComponentProp } = useComponentProps();
   const { refreshData } = useBuilderStateContext();
   const [selectedComponent, setSelectedComponent] =
@@ -66,4 +66,4 @@ const Components = () => {
   );
 };
 
-export default Components;
+export default BuiltInComponents;
