@@ -7,16 +7,13 @@ import styled from 'styled-components';
 import TabbedSidebar from './tabbed-sidebar';
 import Spacings from '@commercetools-uikit/spacings';
 import Text from '@commercetools-uikit/text';
+import { useSideEffects } from '../../hooks/use-side-effects';
 
 interface PageBuilderProps {
   page: PageConfig;
   onUpdatePage: (updatedPage: PageConfig) => void;
 }
 
-const FlexDiv = styled.div`
-  display: flex;
-  flex-direction: row;
-`;
 const StyledDiv = styled.div`
   display: grid;
   grid-template-columns: 1fr 300px;
@@ -25,17 +22,20 @@ const StyledDiv = styled.div`
 const PageBuilder: React.FC<PageBuilderProps> = ({ page, onUpdatePage }) => {
   const [selectedComponent, setSelectedComponent] = useState<ComponentConfig>();
   const { gridDimensions, updateGridDimensions } = useGridDimensions(page);
+  const { applySideEffects } = useSideEffects();
+
   const {
-    addComponentToTarget,
     removeComponentById,
     updateComponentInComponents,
     findComponentById,
   } = useComponentConfig();
 
   const handleComponentUpdate = (updatedComponent: ComponentConfig) => {
+    const sideEffectedComponent = applySideEffects(updatedComponent);
+
     const updatedComponents = updateComponentInComponents(
       page.components,
-      updatedComponent
+      sideEffectedComponent
     );
     onUpdatePage({ ...page, components: updatedComponents });
   };
@@ -69,7 +69,6 @@ const PageBuilder: React.FC<PageBuilderProps> = ({ page, onUpdatePage }) => {
           onUpdatePage={onUpdatePage}
           selectedComponent={selectedComponent}
           setSelectedComponent={setSelectedComponent}
-          addComponentToTarget={addComponentToTarget}
           removeComponentById={removeComponentById}
         />
         <TabbedSidebar

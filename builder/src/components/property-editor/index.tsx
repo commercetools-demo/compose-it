@@ -27,7 +27,7 @@ const PropertyEditor: React.FC<PropertyEditorProps> = ({
         const bSort = component.config?.propsBindings?.[bKey]?.sortOrder || 0;
         return bSort - aSort;
       });
-  }, [component.props]);
+  }, [component]);
   const leastUsedComponentProps = useMemo(() => {
     return Object.entries(component.props || {})
       .filter((a) => {
@@ -42,7 +42,7 @@ const PropertyEditor: React.FC<PropertyEditorProps> = ({
         const bSort = component.config?.propsBindings?.[bKey]?.sortOrder || 0;
         return bSort - aSort;
       });
-  }, [component.props]);
+  }, [component]);
 
   return (
     <div className="property-editor">

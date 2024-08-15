@@ -3,6 +3,7 @@ import { ComponentConfig, PageConfig } from '../../library/general';
 import { calculateNewSize } from '../utils';
 import { useComponentConfig } from './use-component-config';
 import { useBuilderStateContext } from '../../../providers/process';
+import { useSideEffects } from '../../../hooks/use-side-effects';
 
 export const useResizeAndDrag = (
   page: PageConfig,
@@ -20,13 +21,10 @@ export const useResizeAndDrag = (
   } | null>(null);
 
   const { getComponentProps } = useBuilderStateContext();
+  const { applySideEffects } = useSideEffects();
 
-  const {
-    removeComponentById,
-    addComponentToTarget,
-    findComponentById,
-    setDefaultPropsBindings,
-  } = useComponentConfig();
+  const { removeComponentById, addComponentToTarget, findComponentById } =
+    useComponentConfig();
 
   const handleResize = (e: React.MouseEvent) => {
     if (!resizing || !gridRef.current) return;
@@ -167,16 +165,16 @@ export const useResizeAndDrag = (
     if (targetId) {
       // Dropping into another component
       const targetComponent = findComponentById(updatedComponents, targetId);
+      let sideEffectedComponent;
       if (targetComponent) {
-        newComponent.config.propsBindings = setDefaultPropsBindings(
-          newComponent.config.propsBindings,
-          targetComponent
-        );
+        sideEffectedComponent = applySideEffects(newComponent, targetComponent);
+      } else {
+        sideEffectedComponent = applySideEffects(newComponent);
       }
       updatedComponents = addComponentToTarget(
         updatedComponents,
         targetId,
-        newComponent
+        sideEffectedComponent
       );
     } else {
       // Dropping directly onto the grid

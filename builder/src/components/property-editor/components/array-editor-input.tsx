@@ -14,6 +14,8 @@ const ArrayEditorInput: React.FC<Props> = ({ value, onChange }) => {
   return (
     <Formik
       initialValues={{ value }}
+      // enabled since side-effect for DataTable might update columns
+      enableReinitialize
       onSubmit={(values) => onChange(values.value)}
       validateOnBlur
       validate={(values) => {

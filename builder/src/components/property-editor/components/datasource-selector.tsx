@@ -15,35 +15,9 @@ const DatasourceSelector = ({
   value,
   onDatasourceSelect,
 }: Props) => {
-  const { extractPaths } = usePropertyDatasource();
+  const { selectedDatasource, availablePaths, selectedPath } =
+    usePropertyDatasource({ isDatasourceSelected, value });
   const { datasources } = useBuilderStateContext();
-
-  const selectedDatasource = useMemo(
-    () =>
-      isDatasourceSelected && typeof value === 'string' && !!value
-        ? value?.split('.')?.[0]
-        : '',
-    [value]
-  );
-
-  const availablePaths = useMemo(() => {
-    if (selectedDatasource) {
-      const datasource = datasources?.results.find(
-        (d) => d.key === selectedDatasource
-      );
-      if (datasource?.value?.query) {
-        const extractedPaths = extractPaths(datasource?.value?.query || '');
-        return extractedPaths;
-      }
-    }
-    return [];
-  }, [selectedDatasource]);
-
-  const selectedPath = useMemo(() => {
-    return isDatasourceSelected && typeof value === 'string' && !!value
-      ? value?.split('.').slice(1).join('.')
-      : '';
-  }, [value]);
 
   return (
     <>
@@ -54,7 +28,7 @@ const DatasourceSelector = ({
             value={selectedDatasource}
             isCondensed
             isClearable
-            options={[{ value: undefined, label: '' }].concat(
+            options={[{ value: '', label: 'Select a datasource' }].concat(
               datasources?.results.map((datasource) => ({
                 value: datasource.key,
                 label: datasource.value?.name,

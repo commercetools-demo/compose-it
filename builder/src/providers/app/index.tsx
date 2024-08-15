@@ -4,6 +4,7 @@ import React, {
   useState,
   useCallback,
   useEffect,
+  useMemo,
 } from 'react';
 import { AppConfig, PageConfig } from '../../components/library/general';
 import { useApps } from '../../hooks/use-app';
@@ -40,7 +41,10 @@ export const AppProvider: React.FC<{
   const [currentHistoryIndex, setCurrentHistoryIndex] = useState(0);
   const [currentPageId, setCurrentPageId] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
-  const currentPage = appConfig?.pages?.find((p) => p.id === currentPageId);
+  const currentPage = useMemo(
+    () => appConfig?.pages?.find((p) => p.id === currentPageId),
+    [appConfig, currentPageId]
+  );
 
   const query = useQuery();
 

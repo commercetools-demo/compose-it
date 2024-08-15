@@ -12,11 +12,6 @@ interface GridLayoutProps {
   onUpdatePage: (updatedPage: PageConfig) => void;
   selectedComponent: ComponentConfig | undefined;
   setSelectedComponent: (component: ComponentConfig | undefined) => void;
-  addComponentToTarget: (
-    components: ComponentConfig[],
-    targetId: string,
-    newComponent: ComponentConfig
-  ) => ComponentConfig[];
   removeComponentById: (
     components: ComponentConfig[],
     id: string
