@@ -1,5 +1,4 @@
 import {
-  Drawer,
   useModalState,
 } from '@commercetools-frontend/application-components';
 import { PlusBoldIcon } from '@commercetools-uikit/icons';
@@ -7,14 +6,12 @@ import PrimaryButton from '@commercetools-uikit/primary-button';
 import Spacings from '@commercetools-uikit/spacings';
 import Text from '@commercetools-uikit/text';
 import {
-  ComponentProp,
   ComponentPropResponse,
 } from '../../../types/datasource';
 import { useState } from 'react';
 import ComponentList from './component-list';
-import NewComponentForm from './new-component';
+import ComponentPropEditForm from './component-prop-edit-form';
 import { useComponentProps } from '../../../hooks/use-components';
-import { useAppContext } from '../../../providers/app';
 import { useBuilderStateContext } from '../../../providers/process';
 
 const Components = () => {
@@ -59,7 +56,7 @@ const Components = () => {
       </Spacings.Stack>
 
       {drawerState.isModalOpen && (
-        <NewComponentForm
+        <ComponentPropEditForm
           selectedComponent={selectedComponent}
           onSubmit={handleUpdateComponent}
           onCancel={drawerState.closeModal}

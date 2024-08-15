@@ -19,7 +19,7 @@ type Props = {
   selectedComponent?: ComponentPropResponse;
 };
 
-const NewComponentForm = ({
+const ComponentPropEditForm = ({
   onSubmit,
   onCancel,
   selectedComponent = {
@@ -147,4 +147,4 @@ const NewComponentForm = ({
     </Formik>
   );
 };
-export default NewComponentForm;
+export default ComponentPropEditForm;
