@@ -18,6 +18,7 @@ const config = {
   },
   additionalEnv: {
     repoUrl: '${env:REPO_URL}',
+    transformEndPoint: '${env:TRANSFORM_END_POINT}',
   },
   oAuthScopes: {
     view: ['view_products'],
@@ -27,12 +28,14 @@ const config = {
     csp: {
       'connect-src': [
         'https://cdn.jsdelivr.net',
+        '${env:TRANSFORM_END_POINT}',
         'blob:',
         'https://unpkg.com',
         "'unsafe-eval'",
       ],
       'script-src': [
         'https://cdn.jsdelivr.net',
+        '${env:TRANSFORM_END_POINT}',
         'blob:',
         'https://unpkg.com',
         "'unsafe-eval'",

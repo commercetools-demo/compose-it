@@ -1,42 +1,23 @@
 import React from 'react';
 import { FlyingComponentsResponse } from '../../../../types/datasource';
 import { availableModules } from '../utils/available-modules';
-import { transform } from '@babel/standalone';
 import { builtInComponentLibrary, reverseComponentMap } from '../../../library';
+import axios from 'axios';
+import { useApplicationContext } from '@commercetools-frontend/application-shell-connectors';
 
 export const useRuntimeComponents = () => {
-  const compileComponent = (
-    code: string,
-    filename: string = 'component.tsx'
-  ) => {
-    try {
-      const result = transform(code, {
-        filename, // Add filename here
-        presets: [
-          'react',
-          ['typescript', { isTSX: true, allExtensions: true }],
-        ],
-        plugins: ['transform-modules-commonjs'],
-      });
-      return result.code;
-    } catch (error) {
-      throw error;
-    }
-  };
-
-  const serializeComponent = (code: string, name: string) => {
-    try {
-      const compiledCode = compileComponent(code, `${name}.tsx`);
-      if (!compiledCode) return null;
-
-      return JSON.stringify({
-        type: 'custom',
+  const context = useApplicationContext((context) => context);
+  const serializeComponent = async (code: string, name: string) => {
+    const response = await axios
+      .post(context.environment.transformEndPoint, {
+        code,
         name,
-        code: compiledCode,
+      })
+      .catch(() => {
+        return {};
       });
-    } catch (error) {
-      throw error;
-    }
+
+    return response.data.serializedComponent;
   };
 
   const loadComponentsForRuntime = (components: FlyingComponentsResponse[]) => {

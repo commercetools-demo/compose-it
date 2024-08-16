@@ -1,5 +1,4 @@
 import React from 'react';
-import { transform } from '@babel/standalone';
 import { availableModules } from '../../components/library/available-modules';
 import {
   builtInComponentLibrary,
@@ -8,40 +7,6 @@ import {
 import { FlyingComponentsResponse } from '../../types/datasource';
 
 export const useRuntimeComponents = () => {
-  const compileComponent = (
-    code: string,
-    filename: string = 'component.tsx'
-  ) => {
-    try {
-      const result = transform(code, {
-        filename, // Add filename here
-        presets: [
-          'react',
-          ['typescript', { isTSX: true, allExtensions: true }],
-        ],
-        plugins: ['transform-modules-commonjs'],
-      });
-      return result.code;
-    } catch (error) {
-      throw error;
-    }
-  };
-
-  const serializeComponent = (code: string, name: string) => {
-    try {
-      const compiledCode = compileComponent(code, `${name}.tsx`);
-      if (!compiledCode) return null;
-
-      return JSON.stringify({
-        type: 'custom',
-        name,
-        code: compiledCode,
-      });
-    } catch (error) {
-      throw error;
-    }
-  };
-
   const loadComponentsForRuntime = (components: FlyingComponentsResponse[]) => {
     return components.reduce(
       (newComponents: Record<string, React.ComponentType>, c) => {
@@ -111,6 +76,5 @@ export const useRuntimeComponents = () => {
   };
   return {
     loadComponentsForRuntime,
-    serializeComponent,
   };
 };

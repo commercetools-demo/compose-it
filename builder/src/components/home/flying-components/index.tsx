@@ -34,7 +34,7 @@ const FlyingComponents = () => {
     let serializedComponent;
 
     try {
-      serializedComponent = serializeComponent(
+      serializedComponent = await serializeComponent(
         component.value.code,
         component.key
       );
