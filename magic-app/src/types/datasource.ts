@@ -18,7 +18,18 @@ export type Action = {
     variableBindings: Record<string, PropsBindingState>;
   };
 };
-
+export type FlyingComponent = {
+  props: Record<string, unknown>;
+  propsBindings: Record<string, PropsBindingState>;
+  code: string;
+  serializedCode: string;
+};
+export interface FlyingComponentsResponse {
+  id: string;
+  createdAt: string;
+  key: string;
+  value?: FlyingComponent;
+}
 export type DatasourceDraft = {
   id: string;
   name: string;

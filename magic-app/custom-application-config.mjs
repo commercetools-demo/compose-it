@@ -16,7 +16,7 @@ const config = {
       url: '${env:APPLICATION_URL}',
     },
   },
-  additionalEnv:{
+  additionalEnv: {
     appKey: '${env:APP_KEY}',
   },
   oAuthScopes: {
@@ -28,6 +28,12 @@ const config = {
     defaultLabel: 'Template starter',
     labelAllLocales: [],
     permissions: [PERMISSIONS.View],
+  },
+  headers: {
+    csp: {
+      'connect-src': ["'unsafe-eval'"],
+      'script-src': ["'unsafe-eval'"],
+    },
   },
   submenuLinks: [
     {

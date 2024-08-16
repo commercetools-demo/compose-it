@@ -1,9 +1,9 @@
 import { ComponentConfig, PageConfig } from './general';
-import { componentLibrary } from '.';
 import { fixUpRoutingProps } from './utils';
 import { useMemo } from 'react';
 import { usePropsBinding } from './hooks/use-props-binding';
 import styled from 'styled-components';
+import { useAppConfig } from '../../providers/app-config';
 
 const ErrorDiv = styled.div`
   color: red;
@@ -18,6 +18,7 @@ const ComponentWrapper = ({
   children: React.ReactNode;
   parentUrl?: string;
 }) => {
+  const { componentLibrary } = useAppConfig();
   const Component = componentLibrary[component.type];
 
   const { setPropsBinding } = usePropsBinding();

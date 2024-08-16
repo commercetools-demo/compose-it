@@ -33,7 +33,9 @@ const ModalPageRenderer: React.FC<DynamicPageRendererProps> = ({
       title={pageConfig?.props?.title || 'Modal Page'}
       hideControls
       {...(pageConfig?.props || {})}
-      onClose={() => parentUrl ? replace(parentUrl) : formModalState.closeModal()}
+      onClose={() =>
+        parentUrl ? replace(parentUrl) : formModalState.closeModal()
+      }
     >
       <div
         className="dynamic-page"

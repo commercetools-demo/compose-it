@@ -18,7 +18,7 @@ import UiKitTextField, {
 import withFormikInput from './components/with-formik';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const componentLibrary: Record<string, React.FC<any>> = {
+export const builtInComponentLibrary: Record<string, React.FC<any>> = {
   ...Object.keys(Text).reduce(
     (acc, key) => ({ ...acc, [`Text.${key}`]: Text[key] }),
     {}
@@ -32,4 +32,18 @@ export const componentLibrary: Record<string, React.FC<any>> = {
   TextField: withFormikInput<TTextFieldProps>(UiKitTextField),
   FormModalPage,
   FormDetailPage,
+};
+
+export const reverseComponentMap: Record<string, React.FC<any> | any> = {
+  '@commercetools-uikit/link': Link,
+  '@commercetools-uikit/text': Text,
+  '@commercetools-uikit/text-input':
+    withFormikInput<TTextInputProps>(UiKitTextInput),
+  '@commercetools-uikit/text-field':
+    withFormikInput<TTextFieldProps>(UiKitTextField),
+  '@commercetools-uikit/data-table': DataTable,
+  '@commercetools-uikit/card': Card,
+  '@commercetools-uikit/form': Form,
+  '@commercetools-uikit/form-modal-page': FormModalPage,
+  '@commercetools-uikit/form-detail-page': FormDetailPage,
 };
