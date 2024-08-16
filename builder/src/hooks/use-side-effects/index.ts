@@ -11,8 +11,11 @@ const ChangedPropSourcePropName = 'rows';
 const ChangedProptargetPropName = 'columns';
 
 function getLabelFromDottedText(text?: string): string {
-  if (!text || !text.includes('.') || typeof text !== 'string') {
+  if (!text || typeof text !== 'string') {
     return '';
+  }
+  if ( !text.includes('.')) {
+    return text.toUpperCase();
   }
   return text.split('.')?.slice(-1)?.[0].toUpperCase() || '';
 }

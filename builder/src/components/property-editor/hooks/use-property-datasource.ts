@@ -93,9 +93,11 @@ export const usePropertyDatasource = (props?: Props) => {
               // We've reached the subPath, start collecting paths from here
               const collectSubPaths = (
                 subNode: FieldNode,
-                subCurrentPath: string = subPath
+                subCurrentPath: string = ''
               ) => {
-                const subNewPath = `${subCurrentPath}.${subNode.name.value}`;
+                const subNewPath = subCurrentPath
+                  ? `${subCurrentPath}.${subNode.name.value}`
+                  : subNode.name.value;
                 paths.push(subNewPath);
 
                 if (subNode.selectionSet) {
@@ -135,6 +137,7 @@ export const usePropertyDatasource = (props?: Props) => {
         }
       },
     });
+
     return paths;
   }
 
