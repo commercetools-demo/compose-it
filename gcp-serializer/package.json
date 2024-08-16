@@ -1,0 +1,9 @@
+{
+    "name": "component-compiler-serializer",
+    "version": "1.0.0",
+    "description": "GCP Cloud Function to compile and serialize React components",
+    "main": "index.js",
+    "dependencies": {
+      "@babel/standalone": "^7.22.5"
+    }
+  }
