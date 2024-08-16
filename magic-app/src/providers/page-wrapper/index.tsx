@@ -34,6 +34,26 @@ const userAgent = createHttpUserAgent({
   libraryName: window.app.applicationName,
 });
 
+const substituteParams = (variables: Record<string, any>, params: Record<string, any>) => {
+  const substituteValue = (value: any): any => {
+    if (typeof value === 'string') {
+      return value.replace(/:(\w+)/g, (match, key) => {
+        return params[key] || match;
+      });
+    } else if (Array.isArray(value)) {
+      return value.map(substituteValue);
+    } else if (typeof value === 'object' && value !== null) {
+      return substituteParams(value, params);
+    }
+    return value;
+  };
+
+  return Object.entries(variables).reduce((acc: Record<string, any>, [key, value]) => {
+    acc[key] = substituteValue(value);
+    return acc;
+  }, {});
+};
+
 const graphqlFetcher = async (
   graphQLParams: FetcherParams,
   fetcherOpts?: FetcherOpts
@@ -124,7 +144,7 @@ const PageWrapperProvider = ({
       fetcher({
         query: availableDatasource.value?.query || '',
         variables: availableDatasource.value?.variables
-          ? JSON.parse(availableDatasource.value?.variables)
+          ? substituteParams(JSON.parse(availableDatasource.value?.variables), match.params)
           : match.params,
       }).then((data) => {
         setDatasources((prevDatasources) => {

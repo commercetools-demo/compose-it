@@ -2,7 +2,7 @@ import { useHistory, useRouteMatch } from 'react-router';
 import { usePageWrapper } from '../../../providers/page-wrapper';
 import { PropsBindingState } from '../general';
 import { get } from 'lodash';
-import { joinUrls, replacePathParam } from '../../../utils/url-utils';
+import { combineBaseAndSubpath } from '../../../utils/url-utils';
 import * as syncActions from '@commercetools/sync-actions';
 import { useAppConfig } from '../../../providers/app-config';
 
@@ -27,7 +27,7 @@ export const usePropsBinding = () => {
       try {
         action = JSON.parse(eventBinding.value as string);
       } catch (error) {
-        console.error('Error parsing event action:', error);
+        console.warn('Error parsing event action:', error);
       }
 
       if (!action) {
@@ -35,13 +35,15 @@ export const usePropsBinding = () => {
       }
 
       if (action.type === 'route') {
-        return (row: Record<string, unknown>) =>
-          push(
-            joinUrls(
-              match.url,
-              replacePathParam(action.value, row as Record<string, string>)
-            )
+        return (row: Record<string, unknown>) => {
+          const url = combineBaseAndSubpath(
+            match.url,
+            action.value,
+            row as Record<string, string>
           );
+
+          push(url);
+        };
       } else if (Object.keys(syncActions).includes(action.type)) {
         return async (initialData: any, values: any) => {
           const syncAction = syncActions[action.type]();
