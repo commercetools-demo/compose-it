@@ -5,6 +5,7 @@ import Text from '@commercetools-uikit/text';
 import styled from 'styled-components';
 import Actions from './graph-ql/action';
 import BuiltInComponents from './build-in-components';
+import FlyingComponents from './flying-components';
 
 const StyledDiv = styled.div`
   padding-top: 32px;
@@ -27,6 +28,7 @@ const Home = () => {
         <Datasources />
         <Actions />
         <BuiltInComponents />
+        <FlyingComponents />
       </Spacings.Stack>
     </StyledDiv>
   );

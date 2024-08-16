@@ -1,6 +1,7 @@
 import { ComponentConfig } from './general';
-import { componentLibrary } from '.';
 import { get } from 'lodash';
+import { useBuilderStateContext } from '../../providers/process';
+import ErrorBoundary from '../error-boundary';
 
 const ComponentWrapper = ({
   component,
@@ -9,16 +10,16 @@ const ComponentWrapper = ({
   component: ComponentConfig;
   children: React.ReactNode;
 }) => {
+  const { componentLibrary } = useBuilderStateContext();
   const Component = componentLibrary[component.type];
-  const datasource = {
-    'product.name': 'Apple',
-  };
+  const datasource = {};
 
   if (component.config?.propsBindings) {
     Object.keys(component.config.propsBindings).forEach((key) => {
       const binding = component.config.propsBindings[key];
       if (binding.type === 'datasource') {
         const value = get(datasource, binding.value);
+        // value will be empty always
         if (value) {
           component.props[key] = value;
         }
@@ -32,9 +33,13 @@ const ComponentWrapper = ({
   }
 
   return component.props?.children ? (
-    <Component {...component.props}>{children}</Component>
+    <ErrorBoundary>
+      <Component {...component.props}>{children}</Component>
+    </ErrorBoundary>
   ) : (
-    <Component {...component.props} />
+    <ErrorBoundary>
+      <Component {...component.props} />
+    </ErrorBoundary>
   );
 };
 

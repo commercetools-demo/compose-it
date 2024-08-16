@@ -18,6 +18,7 @@ import ComponentPalette from '../component-palette';
 import Spacings from '@commercetools-uikit/spacings';
 import { useQuery } from '../../hooks/use-query';
 import styled from 'styled-components';
+import ErrorBoundary from '../error-boundary';
 
 const StyledDiv = styled.div`
   padding: 0 10px;
@@ -76,12 +77,14 @@ const TabbedSidebar = ({
             {tab === 'add' && <ComponentPalette />}
             {tab === 'properties' && !!component && (
               <>
-                <PropertyEditor
-                  component={component}
-                  onUpdateComponent={(componentConfig) =>
-                    onUpdateComponent(componentConfig as ComponentConfig)
-                  }
-                />
+                <ErrorBoundary>
+                  <PropertyEditor
+                    component={component}
+                    onUpdateComponent={(componentConfig) =>
+                      onUpdateComponent(componentConfig as ComponentConfig)
+                    }
+                  />
+                </ErrorBoundary>
                 <button
                   onClick={() => onDeleteComponent(component)}
                   type="button"

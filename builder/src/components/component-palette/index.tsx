@@ -1,7 +1,7 @@
 import React from 'react';
-import { componentLibrary } from '../library';
 import Text from '@commercetools-uikit/text';
 import styled from 'styled-components';
+import { useBuilderStateContext } from '../../providers/process';
 
 const ComponentItem = styled.div`
   padding: 2px 4px;
@@ -17,6 +17,8 @@ const ComponentItem = styled.div`
   }
 `;
 const ComponentPalette: React.FC = () => {
+  const { componentLibrary } = useBuilderStateContext();
+
   const handleDragStart = (
     e: React.DragEvent<HTMLDivElement>,
     componentType: string

@@ -12,7 +12,7 @@ import {
   FormDetailPage,
 } from '@commercetools-frontend/application-components';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const componentLibrary: Record<string, React.FC<any> | any> = {
+export const builtInComponentLibrary: Record<string, React.FC<any> | any> = {
   ...Object.keys(Text).reduce(
     (acc, key) => ({ ...acc, [`Text.${key}`]: Text[key] }),
     {}
@@ -26,4 +26,16 @@ export const componentLibrary: Record<string, React.FC<any> | any> = {
   Form,
   FormModalPage,
   FormDetailPage,
+};
+
+export const reverseComponentMap: Record<string, React.FC<any> | any> = {
+  '@commercetools-uikit/link': Link,
+  '@commercetools-uikit/text': Text,
+  '@commercetools-uikit/text-input': TextInput,
+  '@commercetools-uikit/text-field': TextField,
+  '@commercetools-uikit/data-table': DataTable,
+  '@commercetools-uikit/card': Card,
+  '@commercetools-uikit/form': Form,
+  '@commercetools-uikit/form-modal-page': FormModalPage,
+  '@commercetools-uikit/form-detail-page': FormDetailPage,
 };

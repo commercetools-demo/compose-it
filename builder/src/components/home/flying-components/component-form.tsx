@@ -1,25 +1,20 @@
 import Grid from '@commercetools-uikit/grid';
-import Spacings from '@commercetools-uikit/spacings';
 import { Form, Formik } from 'formik';
-import FieldLabel from '@commercetools-uikit/field-label';
-import Text from '@commercetools-uikit/text';
-import NumberField from '@commercetools-uikit/number-field';
-import TextField from '@commercetools-uikit/text-field';
-import SelectField from '@commercetools-uikit/select-field';
-import {
-  ComponentProp,
-  ComponentPropResponse,
-} from '../../../types/datasource';
+import { FlyingComponentsResponse } from '../../../types/datasource';
 import { Drawer } from '@commercetools-frontend/application-components';
-import CollapsiblePanel from '@commercetools-uikit/collapsible-panel';
+import Text from '@commercetools-uikit/text';
+import TextField from '@commercetools-uikit/text-field';
+import EditorWrapper from './editor';
+import { useState } from 'react';
+import ErrorBoundary from '../../error-boundary';
 
 type Props = {
-  onSubmit: (component: ComponentPropResponse) => Promise<void>;
+  onSubmit: (component: FlyingComponentsResponse) => Promise<void>;
   onCancel: () => void;
-  selectedComponent?: ComponentPropResponse;
+  selectedComponent?: FlyingComponentsResponse;
 };
 
-const ComponentPropEditForm = ({
+const FlyingComponentForm = ({
   onSubmit,
   onCancel,
   selectedComponent = {
@@ -27,35 +22,50 @@ const ComponentPropEditForm = ({
     value: {
       props: {},
       propsBindings: {},
+      code: '',
     },
-  } as ComponentPropResponse,
+  } as FlyingComponentsResponse,
 }: Props) => {
-  const handleValidation = (values: ComponentPropResponse) => {
-    const errors: Record<keyof ComponentPropResponse, string> = {} as never;
-    const keysWithInvalidSort = Object.keys(values.value?.propsBindings).filter(
-      (key) =>
-        values.value?.propsBindings[key].sortOrder &&
-        (parseFloat(values.value?.propsBindings[key].sortOrder) < 0 ||
-          parseFloat(values.value?.propsBindings[key].sortOrder) > 1)
-    );
-    if (keysWithInvalidSort.length > 0) {
-      errors.keysWithInvalidSort = keysWithInvalidSort;
-    }
+  const [compileError, setCompileError] = useState('');
+  const handleValidation = (values: FlyingComponentsResponse) => {
+    const errors: Record<keyof FlyingComponentsResponse, string> = {} as never;
+
     return errors;
+  };
+
+  const onSubmitForm = async (values: FlyingComponentsResponse) => {
+    try {
+      await onSubmit(values);
+    } catch (error) {
+      setCompileError(error.message);
+    }
   };
 
   return (
     <Formik
       initialValues={selectedComponent}
-      onSubmit={onSubmit}
+      onSubmit={onSubmitForm}
       validateOnBlur
       validate={handleValidation}
     >
-      {({ values, errors, handleChange, submitForm, isValid, dirty }) => (
+      {({
+        values,
+        errors,
+        setFieldValue,
+        handleChange,
+        submitForm,
+        isValid,
+        dirty,
+      }) => (
         <Form>
           <Drawer
-            title="Modify built-in component"
+            title={
+              selectedComponent.key
+                ? 'Modify flying component'
+                : 'Add new flying component'
+            }
             isOpen={true}
+            size={30}
             onClose={onCancel}
             onPrimaryButtonClick={submitForm}
             onSecondaryButtonClick={onCancel}
@@ -66,7 +76,33 @@ const ComponentPropEditForm = ({
               gridTemplateColumns="repeat(1, 1fr)"
               gridAutoColumns="1fr"
             >
-              {Object.keys(values.value?.props || {}).map((key) => (
+              <TextField
+                name="key"
+                value={values.key}
+                onChange={handleChange}
+                title="Key"
+              />
+              <ErrorBoundary>
+                <EditorWrapper
+                  setFieldValue={setFieldValue}
+                  code={values.value?.code}
+                />
+              </ErrorBoundary>
+            </Grid>
+            {!!compileError && (
+              <Text.Caption tone="warning">{compileError}</Text.Caption>
+            )}
+          </Drawer>
+        </Form>
+      )}
+    </Formik>
+  );
+};
+export default FlyingComponentForm;
+
+/***
+ * 
+ {Object.keys(values.value?.props || {}).map((key) => (
                 <Grid.Item gridColumn="span 1" key={key}>
                   <CollapsiblePanel header={key} isDefaultClosed condensed>
                     <Spacings.Stack alignItems="flex-start">
@@ -134,11 +170,4 @@ const ComponentPropEditForm = ({
                   </CollapsiblePanel>
                 </Grid.Item>
               ))}
-            </Grid>
-          </Drawer>
-        </Form>
-      )}
-    </Formik>
-  );
-};
-export default ComponentPropEditForm;
+ */

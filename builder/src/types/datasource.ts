@@ -19,6 +19,13 @@ export type Action = {
   };
 };
 
+export interface FlyingComponentsResponse {
+  id: string;
+  createdAt: string;
+  key: string;
+  value?: FlyingComponent;
+}
+
 export interface ComponentPropResponse {
   id: string;
   createdAt: string;
@@ -28,6 +35,12 @@ export interface ComponentPropResponse {
 export type ComponentProp = {
   props: Record<string, unknown>;
   propsBindings: Record<string, PropsBindingState>;
+};
+export type FlyingComponent = {
+  props: Record<string, unknown>;
+  propsBindings: Record<string, PropsBindingState>;
+  code: string;
+  serializedCode: string;
 };
 
 export type DatasourceDraft = {

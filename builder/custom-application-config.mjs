@@ -16,12 +16,30 @@ const config = {
       url: '${env:APPLICATION_URL}',
     },
   },
-  additionalEnv:{
-    repoUrl : '${env:REPO_URL}',
+  additionalEnv: {
+    repoUrl: '${env:REPO_URL}',
   },
   oAuthScopes: {
     view: ['view_products'],
     manage: ['manage_products'],
+  },
+  headers: {
+    csp: {
+      'connect-src': [
+        'https://cdn.jsdelivr.net',
+        'blob:',
+        'https://unpkg.com',
+        "'unsafe-eval'",
+      ],
+      'script-src': [
+        'https://cdn.jsdelivr.net',
+        'blob:',
+        'https://unpkg.com',
+        "'unsafe-eval'",
+      ],
+      'style-src': ['https://cdn.jsdelivr.net'],
+      'font-src': ['https://cdn.jsdelivr.net'],
+    },
   },
   icon: '${path:@commercetools-frontend/assets/application-icons/rocket.svg}',
   mainMenuLink: {

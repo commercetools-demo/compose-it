@@ -1,13 +1,7 @@
-import {
-  useModalState,
-} from '@commercetools-frontend/application-components';
-import { PlusBoldIcon } from '@commercetools-uikit/icons';
-import PrimaryButton from '@commercetools-uikit/primary-button';
+import { useModalState } from '@commercetools-frontend/application-components';
 import Spacings from '@commercetools-uikit/spacings';
 import Text from '@commercetools-uikit/text';
-import {
-  ComponentPropResponse,
-} from '../../../types/datasource';
+import { ComponentPropResponse } from '../../../types/datasource';
 import { useState } from 'react';
 import ComponentList from './component-list';
 import ComponentPropEditForm from './component-prop-edit-form';
@@ -44,12 +38,9 @@ const BuiltInComponents = () => {
       <Spacings.Stack scale="xl">
         <Spacings.Stack scale="l">
           <Spacings.Inline justifyContent="space-between">
-            <Text.Subheadline as="h4">List of components</Text.Subheadline>
-            <PrimaryButton
-              iconLeft={<PlusBoldIcon />}
-              label="Add new component"
-              onClick={drawerState.openModal}
-            />
+            <Text.Subheadline as="h4">
+              List of built-in components
+            </Text.Subheadline>
           </Spacings.Inline>
           <ComponentList onSelectComponent={handleSelectComponent} />
         </Spacings.Stack>

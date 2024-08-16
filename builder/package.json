@@ -22,6 +22,7 @@
     "@apollo/client": "3.7.14",
     "@babel/core": "^7.22.17",
     "@babel/runtime-corejs3": "^7.22.15",
+    "@babel/standalone": "^7.25.3",
     "@commercetools-frontend/actions-global": "22.29.0",
     "@commercetools-frontend/application-components": "22.29.0",
     "@commercetools-frontend/application-config": "22.29.0",
@@ -66,6 +67,7 @@
     "@formatjs/cli": "6.2.12",
     "@jest/types": "29.6.3",
     "@manypkg/cli": "0.21.4",
+    "@monaco-editor/react": "^4.6.0",
     "@testing-library/dom": "^9.3.1",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "12.1.5",
@@ -76,6 +78,7 @@
     "@types/react-router": "^5.1.20",
     "@types/react-router-dom": "^5.3.3",
     "@types/testing-library__jest-dom": "^5.14.9",
+    "add": "^2.0.6",
     "eslint": "8.57.0",
     "eslint-formatter-pretty": "4.1.0",
     "eslint-plugin-graphql": "^4.0.0",
@@ -89,6 +92,7 @@
     "jest-watch-typeahead": "2.2.2",
     "lodash": "^4.17.21",
     "moment": "^2.29.4",
+    "monaco-editor": "^0.50.0",
     "msw": "0.49.3",
     "omit-empty-es": "1.2.0",
     "prettier": "2.8.8",
@@ -100,7 +104,8 @@
     "react-router-dom": "5.3.4",
     "redux": "4.2.1",
     "styled-components": "^6.1.12",
-    "typescript": "5.0.4"
+    "typescript": "5.0.4",
+    "yarn": "^1.22.22"
   },
   "resolutions": {
     "@emotion/react": "^11.11.1",
@@ -113,5 +118,7 @@
     "headers-polyfill": "3.2.5",
     "nwsapi": "2.2.7"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "@types/babel__standalone": "^7.1.7"
+  }
 }
