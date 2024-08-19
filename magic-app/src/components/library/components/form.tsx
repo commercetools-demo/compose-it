@@ -31,6 +31,7 @@ const Form: React.FC<PropsWithChildren<FormProps>> = ({
       <div className="form-content">
         <Formik
           initialValues={initialData}
+          enableReinitialize
           onSubmit={(values) => submit(values)}
         >
           {({ submitForm }) => (
