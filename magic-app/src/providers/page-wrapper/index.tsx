@@ -14,17 +14,21 @@ import { type FetcherOpts, type FetcherParams } from '@graphiql/toolkit';
 import { PageConfig } from '../../components/library/general';
 import { useAppConfig } from '../app-config';
 import LandingPageRenderer from '../../components/dynamic-page-renderer/landing-page';
-import { useRouteMatch } from 'react-router';
+import { useParams, useRouteMatch } from 'react-router';
 import ModalPageRenderer from '../../components/dynamic-page-renderer/modal-page';
 
 export interface ContextShape {
   datasources: {};
   fetcher: (graphQLParams: FetcherParams, fetcherOpts?: FetcherOpts) => any;
+  cachedData: Record<string, any>;
+  updateCachedData: (key: string, value: any) => void;
 }
 
 const initialState = {
   datasources: {} as {},
   fetcher: () => {},
+  cachedData: {} as Record<string, any>,
+  updateCachedData: () => {},
 } as ContextShape;
 
 export const PageWrapperContext = createContext(initialState);
@@ -90,8 +94,10 @@ const PageWrapperProvider = ({
   const { datasources: datasourceResponses } = useAppConfig();
   const [isLoading, setIsLoading] = useState(true);
   const match = useRouteMatch();
+  const params = useParams<Record<string, string>>();
 
   const [datasources, setDatasources] = useState({});
+  const [cachedData, setCachedData] = useState<Record<string, any>>({});
 
   const fetcher = useCallback(
     (graphQLParams: FetcherParams, fetcherOpts?: FetcherOpts) =>
@@ -103,6 +109,10 @@ const PageWrapperProvider = ({
       }),
     []
   );
+
+  const updateCachedData = useCallback((key: string, value: any) => {
+    setCachedData((prevData) => ({ ...prevData, [key]: value }));
+  }, []);
 
   const renderPageType = (pageConfig: PageConfig, parentUrl?: string) => {
     switch (pageConfig.type) {
@@ -160,6 +170,11 @@ const PageWrapperProvider = ({
     // availableDatasources.map((response) => );
   }, [datasourceResponses, pageConfig.datasourceRefs]);
 
+  useEffect(() => {
+    // Update cachedData with route params
+    setCachedData((prevData) => ({ ...prevData, ...params }));
+  }, [params]);
+
   if (isLoading) {
     return <div>Loading...</div>; // Or any loading indicator
   }
@@ -168,6 +183,8 @@ const PageWrapperProvider = ({
       value={{
         datasources,
         fetcher,
+        cachedData,
+        updateCachedData,
       }}
     >
       {renderPageType(pageConfig, parentUrl)}

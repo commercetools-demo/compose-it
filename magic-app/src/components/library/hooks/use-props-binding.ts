@@ -7,8 +7,8 @@ import * as syncActions from '@commercetools/sync-actions';
 import { useAppConfig } from '../../../providers/app-config';
 
 export const usePropsBinding = () => {
-  const { datasources, fetcher } = usePageWrapper();
-  const { actions: graphQLActions } = useAppConfig();
+  const { datasources, fetcher, cachedData } = usePageWrapper();
+  const { actions: graphQLActions, } = useAppConfig();
 
   const { push } = useHistory();
   const match = useRouteMatch();
@@ -39,7 +39,7 @@ export const usePropsBinding = () => {
           const url = combineBaseAndSubpath(
             match.url,
             action.value,
-            row as Record<string, string>
+            {...row as Record<string, string>, ...cachedData}
           );
 
           push(url);
