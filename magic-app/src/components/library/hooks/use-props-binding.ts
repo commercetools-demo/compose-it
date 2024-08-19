@@ -8,7 +8,7 @@ import { useAppConfig } from '../../../providers/app-config';
 
 export const usePropsBinding = () => {
   const { datasources, fetcher, cachedData } = usePageWrapper();
-  const { actions: graphQLActions, } = useAppConfig();
+  const { actions: graphQLActions } = useAppConfig();
 
   const { push } = useHistory();
   const match = useRouteMatch();
@@ -36,11 +36,10 @@ export const usePropsBinding = () => {
 
       if (action.type === 'route') {
         return (row: Record<string, unknown>) => {
-          const url = combineBaseAndSubpath(
-            match.url,
-            action.value,
-            {...row as Record<string, string>, ...cachedData}
-          );
+          const url = combineBaseAndSubpath(match.url, action.value, {
+            ...(row as Record<string, string>),
+            ...cachedData,
+          });
 
           push(url);
         };

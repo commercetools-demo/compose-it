@@ -4,6 +4,7 @@ import { useMemo } from 'react';
 import { usePropsBinding } from './hooks/use-props-binding';
 import styled from 'styled-components';
 import { useAppConfig } from '../../providers/app-config';
+import ErrorBoundary from '../error-boundary';
 
 const ErrorDiv = styled.div`
   color: red;
@@ -54,18 +55,22 @@ const ComponentWrapper = ({
   }
 
   return (
-    <div style={style}>
-      {component.props?.children &&
-      !Array.isArray(component.props?.children) ? (
-        <Component {...component.props}>{component.props?.children}</Component>
-      ) : children &&
-        Array.isArray(component.props?.children) &&
-        component.props.children.every((child) => !!child) ? (
-        <Component {...component.props}>{children}</Component>
-      ) : (
-        <Component {...component.props} />
-      )}
-    </div>
+    <ErrorBoundary>
+      <div style={style}>
+        {component.props?.children &&
+        !Array.isArray(component.props?.children) ? (
+          <Component {...component.props}>
+            {component.props?.children}
+          </Component>
+        ) : children &&
+          Array.isArray(component.props?.children) &&
+          component.props.children.every((child) => !!child) ? (
+          <Component {...component.props}>{children}</Component>
+        ) : (
+          <Component {...component.props} />
+        )}
+      </div>
+    </ErrorBoundary>
   );
 };
 

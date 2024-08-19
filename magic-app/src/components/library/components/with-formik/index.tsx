@@ -1,6 +1,6 @@
 import React from 'react';
 import { useFormikContext } from 'formik';
-
+import get from 'lodash/get';
 type WithFormikInputProps = {
   name?: string;
   [key: string]: any;
@@ -10,7 +10,7 @@ function withFormikInput<T extends WithFormikInputProps>(
   WrappedComponent: React.ComponentType<T>
 ) {
   return function FormikInput(props: T) {
-    const { values, handleChange } = useFormikContext();
+    const { values = null, handleChange = () => {} } = useFormikContext() || {};
 
     if (!props.name) {
       return null;
@@ -19,8 +19,12 @@ function withFormikInput<T extends WithFormikInputProps>(
     return (
       <WrappedComponent
         {...props}
-        value={values[props.name]}
-        onChange={handleChange}
+        value={!!values ? get(values, props.name) : props.value}
+        isDisabled={!values}
+        onChange={(e) => {
+          console.log('e', e.target.value);
+          handleChange(e);
+        }}
       />
     );
   };

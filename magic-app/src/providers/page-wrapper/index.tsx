@@ -38,7 +38,10 @@ const userAgent = createHttpUserAgent({
   libraryName: window.app.applicationName,
 });
 
-const substituteParams = (variables: Record<string, any>, params: Record<string, any>) => {
+const substituteParams = (
+  variables: Record<string, any>,
+  params: Record<string, any>
+) => {
   const substituteValue = (value: any): any => {
     if (typeof value === 'string') {
       return value.replace(/:(\w+)/g, (match, key) => {
@@ -52,10 +55,13 @@ const substituteParams = (variables: Record<string, any>, params: Record<string,
     return value;
   };
 
-  return Object.entries(variables).reduce((acc: Record<string, any>, [key, value]) => {
-    acc[key] = substituteValue(value);
-    return acc;
-  }, {});
+  return Object.entries(variables).reduce(
+    (acc: Record<string, any>, [key, value]) => {
+      acc[key] = substituteValue(value);
+      return acc;
+    },
+    {}
+  );
 };
 
 const graphqlFetcher = async (
@@ -154,7 +160,10 @@ const PageWrapperProvider = ({
       fetcher({
         query: availableDatasource.value?.query || '',
         variables: availableDatasource.value?.variables
-          ? substituteParams(JSON.parse(availableDatasource.value?.variables), match.params)
+          ? substituteParams(
+              JSON.parse(availableDatasource.value?.variables),
+              match.params
+            )
           : match.params,
       }).then((data) => {
         setDatasources((prevDatasources) => {

@@ -14,7 +14,7 @@ function getLabelFromDottedText(text?: string): string {
   if (!text || typeof text !== 'string') {
     return '';
   }
-  if ( !text.includes('.')) {
+  if (!text.includes('.')) {
     return text.toUpperCase();
   }
   return text.split('.')?.slice(-1)?.[0].toUpperCase() || '';
