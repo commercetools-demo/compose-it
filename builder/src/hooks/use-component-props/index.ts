@@ -9,6 +9,7 @@ import { APP_NAME } from '../../constants';
 import { PagedQueryResponse } from '../../types/general';
 import { ComponentProp, ComponentPropResponse } from '../../types/datasource';
 import { buildUrlWithParams } from '../../utils/utils';
+import { DEFAULT_BUILTIN_COMPONENTS } from './default-builtin-components';
 
 const CONTAINER = `${APP_NAME}_component_props`;
 
@@ -63,8 +64,18 @@ export const useComponentProps = () => {
     return result;
   };
 
+  const createDefaultComponents = async (): Promise<
+    ComponentPropResponse[]
+  > => {
+    for await (const component of DEFAULT_BUILTIN_COMPONENTS) {
+      await updateComponentProp(component.key, component.value);
+    }
+    return fetchAllComponentProps();
+  };
+
   return {
     fetchAllComponentProps,
+    createDefaultComponents,
     updateComponentProp,
   };
 };
