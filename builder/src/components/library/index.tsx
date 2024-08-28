@@ -7,6 +7,7 @@ import TextField from '@commercetools-uikit/text-field';
 import DataTable from '@commercetools-uikit/data-table';
 import PrimaryButton from '@commercetools-uikit/primary-button';
 import Form from './components/form';
+import Loop from './components/loop';
 import {
   FormModalPage,
   FormDetailPage,
@@ -24,6 +25,7 @@ export const builtInComponentLibrary: Record<string, React.FC<any> | any> = {
   Card,
   Link,
   Form,
+  Loop,
   FormModalPage,
   FormDetailPage,
 };
@@ -36,6 +38,7 @@ export const reverseComponentMap: Record<string, React.FC<any> | any> = {
   '@commercetools-uikit/data-table': DataTable,
   '@commercetools-uikit/card': Card,
   '@commercetools-uikit/form': Form,
+  '@commercetools-uikit/loop': Loop,
   '@commercetools-uikit/form-modal-page': FormModalPage,
   '@commercetools-uikit/form-detail-page': FormDetailPage,
 };

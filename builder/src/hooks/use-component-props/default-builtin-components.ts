@@ -1146,6 +1146,23 @@ export const DEFAULT_BUILTIN_COMPONENTS = [
     },
   },
   {
+    key: 'Loop',
+    value: {
+      props: {
+        data: '',
+      },
+      propsBindings: {
+        data: {
+          value: [],
+          dataType: 'array',
+          type: 'property',
+          sortOrder: 0.9,
+          hint: 'Select an array',
+        },
+      },
+    },
+  },
+  {
     key: 'DataTable',
     value: {
       props: {
