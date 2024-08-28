@@ -128,6 +128,7 @@ export const useResizeAndDrag = (
     row: number
   ) => {
     e.preventDefault();
+    e.stopPropagation();
     const componentType = e.dataTransfer.getData('componentType');
     const sourceComponentId = e.dataTransfer.getData('componentId');
 
