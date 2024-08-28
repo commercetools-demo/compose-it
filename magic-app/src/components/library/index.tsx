@@ -9,6 +9,7 @@ import {
   FormDetailPage,
 } from '@commercetools-frontend/application-components';
 import Form from './components/form';
+import Loop from './components/loop';
 import UiKitTextInput, {
   TTextInputProps,
 } from '@commercetools-uikit/text-input';
@@ -26,6 +27,7 @@ export const builtInComponentLibrary: Record<string, React.FC<any>> = {
   PrimaryButton,
   DataTable,
   Form,
+  Loop,
   Card,
   Link,
   TextInput: withFormikInput<TTextInputProps>(UiKitTextInput),
@@ -44,6 +46,7 @@ export const reverseComponentMap: Record<string, React.FC<any> | any> = {
   '@commercetools-uikit/data-table': DataTable,
   '@commercetools-uikit/card': Card,
   '@commercetools-uikit/form': Form,
+  '@commercetools-uikit/loop': Loop,
   '@commercetools-uikit/form-modal-page': FormModalPage,
   '@commercetools-uikit/form-detail-page': FormDetailPage,
 };
