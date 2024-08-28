@@ -56,7 +56,8 @@ const BuilderStateProvider = ({ children }: React.PropsWithChildren<{}>) => {
   const { fetchAllApps } = useApps();
   const { fetchAllDatasources } = useDatasource();
   const { fetchAllActions } = useAction();
-  const { fetchAllComponentProps } = useComponentProps();
+  const { fetchAllComponentProps, createDefaultComponents } =
+    useComponentProps();
   const { fetchAllFlyingComponents } = useFlyingComponents();
 
   const getComponentProps = (
@@ -64,6 +65,28 @@ const BuilderStateProvider = ({ children }: React.PropsWithChildren<{}>) => {
   ): ComponentProp | undefined => {
     return componentProps?.find((component) => component.key === componentType)
       ?.value;
+  };
+
+  const loadFlyingComponentsForRuntime = (
+    flyingComponents: FlyingComponentsResponse[]
+  ) => {
+    if (flyingComponents && flyingComponents.length > 0) {
+      setComponentLibrary((prev) => ({
+        ...prev,
+        ...loadComponentsForRuntime(flyingComponents),
+      }));
+    }
+  };
+
+  const checkBuiltinComponents = async (
+    componentProps: ComponentPropResponse[]
+  ): Promise<void> => {
+    if (!componentProps || componentProps.length === 0) {
+      const resultComponentProps = await createDefaultComponents();
+      setComponentProps(resultComponentProps);
+    } else {
+      setComponentProps(componentProps);
+    }
   };
 
   const getApps = async (limit?: number, page?: number) => {
@@ -85,15 +108,9 @@ const BuilderStateProvider = ({ children }: React.PropsWithChildren<{}>) => {
     setApps(appResult);
     setDatasources(datasourceResult);
     setActions(actionResult);
-    setComponentProps(componentProps);
+    await checkBuiltinComponents(componentProps);
     setFlyingComponents(flyingComponents);
-    if (flyingComponents && flyingComponents.length > 0) {
-      setComponentLibrary((prev) => ({
-        ...prev,
-        ...loadComponentsForRuntime(flyingComponents),
-      }));
-      // addComponentsToLibrary(flyingComponents);
-    }
+    loadFlyingComponentsForRuntime(flyingComponents);
     setIsLoading(false);
   };
 
