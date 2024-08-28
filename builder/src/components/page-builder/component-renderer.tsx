@@ -3,6 +3,7 @@ import { ComponentConfig } from '../library/general';
 import ComponentWrapper from '../library/wrapper';
 import ResizeHandle from './resize-handle';
 import { useContextMenu } from '../../providers/context-menu';
+import styled from 'styled-components';
 
 interface ComponentRendererProps {
   component: ComponentConfig;
@@ -26,6 +27,48 @@ interface ComponentRendererProps {
   ) => void;
 }
 
+const StyledComponentContainer: React.FC<
+  React.HTMLAttributes<HTMLDivElement> & {
+    component: ComponentConfig;
+    selectedComponent?: ComponentConfig;
+  }
+> = styled.div`
+  grid-column: ${({ component }) =>
+    `${component.layout.gridColumn} / span ${component.layout.gridWidth}`};
+  grid-row: ${({ component }) =>
+    `${component.layout.gridRow} / span ${component.layout.gridHeight}`};
+  border: 1px solid #ccc;
+  padding: 8px;
+  background-color: ${({ component, selectedComponent }) =>
+    component.id === selectedComponent?.id ? '#e0e0e0' : 'white'};
+  position: relative;
+  transition: background-color 0.3s ease;
+  &:hover {
+    background-color: ${({ component, selectedComponent }) =>
+      component.id === selectedComponent?.id
+        ? '#e0e0e0'
+        : 'rgba(224, 224, 224, 0.5)'};
+  }
+  &::before {
+    content: '${({ component }) => component.type}';
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 2px 5px;
+    font-size: 12px;
+    border-bottom-right-radius: 4px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+
+  &:hover::before {
+    opacity: 1;
+  }
+`;
+
 const ComponentRenderer: React.FC<ComponentRendererProps> = ({
   component,
   selectedComponent,
@@ -42,19 +85,10 @@ const ComponentRenderer: React.FC<ComponentRendererProps> = ({
 
   if (!component) return null;
   if (typeof component === 'string') return component;
-  const style = {
-    gridColumn: `${component.layout.gridColumn} / span ${component.layout.gridWidth}`,
-    gridRow: `${component.layout.gridRow} / span ${component.layout.gridHeight}`,
-    border: '1px solid #ccc',
-    padding: '8px',
-    backgroundColor:
-      component.id === selectedComponent?.id ? '#e0e0e0' : 'white',
-    position: 'relative' as 'relative',
-  };
-
   return (
-    <div
-      style={style}
+    <StyledComponentContainer
+      component={component}
+      selectedComponent={selectedComponent}
       onClick={(e) => {
         e.stopPropagation();
         setSelectedComponent(component);
@@ -119,7 +153,7 @@ const ComponentRenderer: React.FC<ComponentRendererProps> = ({
           />
         </>
       )}
-    </div>
+    </StyledComponentContainer>
   );
 };
 
