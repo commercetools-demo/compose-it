@@ -30,6 +30,7 @@ const NewDeploymentWizard = ({ onClose }: Props) => {
     selectedConnector,
     selectedDeployment,
     selectedDeploymentDraft,
+    selectedApplicationType,
   } = useDeploymentContext();
   const { appGeneralInfo } = useAppContext();
   const match = useRouteMatch();
@@ -58,6 +59,7 @@ const NewDeploymentWizard = ({ onClose }: Props) => {
             <TabHeader
               to={`${match.url}/organization`}
               label="2. Select organization"
+              isDisabled={!selectedApplicationType}
             />
             <TabHeader
               to={`${match.url}/custom-applications`}

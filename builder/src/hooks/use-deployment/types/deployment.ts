@@ -39,10 +39,12 @@ export type Connector = {
   documentationUrl: null;
 };
 
+export type ApplicationTypes = 'custom-app' | 'custom-view';
+
 export type Deployment = {
   id: string;
   key: string;
-  applicationType: 'custom-app' | 'custom-view';
+  applicationType: ApplicationTypes;
   version: number;
   projectId: string;
   connector: Connector;

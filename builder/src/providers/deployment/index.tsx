@@ -18,6 +18,7 @@ import {
   ConnectorResponse,
 } from '../../hooks/use-deployment/types/connector';
 import {
+  ApplicationTypes,
   Deployment,
   DeploymentDraft,
 } from '../../hooks/use-deployment/types/deployment';
@@ -34,11 +35,13 @@ interface DeploymentContextType {
   connectors?: ConnectorDraft[];
   deployments?: Deployment[];
   selectedOrganization?: string;
+  selectedApplicationType: ApplicationTypes;
   selectedApp?: MyCustomApplication;
   selectedConnector?: ConnectorDraft;
   selectedDeployment?: Deployment;
   selectedDeploymentDraft?: DeploymentDraft;
   onSelectConnector: (connector?: ConnectorDraft) => void;
+  onSelectApplicationType: (applicationType: ApplicationTypes) => void;
   onSelectOrganization: (organizationId?: string) => void;
   onSelectDeployment: (deployment?: Deployment) => void;
   onSelectDeploymentDraft: (deployment?: DeploymentDraft) => void;
@@ -78,6 +81,8 @@ export const DeploymentProvider: React.FC<{
   } = useDeployment();
 
   const [selectedOrganization, onSelectOrganization] = useState<string>();
+  const [selectedApplicationType, onSelectApplicationType] =
+    useState<ApplicationTypes>('custom-app');
   const [selectedApp, onSelectApp] = useState<MyCustomApplication>();
   const [selectedConnector, onSelectConnector] = useState<ConnectorDraft>();
   const [selectedDeployment, setSelectedDeployment] = useState<Deployment>();
@@ -226,6 +231,7 @@ export const DeploymentProvider: React.FC<{
         apps,
         organizations: myOrganizations,
         selectedOrganization,
+        selectedApplicationType,
         selectedApp,
         selectedConnector,
         connectors,
@@ -233,6 +239,7 @@ export const DeploymentProvider: React.FC<{
         selectedDeployment,
         selectedDeploymentDraft,
         onSelectOrganization,
+        onSelectApplicationType,
         onSelectApp,
         onCreateCustomApp,
         onSelectConnector,
