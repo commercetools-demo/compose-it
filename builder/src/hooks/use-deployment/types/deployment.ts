@@ -42,6 +42,7 @@ export type Connector = {
 export type Deployment = {
   id: string;
   key: string;
+  applicationType: 'custom-app' | 'custom-view';
   version: number;
   projectId: string;
   connector: Connector;

@@ -1,11 +1,11 @@
 import DataTable from '@commercetools-uikit/data-table';
 import { ArrowRightIcon } from '@commercetools-uikit/icons';
 import Spacings from '@commercetools-uikit/spacings';
+import Text from '@commercetools-uikit/text';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { Organization } from '../../../hooks/use-deployment/types/organization';
 import { useDeploymentContext } from '../../../providers/deployment';
-import Text from '@commercetools-uikit/text';
 const columns = [
   { key: 'id', label: 'ID' },
   { key: 'name', label: 'Name' },

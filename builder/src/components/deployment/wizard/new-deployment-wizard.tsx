@@ -17,6 +17,7 @@ import { useAppContext } from '../../../providers/app';
 import ConnectApplicationList from './connect-app/connect-app-list';
 import DeploymentList from './connect-deployment/deployment-list';
 import Deploy from './deploy';
+import AppType from './app-type';
 
 type Props = {
   onClose: () => void;
@@ -35,15 +36,11 @@ const NewDeploymentWizard = ({ onClose }: Props) => {
   const { replace } = useHistory();
 
   const handleClose = (e: SyntheticEvent) => {
-    // e.stopPropagation();
-    // e.preventDefault();
-    // goBack();
     replace(`${match.url}`);
     onClose();
-    console.log('NOOOOOO');
   };
   useEffect(() => {
-    replace(`${match.url}/organization`);
+    replace(`${match.url}/application-type`);
   }, []);
   return (
     <Router>
@@ -55,33 +52,40 @@ const NewDeploymentWizard = ({ onClose }: Props) => {
         tabControls={
           <>
             <TabHeader
+              to={`${match.url}/application-type`}
+              label="1. Select deployment type"
+            />
+            <TabHeader
               to={`${match.url}/organization`}
-              label="1. Select organization"
+              label="2. Select organization"
             />
             <TabHeader
               to={`${match.url}/custom-applications`}
-              label="2. Select custom application"
+              label="3. Select custom application"
               isDisabled={!selectedOrganization}
             />
             <TabHeader
               to={`${match.url}/connect-applications`}
-              label="3. Select a connector"
+              label="4. Select a connector"
               isDisabled={!selectedApp}
             />
             <TabHeader
               to={`${match.url}/deployments`}
-              label="4. Select an installation"
+              label="5. Select an installation"
               isDisabled={!selectedConnector}
             />
             <TabHeader
               to={`${match.url}/deploy`}
-              label="5. Deploy"
+              label="6. Deploy"
               isDisabled={!selectedDeployment && !selectedDeploymentDraft}
             />
           </>
         }
       >
         <Switch>
+          <Route path={`${match.path}/application-type`}>
+            <AppType parentUrl={match.url} />
+          </Route>
           <Route path={`${match.path}/organization`}>
             <OrganizationList parentUrl={match.url} />
           </Route>

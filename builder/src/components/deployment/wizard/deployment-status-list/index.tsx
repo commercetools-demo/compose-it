@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import DataTable from '@commercetools-uikit/data-table';
 import { DeployedStatus } from '../../../../hooks/use-deployment/types/deployment';
 import { useDeployment } from '../../../../hooks/use-deployment';
-import { CheckActiveIcon } from '@commercetools-uikit/icons';
 import DeployedStatusActions from './deployed-status-actions';
 import styled from 'styled-components';
 
@@ -14,6 +13,7 @@ const PaddedDiv = styled.div`
 
 const columns = [
   { key: 'id', label: 'ID', isTruncated: true },
+  { key: 'applicationType', label: 'Application Type' },
   { key: 'key', label: 'Key' },
   { key: 'status', label: 'Status' },
   { key: 'action', label: '' },
