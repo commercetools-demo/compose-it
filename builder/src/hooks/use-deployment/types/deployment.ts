@@ -85,7 +85,7 @@ export type Configuration = {
 export type Application = {
   applicationName: string;
   standardConfiguration: Configuration[];
-  securedConfiguration: Configuration[];
+  securedConfiguration?: Configuration[];
   url?: string;
 };
 

@@ -29,7 +29,7 @@ const StyledRow = styled.div`
 `;
 
 const DeploymentList = ({ parentUrl, nextUrl }: { parentUrl: string, nextUrl: string }) => {
-  const { selectedApp } = useDeploymentContext();
+  const { selectedApp, selectedView } = useDeploymentContext();
   const context = useApplicationContext((context) => context);
   const { appGeneralInfo } = useAppContext();
   const modalState = useModalState();
@@ -59,11 +59,11 @@ const DeploymentList = ({ parentUrl, nextUrl }: { parentUrl: string, nextUrl: st
         applications: [
           {
             // TODO: move to .env
-            applicationName: 'magic-app',
+            applicationName: deployment.applicationType === 'custom-app' ? 'magic-app' : 'magic-view',
             standardConfiguration: [
               {
                 key: 'CUSTOM_APPLICATION_ID',
-                value: selectedApp?.id || '',
+                value: (deployment.applicationType === 'custom-app' ? selectedApp?.id : selectedView?.id) || '',
               },
               {
                 key: 'APP_KEY',
@@ -75,7 +75,7 @@ const DeploymentList = ({ parentUrl, nextUrl }: { parentUrl: string, nextUrl: st
               },
               {
                 key: 'ENTRY_POINT_URI_PATH',
-                value: selectedApp?.entryPointUriPath,
+                value: selectedApp?.entryPointUriPath ?? 'empty',
               },
               {
                 key: 'APPLICATION_URL',

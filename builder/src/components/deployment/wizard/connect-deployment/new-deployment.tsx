@@ -21,7 +21,7 @@ type Props = {
 const NewDeploymentForm = ({ onSubmit, isOpen, onClose }: Props) => {
   const [isLoading, setIsLoading] = useState(false);
   const context = useApplicationContext((context) => context);
-  const { selectedConnector, selectedApp } = useDeploymentContext();
+  const { selectedConnector, selectedApp, selectedView } = useDeploymentContext();
   const { appGeneralInfo } = useAppContext();
 
   const initialData: Partial<DeploymentDraft> = {
@@ -35,11 +35,11 @@ const NewDeploymentForm = ({ onSubmit, isOpen, onClose }: Props) => {
     configurations: [
       {
         // TODO: move to .env
-        applicationName: 'magic-app',
+        applicationName: selectedApp ? 'magic-app' : 'magic-view',
         standardConfiguration: [
           {
             key: 'CUSTOM_APPLICATION_ID',
-            value: selectedApp?.id || '',
+            value: selectedApp?.id || selectedView?.id || '',
           },
           {
             key: 'APP_KEY',
@@ -51,7 +51,7 @@ const NewDeploymentForm = ({ onSubmit, isOpen, onClose }: Props) => {
           },
           {
             key: 'ENTRY_POINT_URI_PATH',
-            value: selectedApp?.entryPointUriPath,
+            value: selectedApp?.entryPointUriPath ?? 'empty',
           },
           {
             key: 'APPLICATION_URL',
