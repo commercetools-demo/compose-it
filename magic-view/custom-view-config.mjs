@@ -9,7 +9,7 @@ const config = {
       initialProjectKey: '${env:INITIAL_PROJECT_KEY}',
     },
     production: {
-      customViewId: '${env:CUSTOM_VIEW_ID}',
+      customViewId: '${env:CUSTOM_APPLICATION_ID}',
       url: '${env:APPLICATION_URL}',
     },
   },
