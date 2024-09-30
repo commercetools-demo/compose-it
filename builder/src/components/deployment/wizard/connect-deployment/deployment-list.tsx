@@ -28,7 +28,7 @@ const StyledRow = styled.div`
     `${rowKey === deploymentKey ? 'color: blue;' : ''}`}
 `;
 
-const DeploymentList = ({ parentUrl }: { parentUrl: string }) => {
+const DeploymentList = ({ parentUrl, nextUrl }: { parentUrl: string, nextUrl: string }) => {
   const { selectedApp } = useDeploymentContext();
   const context = useApplicationContext((context) => context);
   const { appGeneralInfo } = useAppContext();
@@ -105,7 +105,7 @@ const DeploymentList = ({ parentUrl }: { parentUrl: string }) => {
           <Link
             to={
               !!selectedDeployment || !!selectedDeploymentDraft
-                ? `${parentUrl}/deploy`
+                ? nextUrl
                 : ''
             }
           >

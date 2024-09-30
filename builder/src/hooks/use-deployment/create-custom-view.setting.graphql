@@ -1,0 +1,15 @@
+mutation CustomView($organizationId: String!, $data: CustomViewDraftDataInput!) {
+  createCustomView (organizationId: $organizationId,data:$data) {
+     id,
+    description,
+    url
+    permissions{ 
+      name,
+      oAuthScopes
+    }
+    status
+    defaultLabel
+    type
+    locators
+  }
+}

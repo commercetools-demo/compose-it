@@ -27,16 +27,22 @@ import {
   DOMAINS,
   NOTIFICATION_KINDS_SIDE,
 } from '@commercetools-frontend/constants';
+import {
+  CustomViewDraft,
+  MyCustomView,
+} from '../../hooks/use-deployment/types/view';
 
 interface DeploymentContextType {
   user?: User;
   apps?: MyCustomApplication[];
+  views?: MyCustomView[];
   organizations?: Organization[];
   connectors?: ConnectorDraft[];
   deployments?: Deployment[];
   selectedOrganization?: string;
   selectedApplicationType: ApplicationTypes;
   selectedApp?: MyCustomApplication;
+  selectedView?: MyCustomView;
   selectedConnector?: ConnectorDraft;
   selectedDeployment?: Deployment;
   selectedDeploymentDraft?: DeploymentDraft;
@@ -46,10 +52,15 @@ interface DeploymentContextType {
   onSelectDeployment: (deployment?: Deployment) => void;
   onSelectDeploymentDraft: (deployment?: DeploymentDraft) => void;
   onSelectApp: (app?: MyCustomApplication) => void;
+  onSelectView: (view?: MyCustomView) => void;
   onCreateCustomApp: (
     organizationId: string,
     customAppDraft: CustomAppDraft
   ) => Promise<MyCustomApplication | undefined>;
+  onCreateCustomView: (
+    organizationId: string,
+    customViewDraft: CustomViewDraft
+  ) => Promise<MyCustomView | undefined>;
   onCreateConnectApp: (
     organizationId: string,
     connectAppDraft: ConnectorDraft
@@ -69,10 +80,13 @@ export const DeploymentProvider: React.FC<{
   const {
     user,
     myApps,
+    myViews,
     myOrganizations,
     createCustomApp,
+    createCustomView,
     createConnectorDraft,
     updateApps,
+    updateViews,
     getConnectors,
     getDeployments,
     createDeployment,
@@ -84,6 +98,7 @@ export const DeploymentProvider: React.FC<{
   const [selectedApplicationType, onSelectApplicationType] =
     useState<ApplicationTypes>('custom-app');
   const [selectedApp, onSelectApp] = useState<MyCustomApplication>();
+  const [selectedView, onSelectView] = useState<MyCustomView>();
   const [selectedConnector, onSelectConnector] = useState<ConnectorDraft>();
   const [selectedDeployment, setSelectedDeployment] = useState<Deployment>();
   const [selectedDeploymentDraft, setSelectedDeploymentDraft] =
@@ -160,6 +175,26 @@ export const DeploymentProvider: React.FC<{
     await updateApps();
     return result;
   };
+  const onCreateCustomView = async (
+    organizationId: string,
+    customViewDraft: CustomViewDraft
+  ): Promise<MyCustomView | undefined> => {
+    const result = await createCustomView(organizationId, {
+      ...customViewDraft,
+      labelAllLocales: [
+        {
+          locale: 'en',
+          value: customViewDraft.defaultLabel!,
+        },
+      ],
+      permissions: customViewDraft.permissions.map((permission, index) => ({
+        ...permission,
+        name: index === 0 ? 'view' : 'manage',
+      })),
+    });
+    await updateViews();
+    return result;
+  };
   const onCreateConnectApp = async (
     organizationId: string,
     connectAppDraft: ConnectorDraft
@@ -203,18 +238,34 @@ export const DeploymentProvider: React.FC<{
       return;
     }
 
-    await createDeploymentStatus({
-      deploymentId: result.id,
-      organizationId: selectedOrganization,
-      customAppId: selectedApp?.id || '',
-      connectorId: selectedConnector?.id || '',
-    });
+    if (selectedApplicationType === 'custom-app') {
+      await createDeploymentStatus({
+        deploymentId: result.id,
+        organizationId: selectedOrganization,
+        customAppId: selectedApp?.id || '',
+        connectorId: selectedConnector?.id || '',
+      });
+    } else if (selectedApplicationType === 'custom-view') {
+      await createDeploymentStatus({
+        deploymentId: result.id,
+        organizationId: selectedOrganization,
+        customViewId: selectedView?.id || '',
+        connectorId: selectedConnector?.id || '',
+      });
+    }
+
     return result;
   };
 
   const apps = useMemo(() => {
     return myApps?.filter((app) => app.organizationId === selectedOrganization);
   }, [myApps, selectedOrganization]);
+
+  const views = useMemo(() => {
+    return myViews?.filter(
+      (view) => view.organizationId === selectedOrganization
+    );
+  }, [myViews, selectedOrganization]);
 
   useEffect(() => {
     updateConnectors();
@@ -229,10 +280,12 @@ export const DeploymentProvider: React.FC<{
       value={{
         user,
         apps,
+        views,
         organizations: myOrganizations,
         selectedOrganization,
         selectedApplicationType,
         selectedApp,
+        selectedView,
         selectedConnector,
         connectors,
         deployments,
@@ -241,7 +294,9 @@ export const DeploymentProvider: React.FC<{
         onSelectOrganization,
         onSelectApplicationType,
         onSelectApp,
+        onSelectView,
         onCreateCustomApp,
+        onCreateCustomView,
         onSelectConnector,
         onCreateConnectApp,
         onSelectDeploymentDraft,

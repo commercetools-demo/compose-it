@@ -1,0 +1,18 @@
+mutation CustomView($organizationId: String!, $installedCustomViewId: ID!) {
+  uninstallCustomView (organizationId: $organizationId, installedCustomViewId:$installedCustomViewId) {
+    id
+    customView {
+      id
+      description
+      url
+      permissions {
+        name
+        oAuthScopes
+      }
+      status
+      defaultLabel
+      type
+      locators
+    }
+  }
+}

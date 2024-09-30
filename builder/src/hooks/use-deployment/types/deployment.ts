@@ -1,5 +1,6 @@
 import { PagedQueryResponse } from '../../../types/general';
 import { MyCustomApplication } from './app';
+import { MyCustomView } from './view';
 
 export type Connector = {
   id?: string;
@@ -72,6 +73,7 @@ export type Deployment = {
 
 export interface DeployedStatus extends Deployment {
   app?: MyCustomApplication;
+  view?: MyCustomView;
   statusValue?: DeploymentStatusValue;
 }
 
@@ -107,7 +109,8 @@ export type DeploymentResponse = PagedQueryResponse<Deployment>;
 export type DeploymentStatusValue = {
   deploymentId: string;
   organizationId: string;
-  customAppId: string;
+  customAppId?: string;
+  customViewId?: string;
   connectorId: string;
   customAppInstallationId?: string;
 };

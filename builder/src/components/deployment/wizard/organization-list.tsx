@@ -16,7 +16,7 @@ const StyledRow = styled.div`
   ${({ id, orgId }) => `${id === orgId ? 'color: blue;' : ''}`}
 `;
 
-const OrganizationList = ({ parentUrl }: { parentUrl: string }) => {
+const OrganizationList = ({ parentUrl, nextUrl }: { parentUrl: string, nextUrl: string }) => {
   const { organizations, onSelectOrganization, selectedOrganization } =
     useDeploymentContext();
   if (!organizations) {
@@ -32,7 +32,7 @@ const OrganizationList = ({ parentUrl }: { parentUrl: string }) => {
         return selectedOrganization === row.id ? (
           <Link
             to={
-              !!selectedOrganization ? `${parentUrl}/custom-applications` : ''
+              !!selectedOrganization ? nextUrl : ''
             }
           >
             <Spacings.Inline alignItems="center">

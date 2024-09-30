@@ -1,0 +1,19 @@
+query MyCustomViews {
+  myCustomViews {
+    id,
+    description,
+    organizationId,
+    url
+    permissions{ 
+      name,
+      oAuthScopes
+    }
+    status
+    defaultLabel
+    type
+    locators
+    permissions {
+      id
+    }
+  }
+}

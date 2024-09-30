@@ -1,0 +1,23 @@
+mutation CustomView(
+  $organizationId: String!
+  $data: CustomViewDraftDataInput!
+  $customViewId: String!
+) {
+  updateCustomView(
+    organizationId: $organizationId
+    customViewId: $customViewId
+    data: $data
+  ) {
+    id
+    description
+    url
+    permissions {
+      name
+      oAuthScopes
+    }
+    status
+    defaultLabel
+    type
+    locators
+  }
+}

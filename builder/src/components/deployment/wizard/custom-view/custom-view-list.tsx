@@ -1,73 +1,68 @@
-import { useModalState } from '@commercetools-frontend/application-components';
-import DataTable from '@commercetools-uikit/data-table';
-import { ArrowRightIcon, PlusThinIcon } from '@commercetools-uikit/icons';
-import PrimaryButton from '@commercetools-uikit/primary-button';
-import Spacings from '@commercetools-uikit/spacings';
-import { Link } from 'react-router-dom';
-import styled from 'styled-components';
-import {
-  CustomAppDraft,
-  MyCustomApplication,
-} from '../../../../hooks/use-deployment/types/app';
-import { useDeploymentContext } from '../../../../providers/deployment';
-import NewCustomAppForm from '../custom-app/new-custom-app';
-import Text from '@commercetools-uikit/text';
 import { useShowNotification } from '@commercetools-frontend/actions-global';
+import { useModalState } from '@commercetools-frontend/application-components';
 import {
   DOMAINS,
   NOTIFICATION_KINDS_SIDE,
 } from '@commercetools-frontend/constants';
+import DataTable from '@commercetools-uikit/data-table';
+import { ArrowRightIcon, PlusThinIcon } from '@commercetools-uikit/icons';
+import PrimaryButton from '@commercetools-uikit/primary-button';
+import Spacings from '@commercetools-uikit/spacings';
+import Text from '@commercetools-uikit/text';
+import { Link } from 'react-router-dom';
+import styled from 'styled-components';
+import { CustomViewDraft, MyCustomView } from '../../../../hooks/use-deployment/types/view';
+import { useDeploymentContext } from '../../../../providers/deployment';
+import NewCustomViewForm from './new-custom-view';
 
 const columns = [
   { key: 'id', label: 'ID' },
-  { key: 'name', label: 'Name' },
+  { key: 'label', label: 'Label' },
   { key: 'description', label: 'Description' },
   { key: 'action', label: '' },
 ];
 
-const StyledRow = styled.div`
-  ${({ id, appId }) => `${id === appId ? 'color: blue;' : ''}`}
+const StyledRow = styled.div<{ id: string; viewId?: string }>`
+  ${({ id, viewId }) => `${id === viewId ? 'color: blue;' : ''}`}
 `;
 
-const CustomApplicationList = ({ parentUrl, nextUrl }: { parentUrl: string, nextUrl: string }) => {
+const CustomViewList = ({ parentUrl, nextUrl }: { parentUrl: string, nextUrl: string }) => {
   const showSuccessNotification = useShowNotification();
 
   const modalState = useModalState();
   const {
     selectedOrganization,
-    apps,
-    selectedApp,
+    views,
+    selectedView,
     selectedConnector,
-    onSelectApp,
-    onCreateCustomApp,
+    onSelectView,
+    onCreateCustomView,
   } = useDeploymentContext();
 
-  const handleNewCustomAppOpen = () => {
+  const handleNewCustomViewOpen = () => {
     modalState.openModal();
-    onSelectApp(undefined);
+    onSelectView(undefined);
   };
 
-  const handleCreateNewCustomApp = async (customApp: CustomAppDraft) => {
+  const handleCreateNewCustomView = async (customView: CustomViewDraft) => {
     if (!selectedOrganization) {
       return;
     }
 
-    const result = await onCreateCustomApp(selectedOrganization, customApp);
+    const result = await onCreateCustomView(selectedOrganization, customView);
     showSuccessNotification({
       domain: DOMAINS.SIDE,
       kind: NOTIFICATION_KINDS_SIDE.success,
-      text: 'Custom application created successfully',
+      text: 'Custom view created successfully',
     });
     modalState.closeModal();
     if (result) {
-      onSelectApp(result);
+      onSelectView(result);
     }
-
-    // onSelectApp(app.id);
   };
 
   const handleRenderItem = (
-    row: MyCustomApplication,
+    row: MyCustomView,
     col: { key: string; label: string }
   ) => {
     switch (col.key) {
@@ -75,8 +70,8 @@ const CustomApplicationList = ({ parentUrl, nextUrl }: { parentUrl: string, next
         const url = !!selectedConnector
           ? `/deployments`
           : nextUrl;
-        return selectedApp?.id === row.id ? (
-          <Link to={!!selectedApp ? `${parentUrl}${url}` : ''}>
+        return selectedView?.id === row.id ? (
+          <Link to={!!selectedView ? `${parentUrl}${url}` : ''}>
             <Spacings.Inline alignItems="center">
               Select for update
               <ArrowRightIcon />
@@ -85,14 +80,14 @@ const CustomApplicationList = ({ parentUrl, nextUrl }: { parentUrl: string, next
         ) : null;
       default:
         return (
-          <StyledRow id={row.id} appId={selectedApp?.id}>
+          <StyledRow id={row.id} viewId={selectedView?.id}>
             {row?.[col.key]}
           </StyledRow>
         );
     }
   };
 
-  if (!apps) {
+  if (!views) {
     return null;
   }
   return (
@@ -100,31 +95,31 @@ const CustomApplicationList = ({ parentUrl, nextUrl }: { parentUrl: string, next
       <Spacings.Stack scale="l">
         <Spacings.Inline justifyContent="space-between">
           <Text.Subheadline>
-            Select a custom MC application to deploy to
+            Select a custom view to deploy to
           </Text.Subheadline>
           <PrimaryButton
-            label="Add a Custom Application"
+            label="Add a Custom View"
             iconLeft={<PlusThinIcon />}
-            onClick={handleNewCustomAppOpen}
+            onClick={handleNewCustomViewOpen}
             isDisabled={!selectedOrganization}
           >
-            Add Custom Application
+            Add Custom View
           </PrimaryButton>
         </Spacings.Inline>
         <DataTable
-          rows={apps}
+          rows={views}
           columns={columns}
-          onRowClick={(row) => onSelectApp(row)}
+          onRowClick={(row) => onSelectView(row)}
           itemRenderer={handleRenderItem}
         />
       </Spacings.Stack>
-      <NewCustomAppForm
+      <NewCustomViewForm
         isOpen={modalState.isModalOpen}
         onClose={modalState.closeModal}
-        onSubmit={handleCreateNewCustomApp}
+        onSubmit={handleCreateNewCustomView}
       />
     </>
   );
 };
 
-export default CustomApplicationList;
+export default CustomViewList;

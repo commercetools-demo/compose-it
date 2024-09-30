@@ -1,0 +1,15 @@
+mutation CustomView($organizationId: String!, $status: CustomViewStatus!, $customViewId: ID!) {
+  changeCustomViewStatus (organizationId: $organizationId, customViewId:$customViewId, status: $status) {
+    id
+    description
+    url
+    permissions {
+      name
+      oAuthScopes
+    }
+    status
+    defaultLabel
+    type
+    locators
+  }
+}

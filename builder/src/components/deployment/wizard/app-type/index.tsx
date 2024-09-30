@@ -32,7 +32,7 @@ const COLUMNS = [
   { key: 'action', label: '' },
 ];
 
-const AppType = ({ parentUrl }: { parentUrl: string }) => {
+const AppType = ({ parentUrl, nextUrl }: { parentUrl: string, nextUrl: string }) => {
   const { selectedApplicationType, onSelectApplicationType } =
     useDeploymentContext();
 
@@ -44,7 +44,7 @@ const AppType = ({ parentUrl }: { parentUrl: string }) => {
       case 'action':
         return selectedApplicationType === row.id ? (
           <Link
-            to={!!selectedApplicationType ? `${parentUrl}/organization` : ''}
+            to={!!selectedApplicationType ? nextUrl : ''}
           >
             <Spacings.Inline alignItems="center">
               Select and continue

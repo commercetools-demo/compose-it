@@ -18,6 +18,7 @@ import ConnectApplicationList from './connect-app/connect-app-list';
 import DeploymentList from './connect-deployment/deployment-list';
 import Deploy from './deploy';
 import AppType from './app-type';
+import CustomViewList from './custom-view/custom-view-list';
 
 type Props = {
   onClose: () => void;
@@ -27,6 +28,7 @@ const NewDeploymentWizard = ({ onClose }: Props) => {
   const {
     selectedOrganization,
     selectedApp,
+    selectedView,
     selectedConnector,
     selectedDeployment,
     selectedDeploymentDraft,
@@ -61,15 +63,24 @@ const NewDeploymentWizard = ({ onClose }: Props) => {
               label="2. Select organization"
               isDisabled={!selectedApplicationType}
             />
-            <TabHeader
-              to={`${match.url}/custom-applications`}
-              label="3. Select custom application"
-              isDisabled={!selectedOrganization}
-            />
+            {selectedApplicationType === 'custom-app' && (
+              <TabHeader
+                to={`${match.url}/custom-applications`}
+                label="3. Select custom application"
+                isDisabled={!selectedOrganization}
+              />
+            )}
+            {selectedApplicationType === 'custom-view' && (
+              <TabHeader
+                to={`${match.url}/custom-views`}
+                label="3. Select custom view"
+                isDisabled={!selectedOrganization}
+              />
+            )}
             <TabHeader
               to={`${match.url}/connect-applications`}
               label="4. Select a connector"
-              isDisabled={!selectedApp}
+              isDisabled={!selectedApp && !selectedView}
             />
             <TabHeader
               to={`${match.url}/deployments`}
@@ -86,19 +97,44 @@ const NewDeploymentWizard = ({ onClose }: Props) => {
       >
         <Switch>
           <Route path={`${match.path}/application-type`}>
-            <AppType parentUrl={match.url} />
+            <AppType
+              parentUrl={match.url}
+              nextUrl={`${match.url}/organization`}
+            />
           </Route>
           <Route path={`${match.path}/organization`}>
-            <OrganizationList parentUrl={match.url} />
+            <OrganizationList
+              parentUrl={match.url}
+              nextUrl={
+                selectedApplicationType === 'custom-app'
+                  ? `${match.url}/custom-applications`
+                  : `${match.url}/custom-views`
+              }
+            />
           </Route>
           <Route path={`${match.path}/custom-applications`}>
-            <CustomApplicationList parentUrl={match.url} />
+            <CustomApplicationList
+              parentUrl={match.url}
+              nextUrl={`${match.url}/connect-applications`}
+            />
+          </Route>
+          <Route path={`${match.path}/custom-views`}>
+            <CustomViewList
+              parentUrl={match.url}
+              nextUrl={`${match.url}/connect-applications`}
+            />
           </Route>
           <Route path={`${match.path}/connect-applications`}>
-            <ConnectApplicationList parentUrl={match.url} />
+            <ConnectApplicationList
+              parentUrl={match.url}
+              nextUrl={`${match.url}/deployments`}
+            />
           </Route>
           <Route path={`${match.path}/deployments`}>
-            <DeploymentList parentUrl={match.url} />
+            <DeploymentList
+              parentUrl={match.url}
+              nextUrl={`${match.url}/deploy`}
+            />
           </Route>
           <Route path={`${match.path}/deploy`}>
             <Deploy parentUrl={match.url} />

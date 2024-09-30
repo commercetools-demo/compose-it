@@ -1,0 +1,26 @@
+mutation CustomView(
+  $organizationId: String!
+  $projectKeys: [String]
+  $customViewId: ID!
+) {
+  installCustomView(
+    organizationId: $organizationId
+    customViewId: $customViewId
+    projectKeys: $projectKeys
+  ) {
+    id
+    customView {
+      id
+      description
+      url
+      permissions {
+        name
+        oAuthScopes
+      }
+      status
+      defaultLabel
+      type
+      locators
+    }
+  }
+}

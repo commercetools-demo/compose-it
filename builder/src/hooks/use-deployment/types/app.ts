@@ -16,7 +16,7 @@ export type MyCustomApplication = {
 export type MyCustomApplications = {
   myCustomApplications: MyCustomApplication[];
 };
-type CustomApplicationPermissionDataInput = {
+export type CustomApplicationPermissionDataInput = {
   name: string;
   oAuthScopes: string[];
 };

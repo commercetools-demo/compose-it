@@ -10,6 +10,7 @@ import { OrganizationResponse } from './types/organization';
 import { useCustomApplications } from './use-custom-applications';
 import { useDeploymentStatuses } from './use-deployment-statuses';
 import { useConnect } from './use-connect';
+import { useCustomViews } from './use-custom-views';
 
 export const useDeployment = () => {
   const {
@@ -21,6 +22,15 @@ export const useDeployment = () => {
     installCustomApp,
     uninstallCustomApp,
   } = useCustomApplications();
+  const {
+    createCustomView,
+    myCustomViews,
+    updateViews,
+    updateCustomView,
+    changeCustomViewStatus,
+    installCustomView,
+    uninstallCustomView,
+  } = useCustomViews();
   const {
     createDeploymentStatus,
     getDeploymentStatuses,
@@ -63,11 +73,18 @@ export const useDeployment = () => {
     installCustomApp,
     uninstallCustomApp,
     updateApps,
+    createCustomView,
+    updateViews,
+    updateCustomView,
+    changeCustomViewStatus,
+    installCustomView,
+    uninstallCustomView,
     createDeploymentStatus,
     getDeploymentStatuses,
     updateDeploymentStatus,
     user: userData?.user,
     myApps: myCustomApplications,
+    myViews: myCustomViews,
     myOrganizations: organizationData?.myOrganizations.results,
   };
 };

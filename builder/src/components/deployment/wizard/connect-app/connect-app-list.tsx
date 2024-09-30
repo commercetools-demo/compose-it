@@ -25,7 +25,13 @@ const StyledRow = styled.div`
   ${({ id, connectorId }) => `${id === connectorId ? 'color: blue;' : ''}`}
 `;
 
-const ConnectApplicationList = ({ parentUrl }: { parentUrl: string }) => {
+const ConnectApplicationList = ({
+  parentUrl,
+  nextUrl,
+}: {
+  parentUrl: string;
+  nextUrl: string;
+}) => {
   const showSuccessNotification = useShowNotification();
 
   const modalState = useModalState();
@@ -69,7 +75,7 @@ const ConnectApplicationList = ({ parentUrl }: { parentUrl: string }) => {
     switch (col.key) {
       case 'action':
         return selectedConnector?.id === row.id ? (
-          <Link to={!!selectedConnector ? `${parentUrl}/deployments` : ''}>
+          <Link to={!!selectedConnector ? nextUrl : ''}>
             <Spacings.Inline alignItems="center">
               Select for deployment
               <ArrowRightIcon />
